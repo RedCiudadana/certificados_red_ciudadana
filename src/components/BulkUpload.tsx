@@ -17,7 +17,7 @@ interface PreviewData {
 }
 
 const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
-  const { addRecipients } = useCertificateStore();
+  const { addRecipients, templates, currentTemplateId } = useCertificateStore();
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [preview, setPreview] = useState<PreviewData[]>([]);
@@ -51,6 +51,13 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
       const missingFields: string[] = [];
       jsonData.forEach((row, index) => {
         if (!row.name) missingFields.push(`Name missing in row ${index + 1}`);
+        
+        // Validate field names against template definitions
+        const templateFields = templates.find(t => t.id === currentTemplateId)?.fields.map(f => f.name) || [];
+        const invalidFields = Object.keys(row).filter(key => !templateFields.includes(key) && !['name', 'email', 'course', 'issueDate'].includes(key));
+        if (invalidFields.length > 0) {
+          throw new Error(`Invalid fields in row ${index + 1}: ${invalidFields.join(', ')}`);
+        }
       });
       
       if (missingFields.length > 0) {
@@ -89,7 +96,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [addRecipients, onUploaded]);
+  }, [addRecipients, onUploaded, templates, currentTemplateId]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];

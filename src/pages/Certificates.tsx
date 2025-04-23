@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Download, ChevronUp, ChevronDown, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
-import { generateCertificatePDF } from '../utils/certificateGenerator';
+import { generateCertificatePDF, downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
 
 const Certificates: React.FC = () => {
   const { certificates, recipients, templates } = useCertificateStore();
@@ -11,6 +11,9 @@ const Certificates: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedCertificates, setSelectedCertificates] = useState<string[]>([]);
 
   const handleSort = (field: typeof sortField) => {
     if (sortField === field) {
@@ -33,8 +36,11 @@ const Certificates: React.FC = () => {
         certificate.id.toLowerCase().includes(searchLower) ||
         (recipient.course || '').toLowerCase().includes(searchLower)
       );
+    }).filter(cert => {
+      const recipient = recipients.find(r => r.id === cert.recipientId);
+      return recipient?.course === selectedCourse || selectedCourse === '';
     });
-  }, [certificates, recipients, searchQuery]);
+  }, [certificates, recipients, searchQuery, selectedCourse]);
 
   const sortedCertificates = useMemo(() => {
     return [...filteredCertificates].sort((a, b) => {
@@ -185,6 +191,58 @@ const Certificates: React.FC = () => {
     }
   };
 
+  const toggleCertificateSelection = (certificateId: string) => {
+    setSelectedCertificates(prev =>
+      prev.includes(certificateId)
+        ? prev.filter(id => id !== certificateId)
+        : [...prev, certificateId]
+    );
+  };
+
+  const handleDownloadSelected = async () => {
+    setIsDownloading(true);
+    const certsToDownload = certificates.filter(cert =>
+      selectedCertificates.includes(cert.id)
+    );  
+    if (certsToDownload.length === 0) return;
+    await downloadAllCertificatesAsPDF(certsToDownload, recipients, templates);
+    setIsDownloading(false);
+  };
+
+  const areAllVisibleSelected = () => {
+    return Object.values(paginatedCertificates).flat().every(cert => selectedCertificates.includes(cert.id));
+  };
+  
+  const toggleSelectAllVisible = () => {
+    const allVisible = Object.values(paginatedCertificates).flat();
+    if (areAllVisibleSelected()) {
+      // Deselecciona todos
+      setSelectedCertificates(prev =>
+        prev.filter(id => !allVisible.some(cert => cert.id === id))
+      );
+    } else {
+      // Agrega todos los visibles
+      setSelectedCertificates(prev => {
+        const idsToAdd = allVisible.map(cert => cert.id).filter(id => !prev.includes(id));
+        return [...prev, ...idsToAdd];
+      });
+    }
+  };
+  
+  const areAllCertificatesSelected = () => {
+    const allIds = sortedCertificates.map(cert => cert.id);
+    return allIds.every(id => selectedCertificates.includes(id));
+  };
+
+  const toggleSelectAllAcrossAllPages = () => {
+    if (selectedCertificates.length === sortedCertificates.length) {
+      setSelectedCertificates([]);
+    } else {
+      const allIds = sortedCertificates.map(cert => cert.id);
+      setSelectedCertificates(allIds);
+    }
+  };  
+
   return (
     <div className="space-y-8">
       <div className="sm:flex sm:items-center sm:justify-between">
@@ -220,6 +278,30 @@ const Certificates: React.FC = () => {
             <span className="ml-2 text-sm text-gray-600">Agrupar por curso</span>
           </label>
         </div>
+      </div>
+
+      <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <button
+          onClick={toggleSelectAllVisible}
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+        >
+          {areAllVisibleSelected() ? 'Deseleccionar todos de la página actual' : 'Seleccionar todos de la página actual'}
+        </button>
+        <button
+          onClick={toggleSelectAllAcrossAllPages}
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+        >
+          {areAllCertificatesSelected() ? 'Deseleccionar todos' : 'Seleccionar todos'}
+        </button>
+        <button
+          onClick={handleDownloadSelected}
+          disabled={selectedCertificates.length === 0 || isDownloading}
+          className={`px-4 py-2 rounded text-white
+                      ${isDownloading ? 'bg-blue-300 cursor-wait' : 'bg-blue-600'}
+                      disabled:opacity-50`}
+        >
+          {isDownloading ? 'Generando…' : 'Descargar certificados seleccionados'}
+        </button>
       </div>
 
       {Object.entries(paginatedCertificates).map(([group, groupCertificates]) => (
@@ -290,6 +372,12 @@ const Certificates: React.FC = () => {
                         {recipient.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <input
+                          type="checkbox"
+                          checked={selectedCertificates.includes(certificate.id)}
+                          onChange={() => toggleCertificateSelection(certificate.id)}
+                          className="mr-2"
+                        />
                         <button
                           onClick={() => handleDownloadPDF(certificate.id)}
                           className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

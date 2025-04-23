@@ -22,6 +22,8 @@ export interface Template {
   name: string;
   imageUrl: string;
   fields: TemplateField[];
+  width?: number; // Width of the template in pixels
+  height?: number; // Height of the template in pixels
 }
 
 export interface TemplateField {

@@ -269,18 +269,19 @@ export const downloadAllCertificatesAsPDF = async (
         certificateDiv.style.backgroundColor = 'white';
         
         // Add template image
-        const img = document.createElement('img');
-        img.src = template.imageUrl;
-        img.alt = 'Certificate template';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'contain';
-        certificateDiv.appendChild(img);
-        
-        // Wait for image to load
+        certificateDiv.style.backgroundImage = `url('${template.imageUrl}')`;
+        certificateDiv.style.backgroundSize = 'contain';
+        certificateDiv.style.backgroundRepeat = 'no-repeat';
+        certificateDiv.style.backgroundPosition = 'center';
+
+        // Pre-load the image to avoid blank captures
         await new Promise((resolve, reject) => {
-          img.onload = resolve;
-          img.onerror = reject;
+          const testImg = new Image();
+          testImg.crossOrigin = 'anonymous';
+          testImg.src = template.imageUrl;
+          testImg.onload = () => resolve(true);
+          testImg.onerror = reject;
+          // fallback
           setTimeout(resolve, 5000);
         });
         
@@ -289,7 +290,7 @@ export const downloadAllCertificatesAsPDF = async (
           const fieldDiv = document.createElement('div');
           fieldDiv.style.position = 'absolute';
           fieldDiv.style.left = `${field.x}%`;
-          fieldDiv.style.top = `${field.y}%`;
+          fieldDiv.style.top  = `${field.y}%`;
           fieldDiv.style.transform = 'translate(-50%, -50%)';
           fieldDiv.style.textAlign = 'center';
           fieldDiv.style.width = '100%';
@@ -330,14 +331,14 @@ export const downloadAllCertificatesAsPDF = async (
         try {
           // Generate PDF for this certificate
           const canvas = await html2canvas(certificateDiv, {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false
           });
 
-          const imgData = canvas.toDataURL('image/png');
+          const imgData = canvas.toDataURL('image/jpeg', 0.92);
           
           const pdf = new jsPDF({
             orientation: 'landscape',

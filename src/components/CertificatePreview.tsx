@@ -121,6 +121,29 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
     }
   };
   
+  // Dynamically adjust the container size based on the template's aspect ratio
+  const aspectRatio = (template.width || 1) / (template.height || 1);
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    width: '100%',
+    paddingTop: `${100 / aspectRatio}%`, // Maintain aspect ratio
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+  };
+
+  // Update to use <img> for SVG templates instead of <object>
+  const renderTemplate = () => (
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage: `url(${template.imageUrl})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    />
+  );
+
   return (
     <div className="space-y-4">
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -147,23 +170,9 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
         <div 
           ref={certificateRef}
           className="relative w-full rounded overflow-hidden certificate-preview bg-white"
-          style={{ 
-            height: '500px',
-            margin: '0 auto'
-          }}
+          style={containerStyle}
         >
-          <img
-            src={template.imageUrl}
-            alt="Certificate template"
-            className="w-full h-full object-contain"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%'
-            }}
-          />
+          {renderTemplate()}
           {template.fields.map(renderField)}
         </div>
       </div>

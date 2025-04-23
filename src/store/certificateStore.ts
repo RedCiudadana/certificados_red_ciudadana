@@ -68,6 +68,16 @@ const defaultTemplates: Template[] = [
       { id: '3', name: 'date', type: 'date', x: 50, y: 75, fontSize: 18, fontFamily: 'serif', color: '#4a5568' },
       { id: '4', name: 'qrcode', type: 'qrcode', x: 85, y: 85 }
     ]
+  },
+  {
+    id: '4',
+    name: 'Intercambio de datos en sector público',
+    imageUrl: 'https://verificador.redciudadana.org/Templates/CursoInteroperabilidadv2.jpeg',
+    fields: [
+      { id: '1', name: 'recipient', type: 'text', x: 35, y: 40, fontSize: 28, fontFamily: 'sans-serif', color: '#1a365d' },
+    ],
+    width: 3300,
+    height: 2550,
   }
 ];
 
@@ -174,12 +184,12 @@ export const useCertificateStore = create<CertificateState>((set, get) => ({
         qrCodeUrl: verificationUrl,
         issueDate: new Date().toISOString(),
         verificationUrl,
-        status: 'published'
+        status: 'published' as 'published'
       };
     });
     
     set((state) => ({
-      certificates: [...state.certificates, ...certificates]
+      certificates: [...state.certificates, ...certificates as Certificate[]]
     }));
     
     return certificates.map(c => c.id);
