@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
 import { Template, Recipient, Certificate, CertificateCollection } from '../types';
 
@@ -8,25 +9,25 @@ interface CertificateState {
   certificates: Certificate[];
   collections: CertificateCollection[];
   currentTemplateId: string | null;
-  
+
   // Template actions
   addTemplate: (template: Omit<Template, 'id'>) => string;
   updateTemplate: (id: string, template: Partial<Template>) => void;
   deleteTemplate: (id: string) => void;
   setCurrentTemplate: (id: string | null) => void;
-  
+
   // Recipient actions
   addRecipient: (recipient: Omit<Recipient, 'id'>) => string;
   addRecipients: (recipients: Omit<Recipient, 'id'>[]) => string[];
   updateRecipient: (id: string, recipient: Partial<Recipient>) => void;
   deleteRecipient: (id: string) => void;
-  
+
   // Certificate actions
   generateCertificate: (recipientId: string, templateId: string) => string;
   generateBulkCertificates: (recipientIds: string[], templateId: string) => string[];
   updateCertificate: (id: string, certificate: Partial<Certificate>) => void;
   deleteCertificate: (id: string) => void;
-  
+
   // Collection actions
   createCollection: (name: string, templateId: string, description?: string) => string;
   updateCollection: (id: string, collection: Partial<CertificateCollection>) => void;
@@ -81,185 +82,175 @@ const defaultTemplates: Template[] = [
   }
 ];
 
-export const useCertificateStore = create<CertificateState>((set, get) => ({
-  templates: defaultTemplates,
-  recipients: [],
-  certificates: [],
-  collections: [],
-  currentTemplateId: null,
-  
-  // Template actions
-  addTemplate: (template) => {
-    const id = nanoid();
-    set((state) => ({
-      templates: [...state.templates, { ...template, id }]
-    }));
-    return id;
-  },
-  
-  updateTemplate: (id, template) => {
-    set((state) => ({
-      templates: state.templates.map((t) => (t.id === id ? { ...t, ...template } : t))
-    }));
-  },
-  
-  deleteTemplate: (id) => {
-    set((state) => ({
-      templates: state.templates.filter((t) => t.id !== id)
-    }));
-  },
-  
-  setCurrentTemplate: (id) => {
-    set({ currentTemplateId: id });
-  },
-  
-  // Recipient actions
-  addRecipient: (recipient) => {
-    const id = nanoid();
-    set((state) => ({
-      recipients: [...state.recipients, { ...recipient, id }]
-    }));
-    return id;
-  },
-  
-  addRecipients: (recipients) => {
-    const recipientsWithIds = recipients.map(recipient => ({
-      ...recipient,
-      id: nanoid()
-    }));
-    
-    set((state) => ({
-      recipients: [...state.recipients, ...recipientsWithIds]
-    }));
-    
-    return recipientsWithIds.map(r => r.id);
-  },
-  
-  updateRecipient: (id, recipient) => {
-    set((state) => ({
-      recipients: state.recipients.map((r) => (r.id === id ? { ...r, ...recipient } : r))
-    }));
-  },
-  
-  deleteRecipient: (id) => {
-    set((state) => ({
-      recipients: state.recipients.filter((r) => r.id !== id),
-      certificates: state.certificates.filter((c) => c.recipientId !== id)
-    }));
-  },
-  
-  // Certificate actions
-  generateCertificate: (recipientId, templateId) => {
-    const id = nanoid();
-    const baseUrl = window.location.origin;
-    const verificationUrl = `${baseUrl}/verify/${id}`;
-    
-    const certificate: Certificate = {
-      id,
-      recipientId,
-      templateId,
-      qrCodeUrl: verificationUrl,
-      issueDate: new Date().toISOString(),
-      verificationUrl,
-      status: 'published'
-    };
-    
-    set((state) => ({
-      certificates: [...state.certificates, certificate]
-    }));
-    
-    return id;
-  },
-  
-  generateBulkCertificates: (recipientIds, templateId) => {
-    const baseUrl = window.location.origin;
-    const certificates = recipientIds.map(recipientId => {
-      const id = nanoid();
-      const verificationUrl = `${baseUrl}/verify/${id}`;
-      
-      return {
-        id,
-        recipientId,
-        templateId,
-        qrCodeUrl: verificationUrl,
-        issueDate: new Date().toISOString(),
-        verificationUrl,
-        status: 'published' as 'published'
-      };
-    });
-    
-    set((state) => ({
-      certificates: [...state.certificates, ...certificates as Certificate[]]
-    }));
-    
-    return certificates.map(c => c.id);
-  },
-  
-  updateCertificate: (id, certificate) => {
-    set((state) => ({
-      certificates: state.certificates.map((c) => (c.id === id ? { ...c, ...certificate } : c))
-    }));
-  },
-  
-  deleteCertificate: (id) => {
-    set((state) => ({
-      certificates: state.certificates.filter((c) => c.id !== id),
-      collections: state.collections.map(collection => ({
-        ...collection,
-        certificates: collection.certificates.filter(cert => cert.id !== id)
-      }))
-    }));
-  },
-  
-  // Collection actions
-  createCollection: (name, templateId, description) => {
-    const id = nanoid();
-    const collection: CertificateCollection = {
-      id,
-      name,
-      description,
-      templateId,
+export const useCertificateStore = create<CertificateState>()(
+  persist(
+    (set, get) => ({
+      templates: defaultTemplates,
+      recipients: [],
       certificates: [],
-      createdAt: new Date().toISOString()
-    };
-    
-    set((state) => ({
-      collections: [...state.collections, collection]
-    }));
-    
-    return id;
-  },
-  
-  updateCollection: (id, collection) => {
-    set((state) => ({
-      collections: state.collections.map((c) => (c.id === id ? { ...c, ...collection } : c))
-    }));
-  },
-  
-  deleteCollection: (id) => {
-    set((state) => ({
-      collections: state.collections.filter((c) => c.id !== id)
-    }));
-  },
-  
-  addCertificatesToCollection: (collectionId, certificateIds) => {
-    const { certificates: allCertificates } = get();
-    
-    set((state) => ({
-      collections: state.collections.map((collection) => {
-        if (collection.id === collectionId) {
-          const newCertificates = allCertificates.filter((cert) => 
-            certificateIds.includes(cert.id) && 
-            !collection.certificates.some(c => c.id === cert.id)
-          );
-          
+      collections: [],
+      currentTemplateId: null,
+
+      addTemplate: (template) => {
+        const id = nanoid();
+        set((state) => ({
+          templates: [...state.templates, { ...template, id }]
+        }));
+        return id;
+      },
+      updateTemplate: (id, template) => {
+        set((state) => ({
+          templates: state.templates.map((t) => (t.id === id ? { ...t, ...template } : t))
+        }));
+      },
+      deleteTemplate: (id) => {
+        set((state) => ({
+          templates: state.templates.filter((t) => t.id !== id)
+        }));
+      },
+      setCurrentTemplate: (id) => {
+        set({ currentTemplateId: id });
+      },
+
+      addRecipient: (recipient) => {
+        const id = nanoid();
+        set((state) => ({
+          recipients: [...state.recipients, { ...recipient, id }]
+        }));
+        return id;
+      },
+      addRecipients: (recipients) => {
+        const recipientsWithIds = recipients.map(recipient => ({ ...recipient, id: nanoid() }));
+        set((state) => ({
+          recipients: [...state.recipients, ...recipientsWithIds]
+        }));
+        return recipientsWithIds.map(r => r.id);
+      },
+      updateRecipient: (id, recipient) => {
+        set((state) => ({
+          recipients: state.recipients.map((r) => (r.id === id ? { ...r, ...recipient } : r))
+        }));
+      },
+      deleteRecipient: (id) => {
+        set((state) => ({
+          recipients: state.recipients.filter((r) => r.id !== id),
+          certificates: state.certificates.filter((c) => c.recipientId !== id)
+        }));
+      },
+
+      generateCertificate: (recipientId, templateId) => {
+        const id = nanoid();
+        const verificationUrl = `${window.location.origin}/verify/${id}`;
+        const certificate: Certificate = {
+          id,
+          recipientId,
+          templateId,
+          qrCodeUrl: verificationUrl,
+          issueDate: new Date().toISOString(),
+          verificationUrl,
+          status: 'published'
+        };
+        set((state) => ({
+          certificates: [...state.certificates, certificate]
+        }));
+        return id;
+      },
+      generateBulkCertificates: (recipientIds, templateId) => {
+        const baseUrl = window.location.origin;
+        const certificates = recipientIds.map(recipientId => {
+          const id = nanoid();
+          const verificationUrl = `${baseUrl}/verify/${id}`;
           return {
-            ...collection,
-            certificates: [...collection.certificates, ...newCertificates]
+            id,
+            recipientId,
+            templateId,
+            qrCodeUrl: verificationUrl,
+            issueDate: new Date().toISOString(),
+            verificationUrl,
+            status: 'published' as const
           };
+        });
+        set((state) => ({
+          certificates: [...state.certificates, ...certificates]
+        }));
+        return certificates.map(c => c.id);
+      },
+      updateCertificate: (id, certificate) => {
+        set((state) => ({
+          certificates: state.certificates.map((c) => (c.id === id ? { ...c, ...certificate } : c))
+        }));
+      },
+      deleteCertificate: (id) => {
+        set((state) => ({
+          certificates: state.certificates.filter((c) => c.id !== id),
+          collections: state.collections.map(collection => ({
+            ...collection,
+            certificates: collection.certificates.filter(cert => cert.id !== id)
+          }))
+        }));
+      },
+
+      createCollection: (name, templateId, description) => {
+        const id = nanoid();
+        const collection: CertificateCollection = {
+          id,
+          name,
+          description,
+          templateId,
+          certificates: [],
+          createdAt: new Date().toISOString()
+        };
+        set((state) => ({
+          collections: [...state.collections, collection]
+        }));
+        return id;
+      },
+      updateCollection: (id, collection) => {
+        set((state) => ({
+          collections: state.collections.map((c) => (c.id === id ? { ...c, ...collection } : c))
+        }));
+      },
+      deleteCollection: (id) => {
+        set((state) => ({
+          collections: state.collections.filter((c) => c.id !== id)
+        }));
+      },
+      addCertificatesToCollection: (collectionId, certificateIds) => {
+        const { certificates: allCertificates } = get();
+        set((state) => ({
+          collections: state.collections.map((collection) => {
+            if (collection.id === collectionId) {
+              const newCertificates = allCertificates.filter((cert) =>
+                certificateIds.includes(cert.id) &&
+                !collection.certificates.some(c => c.id === cert.id)
+              );
+              return {
+                ...collection,
+                certificates: [...collection.certificates, ...newCertificates]
+              };
+            }
+            return collection;
+          })
+        }));
+      }
+    }),
+    {
+      name: 'certificate-store',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        templates: state.templates,
+        recipients: state.recipients,
+        certificates: state.certificates,
+        collections: state.collections,
+        currentTemplateId: state.currentTemplateId
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state?.templates?.length) {
+          if (state) {
+            state.templates = defaultTemplates;
+          }
         }
-        return collection;
-      })
-    }));
-  }
-}));
+      }
+    }
+  )
+);
