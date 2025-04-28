@@ -11,54 +11,145 @@ export const generateStaticSite = (
   templates: Template[]
 ): Record<string, string> => {
   const files: Record<string, string> = {};
-  
+
+  // Partes comunes
+  const head = `
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Verification System</title>
+  <meta name="description" content="Verify the authenticity of digital certificates">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/redciudadana.png">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/footer.css">
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+</head>`;
+
+  const header = `
+<header class="default-header">
+  <div class="main-menu-area menu-2 pl-155 pr-115">
+    <div class="container-fluid">
+      <div class="row d-flex align-items-center padmen" id="menu">
+        <div class="col-xl-2 col-lg-3 p0">
+          <div class="logo">
+            <a href="/index.html"><img src="/assets/img/LOGO-RED_NEGRO.png" alt="Logo Red Ciudadana" style="margin: 0 5%;" /></a>
+          </div>
+        </div>
+        <div class="col-xl-7 col-lg-9">
+          <div class="main-menu f-left ml-120">
+            <nav id="mobile-menu">
+              <ul class="nav-items">
+                <li id="inicio"><a href="/index.html">INICIO</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 d-none d-xl-block flex-container2">
+          <div class="header-02-wrapper">
+            <div class="header-lang mr-10 pos-rel f-right">
+              <div class="lang-icon traduccion">
+                <img width="22%" src="/assets/img/red/BANDERA.png" alt="Red Ciudadan Ingles">
+                <a class="notranslate" href="https://redciudadana-org.translate.goog/index.html?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=es&_x_tr_pto=wapp">En</a>
+                <span>|</span>
+                <a class="notranslate" href="https://redciudadana.org/">Es</a>
+              </div>
+            </div>
+            <div class="header-icon header-02-icon f-right">
+              <a target="_blank" href="https://www.instagram.com/redxguate/"><i class="fab fa-instagram"></i></a>
+              <a target="_blank" href="https://www.tiktok.com/@redxguate"><i class="fa-brands fa-tiktok"></i></a>
+              <a target="_blank" href="https://twitter.com/redxguate"><i class="fa-brands fa-x-twitter"></i></a>
+              <a target="_blank" href="https://www.facebook.com/Redciudadanagt"><i class="fab fa-facebook-f"></i></a>
+              <a target="_blank" href="https://www.youtube.com/channel/UCQwc62j7beStZYFzwPxBEQg"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="mobile-menu"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>`;
+
+  const footer = `
+<footer>
+  <div class="py-4" style="background-color: black;">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5 my-2">
+          <img class="logo_footer" src="/assets/img/footer_2025/WEB_PI-67.png">
+          <p class="text_footer">
+            En Red Ciudadana trabajamos para fortalecer la transparencia,
+            promover la participación ciudadana y construir un futuro más 
+            justo e inclusivo para todos los guatemaltecos.
+          </p>
+          <div class="d-flex">
+            <a href="https://www.facebook.com/Redciudadanagt"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-62.png"></a>
+            <a href="https://twitter.com/redxguate"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-63.png"></a>
+            <a href="https://www.instagram.com/redxguate/"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-64.png"></a>
+            <a href="https://www.linkedin.com/company/red-ciudadana"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-65.png"></a>
+            <a href="https://www.youtube.com/channel/UCQwc62j7beStZYFzwPxBEQg"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-66.png"></a>
+          </div>
+        </div>
+        <div class="col-lg-3 my-2 flex-container">
+          <div class="links-footer text-left">
+            <a href="/index.html">Inicio</a>
+          </div>                          
+        </div>
+        <div class="col-lg-4 my-2 flex-container2">
+          <div>
+            <h4 class="title_footer">Dirección</h4>
+            <p class="text_footer">Zona 10, Ciudad de Guatemala, Guatemala</p>
+            <h4 class="title_footer">Correo Electrónico</h4>
+            <p class="text_footer">info@redciudadana.org.gt</p>
+            <h4 class="title_footer">Horario de Atención</h4>
+            <p class="text_footer">Lunes a Viernes, 8:00am - 5:00pm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-4" style="background-color: white;">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <p class="text_footer_2">Asociación Civil Red Ciudadana 2025</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery-1.12.4.min.js"></script>`;
+
   // Generate main index.html
   files['index.html'] = `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Verification</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <h1 class="text-3xl font-bold text-gray-900 text-center mb-8">
-                        Certificate Verification
-                    </h1>
-                    <div class="mt-5">
-                        <form id="verifyForm" class="space-y-4">
-                            <div>
-                                <label for="certificateId" class="block text-sm font-medium text-gray-700">
-                                    Enter Certificate ID
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" name="certificateId" id="certificateId"
-                                        class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                        placeholder="Enter the certificate ID">
-                                </div>
-                            </div>
-                            <button type="submit"
-                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Verify Certificate
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+${head}
+<body>
+${header}
+<div style="background-color: #eff0f4;">
+  <div class="container py-5">
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-12" style="background-color: #fff;">
+        <div class="input-group search-box">
+          <input id="certificate-id" type="text" class="form-control" placeholder="Ingresa el ID del certificado...">
+          <button class="btn btn-dark" type="button" onclick="verifyCertificate()">Verificar →</button>
         </div>
+      </div>
     </div>
-    <script>
-        document.getElementById('verifyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const certificateId = document.getElementById('certificateId').value;
-            window.location.href = '/verify/' + certificateId + '.html';
-        });
-    </script>
+  </div>
+</div>
+${footer}
+<script>
+function verifyCertificate() {
+  const id = document.getElementById('certificate-id').value.trim();
+  if (id) {
+    window.location.href = '/verify/' + id + '.html';
+  }
+}
+</script>
 </body>
 </html>`;
 
@@ -71,133 +162,44 @@ export const generateStaticSite = (
       files[`verify/${certificate.id}.html`] = `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Verification - ${recipient.name}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <div class="sm:flex sm:items-center sm:justify-between">
-                        <h1 class="text-3xl font-bold text-gray-900">
-                            Certificate Verification
-                        </h1>
-                        <div class="mt-3 sm:mt-0 sm:ml-4">
-                            <a href="/"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Verify Another
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mt-8">
-                        <div class="rounded-md bg-green-50 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-green-800">
-                                        Valid Certificate
-                                    </h3>
-                                    <div class="mt-2 text-sm text-green-700">
-                                        <p>This is a valid certificate issued to ${recipient.name}.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-6 border-t border-gray-200 pt-6">
-                            <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-                                <div class="sm:col-span-1">
-                                    <dt class="text-sm font-medium text-gray-500">Recipient Name</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">${recipient.name}</dd>
-                                </div>
-                                <div class="sm:col-span-1">
-                                    <dt class="text-sm font-medium text-gray-500">Issue Date</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">
-                                        ${new Date(recipient.issueDate).toLocaleDateString('en-US', {
-                                          year: 'numeric',
-                                          month: 'long',
-                                          day: 'numeric'
-                                        })}
-                                    </dd>
-                                </div>
-                                ${recipient.course ? `
-                                <div class="sm:col-span-2">
-                                    <dt class="text-sm font-medium text-gray-500">Course</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">${recipient.course}</dd>
-                                </div>
-                                ` : ''}
-                                <div class="sm:col-span-2">
-                                    <dt class="text-sm font-medium text-gray-500">Certificate ID</dt>
-                                    <dd class="mt-1 text-sm text-gray-900 font-mono">${certificate.id}</dd>
-                                </div>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+${head}
+<body>
+${header}
+<div style="background-color: #eff0f4;">
+  <div class="container py-5">
+    <div class="text-center">
+      <h1 class="mb-4">Certificado Válido</h1>
+      <p><strong>Nombre:</strong> ${recipient.name}</p>
+      <p><strong>Fecha de Emisión:</strong> ${new Date(recipient.issueDate).toLocaleDateString('es-ES')}</p>
+      ${recipient.course ? `<p><strong>Curso:</strong> ${recipient.course}</p>` : ''}
+      <p><strong>ID:</strong> ${certificate.id}</p>
+      <a href="/index.html" class="btn btn-primary mt-4">Verificar otro certificado</a>
     </div>
+  </div>
+</div>
+${footer}
 </body>
 </html>`;
     }
   });
-  
-  // Generate 404 page for invalid certificate IDs
+
+  // Generate 404 page
   files['404.html'] = `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Not Found</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="max-w-3xl mx-auto">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="px-4 py-5 sm:p-6">
-                    <div class="sm:flex sm:items-center sm:justify-between">
-                        <h1 class="text-3xl font-bold text-gray-900">
-                            Certificate Not Found
-                        </h1>
-                        <div class="mt-3 sm:mt-0 sm:ml-4">
-                            <a href="/"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                Try Again
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mt-8">
-                        <div class="rounded-md bg-red-50 p-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">
-                                        Invalid Certificate
-                                    </h3>
-                                    <div class="mt-2 text-sm text-red-700">
-                                        <p>The certificate ID you provided is not valid or does not exist.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+${head}
+<body>
+${header}
+<div style="background-color: #eff0f4;">
+  <div class="container py-5">
+    <div class="text-center">
+      <h1 class="mb-4 text-danger">Certificado No Encontrado</h1>
+      <p>El ID ingresado no corresponde a un certificado válido.</p>
+      <a href="/index.html" class="btn btn-primary mt-4">Volver a intentar</a>
     </div>
+  </div>
+</div>
+${footer}
 </body>
 </html>`;
 
