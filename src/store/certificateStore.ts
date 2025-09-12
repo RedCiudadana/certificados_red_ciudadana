@@ -156,7 +156,7 @@ export const useCertificateStore = create<CertificateState>()(
         return id;
       },
       generateBulkCertificates: (recipientIds, templateId) => {
-        const baseUrl = window.location.origin;
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://localhost:5173';
         const certificates = recipientIds.map(recipientId => {
           const id = nanoid();
           const verificationUrl = `${baseUrl}/verify/${id}`;

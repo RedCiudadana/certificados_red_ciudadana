@@ -211,12 +211,17 @@ export const generateCertificatePDF = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
+    // Wait a moment for any animations to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     const canvas = await html2canvas(certificateRef, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      logging: false
+      logging: false,
+      width: certificateRef.offsetWidth,
+      height: certificateRef.offsetHeight
     });
 
     const imgData = canvas.toDataURL('image/png');
@@ -224,13 +229,19 @@ export const generateCertificatePDF = async (
     const pdf = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
+      format: 'a4'
     });
     
     const imgProps = pdf.getImageProperties(imgData);
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
     
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    // Center the image if it's smaller than the page
+    const yOffset = pdfHeight < pdf.internal.pageSize.getHeight() 
+      ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
+      : 0;
+    
+    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
     
     pdf.save(`${filename}.pdf`);
   } catch (error) {

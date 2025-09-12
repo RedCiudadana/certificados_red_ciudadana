@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight, Award, Save, Users, FileSpreadsheet, Share2, Download, CheckCircle, ArrowLeft, Sparkles } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import TemplateCard from '../components/TemplateCard';
@@ -6,6 +7,7 @@ import RecipientForm from '../components/RecipientForm';
 import CertificatePreview from '../components/CertificatePreview';
 import BulkUpload from '../components/BulkUpload';
 import { toPng } from 'html-to-image';
+import { generateCertificatePDF } from '../utils/certificateGenerator';
 
 export default function CreateCertificate() {
   const {
@@ -55,15 +57,18 @@ export default function CreateCertificate() {
     const certificateId = generateCertificate(currentRecipientId, currentTemplateId);
     setGeneratedCertificateIds([certificateId]);
     
-    const certificateElement = document.querySelector('.certificate-preview');
-    if (certificateElement) {
-      try {
-        const dataUrl = await toPng(certificateElement as HTMLElement, { quality: 0.95 });
-        setCertificateImage(dataUrl);
-      } catch (error) {
-        console.error('Error generating certificate image:', error);
+    // Generate certificate image for preview
+    setTimeout(async () => {
+      const certificateElement = document.querySelector('.certificate-preview');
+      if (certificateElement) {
+        try {
+          const dataUrl = await toPng(certificateElement as HTMLElement, { quality: 0.95 });
+          setCertificateImage(dataUrl);
+        } catch (error) {
+          console.error('Error generating certificate image:', error);
+        }
       }
-    }
+    }, 500);
     
     setShowSuccess(true);
   };
@@ -76,6 +81,23 @@ export default function CreateCertificate() {
     setShowSuccess(true);
   };
   
+  const handleDownloadCertificate = async () => {
+    if (!currentTemplate || !currentRecipient) return;
+    
+    const certificateElement = document.querySelector('.certificate-preview');
+    if (certificateElement) {
+      try {
+        await generateCertificatePDF(
+          certificateElement as HTMLElement,
+          `${currentRecipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
+        );
+      } catch (error) {
+        console.error('Error downloading certificate:', error);
+        alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
+      }
+    }
+  };
+  
   const handleShareToLinkedIn = async () => {
     setIsSharing(true);
     
@@ -83,9 +105,10 @@ export default function CreateCertificate() {
       const recipient = recipients.find(r => r.id === currentRecipientId);
       if (!recipient) return;
       
-      const shareText = `¡Me complace compartir que he obtenido un certificado en ${recipient.course || 'mi campo de estudio'}! 🎓\n\nEste logro representa mi compromiso con el aprendizaje continuo y el desarrollo profesional.\n\n#Educación #DesarrolloProfesional #Certificación`;
+      const certificate = certificates.find(c => c.id === generatedCertificateIds[0]);
+      const verificationUrl = certificate ? certificate.verificationUrl : `${window.location.origin}/verify/${generatedCertificateIds[0]}`;
       
-      const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.href)}&certId=${encodeURIComponent(currentRecipientId)}`;
+      const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(verificationUrl)}&certId=${encodeURIComponent(generatedCertificateIds[0])}`;
       
       window.open(linkedInUrl, '_blank', 'width=600,height=600');
     } catch (error) {
@@ -498,20 +521,54 @@ export default function CreateCertificate() {
                     {recipient.course && (
                       <p className="text-gray-600 mt-1">{recipient.course}</p>
                     )}
+                    <div className="mt-3 text-sm text-gray-500">
+                      <p>ID: {generatedCertificateIds[0]}</p>
+                      <p>Fecha: {new Date(recipient.issueDate).toLocaleDateString('es-ES')}</p>
+                    </div>
                   </div>
                   
-                  <button
-                    onClick={handleShareToLinkedIn}
-                    disabled={isSharing}
-                    className="inline-flex items-center px-6 py-3 bg-[#0A66C2] text-white text-sm font-medium rounded-xl hover:bg-[#004182] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  >
-                    <Share2 className="mr-2 h-5 w-5" />
-                    {isSharing ? 'Abriendo LinkedIn...' : 'Agregar a LinkedIn'}
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={handleDownloadCertificate}
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      <Download className="mr-2 h-5 w-5" />
+                      Descargar PDF
+                    </button>
+                    
+                    <button
+                      onClick={handleShareToLinkedIn}
+                      disabled={isSharing}
+                      className="inline-flex items-center px-6 py-3 bg-[#0A66C2] text-white text-sm font-medium rounded-xl hover:bg-[#004182] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      <Share2 className="mr-2 h-5 w-5" />
+                      {isSharing ? 'Abriendo LinkedIn...' : 'Agregar a LinkedIn'}
+                    </button>
+                  </div>
                   
                   <p className="text-sm text-gray-600">
-                    Agrega este logro directamente a tu perfil de LinkedIn
+                    Descarga tu certificado o agrégalo directamente a tu perfil de LinkedIn
                   </p>
+                </div>
+              )}
+              
+              {isBulkMode && (
+                <div className="mb-8 text-center">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 max-w-md mx-auto">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Certificados Generados:</h3>
+                    <p className="text-3xl font-bold text-green-600">{generatedCertificateIds.length}</p>
+                    <p className="text-gray-600 mt-1">certificados creados exitosamente</p>
+                  </div>
+                  
+                  <div className="mt-4">
+                    <Link
+                      to="/certificates"
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      Ver Todos los Certificados
+                      <ChevronRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </div>
                 </div>
               )}
               
@@ -522,21 +579,21 @@ export default function CreateCertificate() {
                     setActiveStep(1);
                     setGeneratedCertificateIds([]);
                     setCertificateImage(null);
+                    setCurrentRecipientId(null);
+                    setFormData(null);
                   }}
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
                   Crear Otro Certificado
                 </button>
-                <button
-                  onClick={() => {
-                    window.location.href = "/";
-                  }}
+                <Link
+                  to="/"
                   className="inline-flex items-center px-6 py-3 bg-white text-gray-700 text-sm font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   <ArrowLeft className="mr-2 h-5 w-5" />
                   Volver al Panel
-                </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -19,19 +19,29 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   
   const handleDownloadPDF = async () => {
     if (certificateRef.current) {
-      await generateCertificatePDF(
-        certificateRef.current, 
-        `${recipient.name.replace(/\s+/g, '-')}-certificate`
-      );
+      try {
+        await generateCertificatePDF(
+          certificateRef.current, 
+          `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
+        );
+      } catch (error) {
+        console.error('Error downloading PDF:', error);
+        alert('Error al descargar el PDF. Por favor, inténtelo de nuevo.');
+      }
     }
   };
   
   const handleDownloadImage = async () => {
     if (certificateRef.current) {
-      await generateCertificateImage(
-        certificateRef.current, 
-        `${recipient.name.replace(/\s+/g, '-')}-certificate`
-      );
+      try {
+        await generateCertificateImage(
+          certificateRef.current, 
+          `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
+        );
+      } catch (error) {
+        console.error('Error downloading image:', error);
+        alert('Error al descargar la imagen. Por favor, inténtelo de nuevo.');
+      }
     }
   };
   

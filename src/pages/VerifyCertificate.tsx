@@ -15,9 +15,7 @@ const VerifyCertificate: React.FC = () => {
   const handleShareToLinkedIn = async () => {
     if (!recipient || !certificate) return;
     
-    const shareText = `¡Me complace compartir que he obtenido un certificado en ${recipient.course || 'mi campo de estudio'}! 🎓\n\nEste logro representa mi compromiso con el aprendizaje continuo y el desarrollo profesional.\n\n#Educación #DesarrolloProfesional #Certificación`;
-    
-    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent(window.location.hostname)}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.href)}&certId=${encodeURIComponent(certificate.id)}`;
+    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.href)}&certId=${encodeURIComponent(certificate.id)}`;
     
     window.open(linkedInUrl, '_blank', 'width=600,height=600');
   };
