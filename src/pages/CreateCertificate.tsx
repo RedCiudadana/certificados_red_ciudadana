@@ -7,7 +7,7 @@ import CertificatePreview from '../components/CertificatePreview';
 import BulkUpload from '../components/BulkUpload';
 import { toPng } from 'html-to-image';
 
-const CreateCertificate: React.FC = () => {
+export default function CreateCertificate() {
   const {
     templates,
     recipients,
@@ -628,4 +628,4 @@ const CreateCertificate: React.FC = () => {
       {renderStepContent()}
     </div>
   );
-};
+}
