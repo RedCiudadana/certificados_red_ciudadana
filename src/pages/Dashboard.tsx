@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Award, FileSpreadsheet, FileText, Users, Download, ChevronRight, TrendingUp, Clock, CheckCircle, Plus } from 'lucide-react';
+import { Award, FileSpreadsheet, FileText, Users, Download, ChevronRight, TrendingUp, Clock, CheckCircle, Plus, Shield, Search } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
 
@@ -82,6 +82,13 @@ const Dashboard: React.FC = () => {
                   Descargar todos los PDF
                 </button>
               )}
+              <Link
+                to="/verify"
+                className="inline-flex items-center px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white text-sm font-medium rounded-xl hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Shield className="mr-2 h-5 w-5" />
+                Verificar Certificado
+              </Link>
               <Link
                 to="/create"
                 className="inline-flex items-center px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"

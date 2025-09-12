@@ -140,7 +140,8 @@ export const useCertificateStore = create<CertificateState>()(
 
       generateCertificate: (recipientId, templateId) => {
         const id = nanoid();
-        const verificationUrl = `${window.location.origin}/verify/${id}`;
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://localhost:5173';
+        const verificationUrl = `${baseUrl}/verify/${id}`;
         const certificate: Certificate = {
           id,
           recipientId,

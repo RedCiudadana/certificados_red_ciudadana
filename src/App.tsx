@@ -31,6 +31,7 @@ function App() {
           <Route path="docs" element={<Documentation />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+        <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
       </Routes>
     </BrowserRouter>

@@ -12,7 +12,8 @@ import {
   Share2,
   Mail,
   ScrollText,
-  Sparkles
+  Sparkles,
+  Shield
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 
@@ -30,6 +31,7 @@ const Layout: React.FC = () => {
     { name: 'Exportar Sitio', to: '/export', icon: Download },
     { name: 'LinkedIn', to: '/linkedin', icon: Share2 },
     { name: 'Notificaciones', to: '/notifications', icon: Mail },
+    { name: 'Verificar Certificado', to: '/verify', icon: Shield },
     { name: 'Documentación', to: '/docs', icon: Book }
   ];
 
