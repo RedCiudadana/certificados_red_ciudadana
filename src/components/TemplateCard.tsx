@@ -1,7 +1,7 @@
 import React from 'react';
 import { Template } from '../types';
 import { useCertificateStore } from '../store/certificateStore';
-import { CheckCircle, Edit, Trash } from 'lucide-react';
+import { CheckCircle, Edit, Trash, Eye, Sparkles } from 'lucide-react';
 
 interface TemplateCardProps {
   template: Template;
@@ -23,46 +23,36 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   
   return (
     <div 
-      className={`relative group bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-xl ${
-        isSelected ? 'ring-2 ring-blue-500' : ''
+      className={`relative group bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl ${
+        isSelected ? 'ring-4 ring-blue-500 ring-opacity-50 shadow-2xl' : ''
       }`}
     >
-      <div className="aspect-[3/2] relative overflow-hidden">
+      <div className="aspect-[3/2] relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
         <img
           src={template.imageUrl}
           alt={template.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
+        
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Selection indicator */}
         {isSelected && (
-          <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
+          <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full p-2 shadow-lg animate-pulse">
             <CheckCircle className="h-5 w-5" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
-      </div>
-      
-      <div className="p-4">
-        <h3 className="text-lg font-medium text-gray-900">{template.name}</h3>
-        <p className="text-sm text-gray-500 mt-1">
-          {template.fields.length} fields
-        </p>
         
-        <div className="mt-3 flex space-x-2">
-          <button
-            onClick={handleSelect}
-            className={`flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm ${
-              isSelected
-                ? 'text-white bg-blue-600 hover:bg-blue-700'
-                : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-          >
-            {isSelected ? 'Selected' : 'Select'}
-          </button>
-          
+        {/* Action buttons overlay */}
+        <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex space-x-2">
           {onEdit && (
             <button
-              onClick={() => onEdit(template.id)}
-              className="inline-flex items-center p-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(template.id);
+              }}
+              className="p-2 bg-white bg-opacity-90 backdrop-blur-sm rounded-full text-gray-700 hover:bg-white hover:text-blue-600 transition-all duration-200 shadow-lg"
             >
               <Edit className="h-4 w-4" />
             </button>
@@ -70,14 +60,70 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           
           {onDelete && (
             <button
-              onClick={() => onDelete(template.id)}
-              className="inline-flex items-center p-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(template.id);
+              }}
+              className="p-2 bg-white bg-opacity-90 backdrop-blur-sm rounded-full text-gray-700 hover:bg-white hover:text-red-600 transition-all duration-200 shadow-lg"
             >
               <Trash className="h-4 w-4" />
             </button>
           )}
         </div>
+        
+        {/* Preview button */}
+        <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button className="p-2 bg-white bg-opacity-90 backdrop-blur-sm rounded-full text-gray-700 hover:bg-white hover:text-blue-600 transition-all duration-200 shadow-lg">
+            <Eye className="h-4 w-4" />
+          </button>
+        </div>
       </div>
+      
+      <div className="p-6">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors duration-200">
+              {template.name}
+            </h3>
+            <div className="flex items-center space-x-2">
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                {template.fields.length} campos
+              </span>
+              {isSelected && (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Seleccionado
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex space-x-2">
+          <button
+            onClick={handleSelect}
+            className={`flex-1 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm ${
+              isSelected
+                ? 'text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg'
+                : 'text-gray-700 bg-gray-100 hover:bg-gray-200 hover:shadow-md'
+            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 btn-hover-lift`}
+          >
+            {isSelected ? (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Seleccionado
+              </>
+            ) : (
+              'Seleccionar'
+            )}
+          </button>
+        </div>
+      </div>
+      
+      {/* Subtle glow effect for selected template */}
+      {isSelected && (
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 pointer-events-none animate-pulse"></div>
+      )}
     </div>
   );
 };
