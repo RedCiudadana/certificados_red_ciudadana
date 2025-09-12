@@ -46,3 +46,16 @@ export interface CertificateCollection {
   certificates: Certificate[];
   createdAt: string;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'student';
+  createdAt: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+}
