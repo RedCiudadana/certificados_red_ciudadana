@@ -187,9 +187,11 @@ const PublicIndex: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <Award className="h-7 w-7 text-white" />
-              </div>
+              <img 
+                src="https://www.redciudadana.org/assets/img/red/LOGO-RED_NEGRO.png" 
+                alt="Red Ciudadana Logo" 
+                className="h-12 w-auto"
+              />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">CertifyPro</h1>
                 <p className="text-sm text-gray-600">Sistema de Certificados - Red Ciudadana</p>
@@ -496,9 +498,11 @@ const PublicIndex: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Award className="h-6 w-6 text-white" />
-                </div>
+                <img 
+                  src="https://www.redciudadana.org/assets/img/footer_2025/WEB_PI-67.png" 
+                  alt="Red Ciudadana Footer Logo" 
+                  className="h-10 w-auto"
+                />
                 <div>
                   <h3 className="text-xl font-bold">CertifyPro</h3>
                   <p className="text-gray-400 text-sm">Red Ciudadana</p>
