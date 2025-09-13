@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 import { 
   Award, 
   Users, 
@@ -13,16 +14,20 @@ import {
   Mail,
   ScrollText,
   Sparkles,
-  Shield
+  Shield,
+  LogOut,
+  User
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 
 const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuthStore();
   const { certificates, recipients, templates } = useCertificateStore();
   
-  const navigation = [
+  // Admin navigation
+  const adminNavigation = [
     { name: 'Panel Principal', to: '/', icon: LayoutIcon },
     { name: 'Crear Certificado', to: '/create', icon: Award },
     { name: 'Certificados', to: '/certificates', icon: ScrollText },
@@ -31,9 +36,21 @@ const Layout: React.FC = () => {
     { name: 'Exportar Sitio', to: '/export', icon: Download },
     { name: 'LinkedIn', to: '/linkedin', icon: Share2 },
     { name: 'Notificaciones', to: '/notifications', icon: Mail },
-    { name: 'Verificar Certificado', to: '/verify', icon: Shield },
     { name: 'Documentación', to: '/docs', icon: Book }
   ];
+
+  // Student navigation
+  const studentNavigation = [
+    { name: 'Mi Panel', to: '/', icon: LayoutIcon },
+    { name: 'Verificar Certificado', to: '/verify', icon: Shield }
+  ];
+
+  const navigation = user?.role === 'admin' ? adminNavigation : studentNavigation;
+
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -79,22 +96,34 @@ const Layout: React.FC = () => {
           </Link>
         </div>
         
-        {/* Stats overview */}
+        {/* User info and stats */}
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-lg font-bold text-blue-600">{certificates.length}</div>
-              <div className="text-xs text-gray-500">Certificados</div>
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+              <User className="h-5 w-5 text-white" />
             </div>
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-lg font-bold text-green-600">{recipients.length}</div>
-              <div className="text-xs text-gray-500">Destinatarios</div>
-            </div>
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-lg font-bold text-purple-600">{templates.length}</div>
-              <div className="text-xs text-gray-500">Plantillas</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
+              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
             </div>
           </div>
+          
+          {user?.role === 'admin' && (
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-lg font-bold text-blue-600">{certificates.length}</div>
+                <div className="text-xs text-gray-500">Certificados</div>
+              </div>
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-lg font-bold text-green-600">{recipients.length}</div>
+                <div className="text-xs text-gray-500">Destinatarios</div>
+              </div>
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-lg font-bold text-purple-600">{templates.length}</div>
+                <div className="text-xs text-gray-500">Plantillas</div>
+              </div>
+            </div>
+          )}
         </div>
         
         <nav className="flex-1 flex flex-col overflow-y-auto px-4 py-4 space-y-2">
@@ -132,15 +161,25 @@ const Layout: React.FC = () => {
           })}
         </nav>
         
-        {/* Quick action button */}
+        {/* Quick action and logout */}
         <div className="p-4 border-t border-gray-100">
-          <Link
-            to="/create"
-            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+          {user?.role === 'admin' && (
+            <Link
+              to="/create"
+              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl mb-3"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              Crear Certificado
+            </Link>
+          )}
+          
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white text-sm font-medium rounded-xl hover:bg-red-700 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            <Award className="h-4 w-4 mr-2" />
-            Crear Certificado
-          </Link>
+            <LogOut className="h-4 w-4 mr-2" />
+            Cerrar Sesión
+          </button>
         </div>
       </div>
       
@@ -171,22 +210,34 @@ const Layout: React.FC = () => {
           </Link>
         </div>
         
-        {/* Mobile stats */}
+        {/* Mobile user info and stats */}
         <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-sm font-bold text-blue-600">{certificates.length}</div>
-              <div className="text-xs text-gray-500">Certificados</div>
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+              <User className="h-4 w-4 text-white" />
             </div>
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-sm font-bold text-green-600">{recipients.length}</div>
-              <div className="text-xs text-gray-500">Destinatarios</div>
-            </div>
-            <div className="bg-white rounded-lg p-2 shadow-sm">
-              <div className="text-sm font-bold text-purple-600">{templates.length}</div>
-              <div className="text-xs text-gray-500">Plantillas</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
+              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
             </div>
           </div>
+          
+          {user?.role === 'admin' && (
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-sm font-bold text-blue-600">{certificates.length}</div>
+                <div className="text-xs text-gray-500">Certificados</div>
+              </div>
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-sm font-bold text-green-600">{recipients.length}</div>
+                <div className="text-xs text-gray-500">Destinatarios</div>
+              </div>
+              <div className="bg-white rounded-lg p-2 shadow-sm">
+                <div className="text-sm font-bold text-purple-600">{templates.length}</div>
+                <div className="text-xs text-gray-500">Plantillas</div>
+              </div>
+            </div>
+          )}
         </div>
         
         <nav className="flex-1 px-4 py-4 space-y-2">
@@ -225,16 +276,26 @@ const Layout: React.FC = () => {
           })}
         </nav>
         
-        {/* Mobile quick action */}
+        {/* Mobile quick action and logout */}
         <div className="p-4 border-t border-gray-100">
-          <Link
-            to="/create"
-            onClick={toggleMobileMenu}
-            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+          {user?.role === 'admin' && (
+            <Link
+              to="/create"
+              onClick={toggleMobileMenu}
+              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg mb-3"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              Crear Certificado
+            </Link>
+          )}
+          
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white text-sm font-medium rounded-xl hover:bg-red-700 transition-all duration-200 shadow-lg"
           >
-            <Award className="h-4 w-4 mr-2" />
-            Crear Certificado
-          </Link>
+            <LogOut className="h-4 w-4 mr-2" />
+            Cerrar Sesión
+          </button>
         </div>
       </div>
       

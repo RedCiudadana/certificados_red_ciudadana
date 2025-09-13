@@ -1,5 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuthStore } from './store/authStore';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginForm from './components/LoginForm';
+import StudentDashboard from './pages/StudentDashboard';
 import Dashboard from './pages/Dashboard';
 import CreateCertificate from './pages/CreateCertificate';
 import TemplateManager from './pages/TemplateManager';
@@ -11,26 +15,72 @@ import LinkedInIntegration from './pages/LinkedInIntegration';
 import EmailNotifications from './pages/EmailNotifications';
 import Certificates from './pages/Certificates';
 import Layout from './components/Layout';
-import { useCertificateStore } from './store/certificateStore';
 
 function App() {
-  const { templates } = useCertificateStore();
+  const { isAuthenticated, user } = useAuthStore();
+  
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
   
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="create" element={<CreateCertificate />} />
-          <Route path="certificates" element={<Certificates />} />
-          <Route path="templates" element={<TemplateManager />} />
-          <Route path="recipients" element={<RecipientManager />} />
-          <Route path="export" element={<ExportSite />} />
-          <Route path="linkedin" element={<LinkedInIntegration />} />
-          <Route path="notifications" element={<EmailNotifications />} />
-          <Route path="docs" element={<Documentation />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={
+            user?.role === 'admin' ? <Dashboard /> : <StudentDashboard />
+          } />
+          
+          {/* Admin-only routes */}
+          <Route path="create" element={
+            <ProtectedRoute requiredRole="admin">
+              <CreateCertificate />
+            </ProtectedRoute>
+          } />
+          <Route path="certificates" element={
+            <ProtectedRoute requiredRole="admin">
+              <Certificates />
+            </ProtectedRoute>
+          } />
+          <Route path="templates" element={
+            <ProtectedRoute requiredRole="admin">
+              <TemplateManager />
+            </ProtectedRoute>
+          } />
+          <Route path="recipients" element={
+            <ProtectedRoute requiredRole="admin">
+              <RecipientManager />
+            </ProtectedRoute>
+          } />
+          <Route path="export" element={
+            <ProtectedRoute requiredRole="admin">
+              <ExportSite />
+            </ProtectedRoute>
+          } />
+          <Route path="linkedin" element={
+            <ProtectedRoute requiredRole="admin">
+              <LinkedInIntegration />
+            </ProtectedRoute>
+          } />
+          <Route path="notifications" element={
+            <ProtectedRoute requiredRole="admin">
+              <EmailNotifications />
+            </ProtectedRoute>
+          } />
+          <Route path="docs" element={
+            <ProtectedRoute requiredRole="admin">
+              <Documentation />
+            </ProtectedRoute>
+          } />
+          
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+        
+        {/* Public verification route */}
         <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
       </Routes>
