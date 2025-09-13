@@ -499,10 +499,6 @@ const PublicIndex: React.FC = () => {
                   alt="Red Ciudadana Footer Logo" 
                   className="h-10 w-auto"
                 />
-                <div>
-                  <h3 className="text-xl font-bold">CertifyPro</h3>
-                  <p className="text-gray-400 text-sm">Red Ciudadana</p>
-                </div>
               </div>
               <p className="text-gray-400">
                 Sistema oficial de certificados digitales de Red Ciudadana. 
