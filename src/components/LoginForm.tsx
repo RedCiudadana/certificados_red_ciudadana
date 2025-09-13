@@ -61,17 +61,17 @@ const LoginForm: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6">
-            <Shield className="h-10 w-10 text-white" />
+          <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-6">
+            <Shield className="h-10 w-10 text-black" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-white mb-2">
             {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-400">
             {isLoginMode 
               ? 'Accede a tu cuenta de CertifyPro' 
               : 'Únete a la plataforma de certificados'
@@ -80,22 +80,22 @@ const LoginForm: React.FC = () => {
         </div>
 
         {/* Demo Credentials */}
-        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-          <h3 className="text-sm font-semibold text-blue-800 mb-2">Credenciales de Demostración:</h3>
+        <div className="bg-gray-900 rounded-xl p-4 border border-gray-700">
+          <h3 className="text-sm font-semibold text-white mb-2">Credenciales de Demostración:</h3>
           <div className="space-y-2 text-xs">
             {demoCredentials.map((cred, index) => (
-              <div key={index} className="bg-white rounded-lg p-2 border border-blue-100">
+              <div key={index} className="bg-gray-800 rounded-lg p-2 border border-gray-600">
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-blue-700">{cred.role}:</span>
+                  <span className="font-medium text-white">{cred.role}:</span>
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, email: cred.email, password: cred.password }))}
-                    className="text-blue-600 hover:text-blue-800 text-xs underline"
+                    className="text-gray-300 hover:text-white text-xs underline"
                   >
                     Usar estas credenciales
                   </button>
                 </div>
-                <div className="text-gray-600 mt-1">
+                <div className="text-gray-400 mt-1">
                   <div>Email: {cred.email}</div>
                   <div>Password: {cred.password}</div>
                 </div>
@@ -109,12 +109,12 @@ const LoginForm: React.FC = () => {
           <div className="space-y-4">
             {!isLoginMode && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-white mb-1">
                   Nombre Completo
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
+                    <User className="h-5 w-5 text-gray-500" />
                   </div>
                   <input
                     id="name"
@@ -123,7 +123,7 @@ const LoginForm: React.FC = () => {
                     required={!isLoginMode}
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-600 bg-gray-900 text-white rounded-xl shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
                     placeholder="Tu nombre completo"
                   />
                 </div>
@@ -131,12 +131,12 @@ const LoginForm: React.FC = () => {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-white mb-1">
                 Correo Electrónico
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
                   id="email"
@@ -145,19 +145,19 @@ const LoginForm: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-600 bg-gray-900 text-white rounded-xl shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
                   placeholder="tu@email.com"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-white mb-1">
                 Contraseña
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-gray-500" />
                 </div>
                 <input
                   id="password"
@@ -166,7 +166,7 @@ const LoginForm: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-10 pr-10 py-3 border border-gray-600 bg-gray-900 text-white rounded-xl shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
                   placeholder="Tu contraseña"
                 />
                 <button
@@ -175,9 +175,9 @@ const LoginForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
+                    <EyeOff className="h-5 w-5 text-gray-500" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
+                    <Eye className="h-5 w-5 text-gray-500" />
                   )}
                 </button>
               </div>
@@ -185,7 +185,7 @@ const LoginForm: React.FC = () => {
 
             {!isLoginMode && (
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="role" className="block text-sm font-medium text-white mb-1">
                   Tipo de Usuario
                 </label>
                 <select
@@ -193,7 +193,7 @@ const LoginForm: React.FC = () => {
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
-                  className="block w-full px-3 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full px-3 py-3 border border-gray-600 bg-gray-900 text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
                 >
                   <option value="student">Estudiante</option>
                   <option value="admin">Administrador</option>
@@ -203,8 +203,8 @@ const LoginForm: React.FC = () => {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="bg-red-900 border border-red-700 rounded-xl p-3">
+              <p className="text-sm text-red-300">{error}</p>
             </div>
           )}
 
@@ -212,11 +212,11 @@ const LoginForm: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white focus:ring-offset-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {isLoading ? (
                 <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mr-2"></div>
                   {isLoginMode ? 'Iniciando sesión...' : 'Creando cuenta...'}
                 </div>
               ) : (
@@ -240,7 +240,7 @@ const LoginForm: React.FC = () => {
                 setError('');
                 setFormData({ email: '', password: '', name: '', role: 'student' });
               }}
-              className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+              className="text-gray-300 hover:text-white text-sm font-medium"
             >
               {isLoginMode 
                 ? '¿No tienes cuenta? Crear una nueva' 
