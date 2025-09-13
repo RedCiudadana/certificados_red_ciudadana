@@ -488,23 +488,6 @@ const PublicIndex: React.FC = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">
-            ¿Eres administrador o necesitas crear certificados?
-          </h3>
-          <p className="text-blue-100 mb-6">
-            Accede al panel administrativo para gestionar certificados, plantillas y destinatarios.
-          </p>
-          <button
-            onClick={openLoginModal}
-            className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors duration-200 shadow-lg"
-          >
-            <User className="mr-2 h-5 w-5" />
-            Iniciar Sesión como Administrador
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </button>
-        </div>
       </div>
 
       {/* Footer */}
