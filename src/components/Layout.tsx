@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { 
   Award, 
@@ -23,6 +23,7 @@ import { useCertificateStore } from '../store/certificateStore';
 const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { certificates, recipients, templates } = useCertificateStore();
   
@@ -49,6 +50,7 @@ const Layout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
     setIsMobileMenuOpen(false);
   };
 
