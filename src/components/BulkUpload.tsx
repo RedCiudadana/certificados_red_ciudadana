@@ -84,11 +84,11 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
       // Add recipients and get their IDs
       const recipientIds = addRecipients(formattedData);
       
-      // Only set upload complete after recipients are added
-      setUploadComplete(true);
-      
       // Call onUploaded with the recipient IDs
       onUploaded(recipientIds);
+      
+      // Only set upload complete after recipients are added
+      setUploadComplete(true);
       
     } catch (err) {
       console.error('Error processing file:', err);

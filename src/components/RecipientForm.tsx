@@ -58,8 +58,40 @@ const RecipientForm: React.FC<RecipientFormProps> = ({
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      alert('El nombre del destinatario es requerido');
+      return;
+    }
+    
+    // Format the data properly
+    const submissionData = {
+      ...formData,
+      name: formData.name.trim(),
+      email: formData.email?.trim() || '',
+      course: formData.course?.trim() || '',
+      issueDate: formData.issueDate || new Date().toISOString(),
+      customFields: formData.customFields || {}
+    };
+    
+    onSubmit(submissionData);
   };
+  
+  const handleFormSubmit = () => {
+    // Trigger form submission
+    const form = document.querySelector('form');
+    if (form) {
+      form.requestSubmit();
+    }
+  };
+  
+  // Auto-submit when form data changes and is valid
+  React.useEffect(() => {
+    if (formData.name.trim()) {
+    onSubmit(formData);
+    }
+  }, [formData.name, formData.email, formData.course, formData.issueDate]);
   
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
