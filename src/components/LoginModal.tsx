@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LogIn, User, Lock, Eye, EyeOff, UserPlus, Shield, GraduationCap } from 'lucide-react';
+import { LogIn, User, Lock, Eye, EyeOff, UserPlus, Shield, GraduationCap, X } from 'lucide-react';
 
-const LoginForm: React.FC = () => {
-  const { login, register, isLoading } = useAuthStore();
+const LoginModal: React.FC = () => {
+  const { login, register, isLoading, isLoginModalOpen, closeLoginModal } = useAuthStore();
   const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +28,7 @@ const LoginForm: React.FC = () => {
         if (!success) {
           setError('Credenciales incorrectas. Intenta de nuevo.');
         } else {
+          closeLoginModal();
           navigate('/dashboard');
         }
       } else {
@@ -40,6 +41,7 @@ const LoginForm: React.FC = () => {
         if (!success) {
           setError('El usuario ya existe o hubo un error en el registro.');
         } else {
+          closeLoginModal();
           navigate('/dashboard');
         }
       }
@@ -55,58 +57,82 @@ const LoginForm: React.FC = () => {
     }));
   };
 
+  const handleClose = () => {
+    closeLoginModal();
+    setError('');
+    setFormData({ email: '', password: '', name: '', role: 'student' });
+    setIsLoginMode(true);
+  };
+
   const demoCredentials = [
     { email: 'admin@redciudadana.org', password: 'admin123', role: 'Administrador' },
     { email: 'estudiante@example.com', password: 'student123', role: 'Estudiante' }
   ];
 
+  if (!isLoginModalOpen) return null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-6">
-            <Shield className="h-10 w-10 text-white" />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
-          </h2>
-          <p className="text-gray-600">
-            {isLoginMode 
-              ? 'Accede a tu cuenta de CertifyPro' 
-              : 'Únete a la plataforma de certificados'
-            }
-          </p>
-        </div>
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        {/* Background overlay */}
+        <div 
+          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+          onClick={handleClose}
+        />
 
-        {/* Demo Credentials */}
-        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-          <h3 className="text-sm font-semibold text-blue-800 mb-2">Credenciales de Demostración:</h3>
-          <div className="space-y-2 text-xs">
-            {demoCredentials.map((cred, index) => (
-              <div key={index} className="bg-white rounded-lg p-2 border border-blue-100">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-blue-700">{cred.role}:</span>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, email: cred.email, password: cred.password }))}
-                    className="text-blue-600 hover:text-blue-800 text-xs underline"
-                  >
-                    Usar estas credenciales
-                  </button>
-                </div>
-                <div className="text-gray-600 mt-1">
-                  <div>Email: {cred.email}</div>
-                  <div>Password: {cred.password}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Modal panel */}
+        <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+          {/* Close button */}
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
 
-        {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-4">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
+            </h2>
+            <p className="text-gray-600">
+              {isLoginMode 
+                ? 'Accede a tu cuenta de CertifyPro' 
+                : 'Únete a la plataforma de certificados'
+              }
+            </p>
+          </div>
+
+          {/* Demo Credentials */}
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 mb-6">
+            <h3 className="text-sm font-semibold text-blue-800 mb-2">Credenciales de Demostración:</h3>
+            <div className="space-y-2 text-xs">
+              {demoCredentials.map((cred, index) => (
+                <div key={index} className="bg-white rounded-lg p-2 border border-blue-100">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-blue-700">{cred.role}:</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, email: cred.email, password: cred.password }))}
+                      className="text-blue-600 hover:text-blue-800 text-xs underline"
+                    >
+                      Usar estas credenciales
+                    </button>
+                  </div>
+                  <div className="text-gray-600 mt-1">
+                    <div>Email: {cred.email}</div>
+                    <div>Password: {cred.password}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Form */}
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLoginMode && (
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -200,58 +226,58 @@ const LoginForm: React.FC = () => {
                 </select>
               </div>
             )}
-          </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-              <p className="text-sm text-red-600">{error}</p>
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            <div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                    {isLoginMode ? 'Iniciando sesión...' : 'Creando cuenta...'}
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    {isLoginMode ? (
+                      <LogIn className="h-5 w-5 mr-2" />
+                    ) : (
+                      <UserPlus className="h-5 w-5 mr-2" />
+                    )}
+                    {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
+                  </div>
+                )}
+              </button>
             </div>
-          )}
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              {isLoading ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
-                  {isLoginMode ? 'Iniciando sesión...' : 'Creando cuenta...'}
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  {isLoginMode ? (
-                    <LogIn className="h-5 w-5 mr-2" />
-                  ) : (
-                    <UserPlus className="h-5 w-5 mr-2" />
-                  )}
-                  {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
-                </div>
-              )}
-            </button>
-          </div>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLoginMode(!isLoginMode);
-                setError('');
-                setFormData({ email: '', password: '', name: '', role: 'student' });
-              }}
-              className="text-blue-600 hover:text-blue-500 text-sm font-medium"
-            >
-              {isLoginMode 
-                ? '¿No tienes cuenta? Crear una nueva' 
-                : '¿Ya tienes cuenta? Iniciar sesión'
-              }
-            </button>
-          </div>
-        </form>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLoginMode(!isLoginMode);
+                  setError('');
+                  setFormData({ email: '', password: '', name: '', role: 'student' });
+                }}
+                className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+              >
+                {isLoginMode 
+                  ? '¿No tienes cuenta? Crear una nueva' 
+                  : '¿Ya tienes cuenta? Iniciar sesión'
+                }
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default LoginModal;

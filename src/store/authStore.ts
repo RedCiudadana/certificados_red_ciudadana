@@ -13,12 +13,15 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isLoginModalOpen: boolean;
   
   // Actions
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   register: (userData: Omit<User, 'id' | 'createdAt'> & { password: string }) => Promise<boolean>;
   checkAuth: () => void;
+  openLoginModal: () => void;
+  closeLoginModal: () => void;
 }
 
 // Mock users for demonstration
@@ -47,6 +50,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isLoginModalOpen: false,
 
       login: async (email: string, password: string) => {
         set({ isLoading: true });
@@ -115,6 +119,14 @@ export const useAuthStore = create<AuthState>()(
       checkAuth: () => {
         const { user } = get();
         set({ isAuthenticated: !!user });
+      },
+
+      openLoginModal: () => {
+        set({ isLoginModalOpen: true });
+      },
+
+      closeLoginModal: () => {
+        set({ isLoginModalOpen: false });
       }
     }),
     {
@@ -122,7 +134,8 @@ export const useAuthStore = create<AuthState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated
+        isAuthenticated: state.isAuthenticated,
+        isLoginModalOpen: false // Don't persist modal state
       })
     }
   )

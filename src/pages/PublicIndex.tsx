@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalLink, ArrowRight, Sparkles, Users, BookOpen, Download } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
+import { useAuthStore } from '../store/authStore';
 import { generateCertificatePDF } from '../utils/certificateGenerator';
 
 const PublicIndex: React.FC = () => {
+  const { openLoginModal } = useAuthStore();
   const { certificates, recipients, templates } = useCertificateStore();
   const [searchId, setSearchId] = useState('');
   const [searchResult, setSearchResult] = useState<any>(null);
@@ -119,7 +121,7 @@ const PublicIndex: React.FC = () => {
 
       // Add text fields
       template.fields.forEach(field => {
-        if (field.type === 'qrcode') return;
+        if (field.type === 'qrcode') return; // Skip QR code for now
         
         const fieldDiv = document.createElement('div');
         fieldDiv.style.position = 'absolute';
@@ -136,9 +138,9 @@ const PublicIndex: React.FC = () => {
         fieldDiv.style.fontWeight = 'bold';
         fieldDiv.style.textShadow = '1px 1px 2px rgba(255,255,255,0.8)';
 
+        let textValue = '';
         switch (field.type) {
           case 'text':
-            let textValue = '';
             if (field.name === 'recipient') {
               textValue = recipient.name;
             } else if (field.name === 'course') {
@@ -148,11 +150,10 @@ const PublicIndex: React.FC = () => {
             } else {
               textValue = field.defaultValue || '';
             }
-            fieldDiv.textContent = textValue;
             break;
 
           case 'date':
-            fieldDiv.textContent = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+            textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
@@ -160,6 +161,8 @@ const PublicIndex: React.FC = () => {
             break;
         }
 
+        // Set the text content
+        fieldDiv.textContent = textValue;
         certificateDiv.appendChild(fieldDiv);
       });
 
@@ -193,13 +196,13 @@ const PublicIndex: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Link
-                to="/login"
+              <button
+                onClick={openLoginModal}
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors duration-200"
               >
                 <User className="mr-2 h-4 w-4" />
                 Iniciar Sesión
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -493,14 +496,14 @@ const PublicIndex: React.FC = () => {
           <p className="text-blue-100 mb-6">
             Accede al panel administrativo para gestionar certificados, plantillas y destinatarios.
           </p>
-          <Link
-            to="/login"
+          <button
+            onClick={openLoginModal}
             className="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors duration-200 shadow-lg"
           >
             <User className="mr-2 h-5 w-5" />
             Iniciar Sesión como Administrador
             <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
+          </button>
         </div>
       </div>
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import ProtectedRoute from './components/ProtectedRoute';
-import LoginForm from './components/LoginForm';
+import LoginModal from './components/LoginModal';
 import PublicIndex from './pages/PublicIndex';
 import StudentDashboard from './pages/StudentDashboard';
 import Dashboard from './pages/Dashboard';
@@ -17,20 +17,16 @@ import EmailNotifications from './pages/EmailNotifications';
 import Certificates from './pages/Certificates';
 import Layout from './components/Layout';
 
-function App() {
+function AppContent() {
   const { isAuthenticated, user } = useAuthStore();
+  const location = useLocation();
   
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         {/* Public index route */}
         <Route path="/" element={
           !isAuthenticated ? <PublicIndex /> : <Navigate to="/dashboard" replace />
-        } />
-        
-        {/* Login route */}
-        <Route path="/login" element={
-          !isAuthenticated ? <LoginForm /> : <Navigate to="/dashboard" replace />
         } />
         
         {/* Public verification route */}
@@ -93,6 +89,17 @@ function App() {
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      
+      {/* Login Modal - always rendered */}
+      <LoginModal />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

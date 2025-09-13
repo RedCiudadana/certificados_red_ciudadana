@@ -481,12 +481,66 @@ const VerifyCertificate: React.FC = () => {
                   <FileText className="mr-2 h-5 w-5 text-blue-600" />
                   Certificado Digital
                 </h3>
-                <div className="relative bg-gray-50 rounded-xl p-4">
-                  <img
-                    src={template.imageUrl}
-                    alt="Certificate"
-                    className="w-full h-auto rounded-lg shadow-lg"
-                  />
+                <div className="relative bg-gray-50 rounded-xl p-4 overflow-hidden">
+                  <div 
+                    className="relative w-full"
+                    style={{
+                      paddingTop: '70.7%', // Maintain aspect ratio (A4 landscape)
+                      backgroundImage: `url(${template.imageUrl})`,
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    {/* Render certificate fields */}
+                    {template.fields.map(field => {
+                      if (field.type === 'qrcode') return null; // Skip QR code in preview
+                      
+                      const style: React.CSSProperties = {
+                        position: 'absolute',
+                        left: `${field.x}%`,
+                        top: `${field.y}%`,
+                        transform: 'translate(-50%, -50%)',
+                        fontFamily: field.fontFamily || 'serif',
+                        fontSize: `${(field.fontSize || 16) * 0.8}px`, // Scale down for preview
+                        color: field.color || '#000',
+                        textAlign: 'center',
+                        width: '100%',
+                        maxWidth: '80%',
+                        fontWeight: 'bold',
+                        textShadow: '1px 1px 2px rgba(255,255,255,0.8)',
+                        zIndex: 1
+                      };
+
+                      let textValue = '';
+                      switch (field.type) {
+                        case 'text':
+                          if (field.name === 'recipient') {
+                            textValue = recipient?.name || '';
+                          } else if (field.name === 'course') {
+                            textValue = recipient?.course || field.defaultValue || '';
+                          } else if (recipient?.customFields && recipient.customFields[field.name]) {
+                            textValue = recipient.customFields[field.name];
+                          } else {
+                            textValue = field.defaultValue || '';
+                          }
+                          break;
+                        case 'date':
+                          textValue = new Date(recipient?.issueDate || certificate?.issueDate).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          });
+                          break;
+                      }
+
+                      return (
+                        <div key={field.id} style={style}>
+                          {textValue}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}

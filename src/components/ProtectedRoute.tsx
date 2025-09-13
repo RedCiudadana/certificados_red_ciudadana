@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAuthStore } from '../store/authStore';
-import LoginForm from './LoginForm';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -8,10 +7,29 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, openLoginModal } = useAuthStore();
 
   if (!isAuthenticated || !user) {
-    return <LoginForm />;
+    // Open login modal and show a loading/redirect message
+    React.useEffect(() => {
+      openLoginModal();
+    }, [openLoginModal]);
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-6">
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-white border-t-transparent"></div>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Acceso Requerido
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Por favor inicia sesión para acceder a esta sección.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (requiredRole && user.role !== requiredRole) {
