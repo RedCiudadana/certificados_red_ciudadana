@@ -250,7 +250,7 @@ export default function CreateCertificate() {
                       Necesitas crear al menos una plantilla antes de continuar.
                     </p>
                     <Link
-                      to="/templates"
+                      to="/dashboard/templates"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
                     >
                       <Plus className="mr-2 h-5 w-5" />
@@ -446,7 +446,7 @@ export default function CreateCertificate() {
                   
                   <div className="mt-4">
                     <Link
-                      to="/certificates"
+                      to="/dashboard/certificates"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
                       Ver Todos los Certificados
@@ -472,7 +472,7 @@ export default function CreateCertificate() {
                   Crear Otro Certificado
                 </button>
                 <Link
-                  to="/"
+                  to="/dashboard"
                   className="inline-flex items-center px-6 py-3 bg-white text-gray-700 text-sm font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   <ArrowLeft className="mr-2 h-5 w-5" />

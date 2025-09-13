@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
       color: 'from-blue-500 to-blue-600', 
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
-      to: '/templates',
+      to: '/dashboard/templates',
       description: 'Diseños disponibles'
     },
     { 
@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
       color: 'from-green-500 to-green-600', 
       bgColor: 'bg-green-50',
       textColor: 'text-green-700',
-      to: '/recipients',
+      to: '/dashboard/recipients',
       description: 'Personas registradas'
     },
     { 
@@ -35,7 +35,7 @@ const Dashboard: React.FC = () => {
       color: 'from-purple-500 to-purple-600', 
       bgColor: 'bg-purple-50',
       textColor: 'text-purple-700',
-      to: '/certificates',
+      to: '/dashboard/certificates',
       description: 'Certificados generados'
     }
   ];
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
                 Verificar Certificado
               </Link>
               <Link
-                to="/create"
+                to="/dashboard/create"
                 className="inline-flex items-center px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Plus className="mr-2 h-5 w-5" />
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
             <p className="text-gray-600 mt-1">Últimos certificados generados</p>
           </div>
           <Link
-            to="/certificates"
+            to="/dashboard/certificates"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             Ver todos
@@ -243,7 +243,7 @@ const Dashboard: React.FC = () => {
                 Comienza creando un nuevo certificado.
               </p>
               <Link
-                to="/create"
+                to="/dashboard/create"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Plus className="mr-2 h-5 w-5" />
