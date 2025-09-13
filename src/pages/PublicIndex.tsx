@@ -192,10 +192,6 @@ const PublicIndex: React.FC = () => {
                 alt="Red Ciudadana Logo" 
                 className="h-12 w-auto"
               />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">CertifyPro</h1>
-                <p className="text-sm text-gray-600">Sistema de Certificados - Red Ciudadana</p>
-              </div>
             </div>
             <div className="flex items-center space-x-4">
               <button
