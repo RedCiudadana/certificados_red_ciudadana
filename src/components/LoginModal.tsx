@@ -12,7 +12,7 @@ const LoginModal: React.FC = () => {
     email: '',
     password: '',
     name: '',
-    role: 'student' as 'admin' | 'student'
+    role: 'admin' as 'admin'
   });
   const [error, setError] = useState('');
 
@@ -60,13 +60,12 @@ const LoginModal: React.FC = () => {
   const handleClose = () => {
     closeLoginModal();
     setError('');
-    setFormData({ email: '', password: '', name: '', role: 'student' });
+    setFormData({ email: '', password: '', name: '', role: 'admin' });
     setIsLoginMode(true);
   };
 
   const demoCredentials = [
-    { email: 'admin@redciudadana.org', password: 'admin123', role: 'Administrador' },
-    { email: 'estudiante@example.com', password: 'student123', role: 'Estudiante' }
+    { email: 'admin@redciudadana.org', password: 'admin123', role: 'Administrador' }
   ];
 
   if (!isLoginModalOpen) return null;
@@ -214,16 +213,13 @@ const LoginModal: React.FC = () => {
                 <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
                   Tipo de Usuario
                 </label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleInputChange}
-                  className="block w-full px-3 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="student">Estudiante</option>
-                  <option value="admin">Administrador</option>
-                </select>
+                <input
+                  type="text"
+                  value="Administrador"
+                  disabled
+                  className="block w-full px-3 py-3 border border-gray-300 rounded-xl shadow-sm bg-gray-50 text-gray-500"
+                />
+                <input type="hidden" name="role" value="admin" />
               </div>
             )}
 

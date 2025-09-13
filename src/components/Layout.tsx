@@ -27,8 +27,8 @@ const Layout: React.FC = () => {
   const { user, logout } = useAuthStore();
   const { certificates, recipients, templates } = useCertificateStore();
   
-  // Admin navigation
-  const adminNavigation = [
+  // Navigation items
+  const navigation = [
     { name: 'Panel Principal', to: '/dashboard', icon: LayoutIcon },
     { name: 'Crear Certificado', to: '/dashboard/create', icon: Award },
     { name: 'Certificados', to: '/dashboard/certificates', icon: ScrollText },
@@ -39,14 +39,6 @@ const Layout: React.FC = () => {
     { name: 'Notificaciones', to: '/dashboard/notifications', icon: Mail },
     { name: 'Documentación', to: '/dashboard/docs', icon: Book }
   ];
-
-  // Student navigation
-  const studentNavigation = [
-    { name: 'Mi Panel', to: '/dashboard', icon: LayoutIcon },
-    { name: 'Verificar Certificado', to: '/verify', icon: Shield }
-  ];
-
-  const navigation = user?.role === 'admin' ? adminNavigation : studentNavigation;
 
   const handleLogout = () => {
     logout();
@@ -106,26 +98,24 @@ const Layout: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <p className="text-xs text-gray-500">Administrador</p>
             </div>
           </div>
           
-          {user?.role === 'admin' && (
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-lg font-bold text-blue-600">{certificates.length}</div>
-                <div className="text-xs text-gray-500">Certificados</div>
-              </div>
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-lg font-bold text-green-600">{recipients.length}</div>
-                <div className="text-xs text-gray-500">Destinatarios</div>
-              </div>
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-lg font-bold text-purple-600">{templates.length}</div>
-                <div className="text-xs text-gray-500">Plantillas</div>
-              </div>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-lg font-bold text-blue-600">{certificates.length}</div>
+              <div className="text-xs text-gray-500">Certificados</div>
             </div>
-          )}
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-lg font-bold text-green-600">{recipients.length}</div>
+              <div className="text-xs text-gray-500">Destinatarios</div>
+            </div>
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-lg font-bold text-purple-600">{templates.length}</div>
+              <div className="text-xs text-gray-500">Plantillas</div>
+            </div>
+          </div>
         </div>
         
         <nav className="flex-1 flex flex-col overflow-y-auto px-4 py-4 space-y-2">
@@ -165,15 +155,13 @@ const Layout: React.FC = () => {
         
         {/* Quick action and logout */}
         <div className="p-4 border-t border-gray-100">
-          {user?.role === 'admin' && (
-            <Link
-              to="/dashboard/create"
-              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl mb-3"
-            >
-              <Award className="h-4 w-4 mr-2" />
-              Crear Certificado
-            </Link>
-          )}
+          <Link
+            to="/dashboard/create"
+            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl mb-3"
+          >
+            <Award className="h-4 w-4 mr-2" />
+            Crear Certificado
+          </Link>
           
           <button
             onClick={handleLogout}
@@ -220,26 +208,24 @@ const Layout: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <p className="text-xs text-gray-500">Administrador</p>
             </div>
           </div>
           
-          {user?.role === 'admin' && (
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-sm font-bold text-blue-600">{certificates.length}</div>
-                <div className="text-xs text-gray-500">Certificados</div>
-              </div>
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-sm font-bold text-green-600">{recipients.length}</div>
-                <div className="text-xs text-gray-500">Destinatarios</div>
-              </div>
-              <div className="bg-white rounded-lg p-2 shadow-sm">
-                <div className="text-sm font-bold text-purple-600">{templates.length}</div>
-                <div className="text-xs text-gray-500">Plantillas</div>
-              </div>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-sm font-bold text-blue-600">{certificates.length}</div>
+              <div className="text-xs text-gray-500">Certificados</div>
             </div>
-          )}
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-sm font-bold text-green-600">{recipients.length}</div>
+              <div className="text-xs text-gray-500">Destinatarios</div>
+            </div>
+            <div className="bg-white rounded-lg p-2 shadow-sm">
+              <div className="text-sm font-bold text-purple-600">{templates.length}</div>
+              <div className="text-xs text-gray-500">Plantillas</div>
+            </div>
+          </div>
         </div>
         
         <nav className="flex-1 px-4 py-4 space-y-2">
@@ -280,16 +266,14 @@ const Layout: React.FC = () => {
         
         {/* Mobile quick action and logout */}
         <div className="p-4 border-t border-gray-100">
-          {user?.role === 'admin' && (
-            <Link
-              to="/dashboard/create"
-              onClick={toggleMobileMenu}
-              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg mb-3"
-            >
-              <Award className="h-4 w-4 mr-2" />
-              Crear Certificado
-            </Link>
-          )}
+          <Link
+            to="/dashboard/create"
+            onClick={toggleMobileMenu}
+            className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg mb-3"
+          >
+            <Award className="h-4 w-4 mr-2" />
+            Crear Certificado
+          </Link>
           
           <button
             onClick={handleLogout}

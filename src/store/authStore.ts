@@ -5,7 +5,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'student';
+  role: 'admin';
   createdAt: string;
 }
 
@@ -34,14 +34,6 @@ const mockUsers: Array<User & { password: string }> = [
     role: 'admin',
     createdAt: new Date().toISOString()
   },
-  {
-    id: '2',
-    email: 'estudiante@example.com',
-    password: 'student123',
-    name: 'Juan Pérez',
-    role: 'student',
-    createdAt: new Date().toISOString()
-  }
 ];
 
 export const useAuthStore = create<AuthState>()(

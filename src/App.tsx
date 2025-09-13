@@ -39,11 +39,9 @@ function AppContent() {
             <Layout />
           </ProtectedRoute>
         }>
-          <Route index element={
-            user?.role === 'admin' ? <Dashboard /> : <StudentDashboard />
-          } />
+          <Route index element={<Dashboard />} />
           
-          {/* Admin-only routes */}
+          {/* Admin routes */}
           <Route path="create" element={
             <ProtectedRoute requiredRole="admin">
               <CreateCertificate />

@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/authStore';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'admin' | 'student';
+  requiredRole?: 'admin';
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
@@ -45,7 +45,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
             Acceso Denegado
           </h2>
           <p className="text-gray-600 mb-8">
-            No tienes permisos para acceder a esta sección. Se requiere rol de {requiredRole === 'admin' ? 'Administrador' : 'Estudiante'}.
+            No tienes permisos para acceder a esta sección. Se requiere rol de Administrador.
           </p>
           <p className="text-sm text-gray-500">
             Tu rol actual: <span className="font-semibold capitalize">{user.role}</span>
