@@ -58,11 +58,11 @@ const Layout: React.FC = () => {
 
   const getBadgeCount = (path: string) => {
     switch (path) {
-      case '/certificates':
+      case '/dashboard/certificates':
         return certificates.length;
-      case '/recipients':
+      case '/dashboard/recipients':
         return recipients.length;
-      case '/templates':
+      case '/dashboard/templates':
         return templates.length;
       default:
         return 0;
