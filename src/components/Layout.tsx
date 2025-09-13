@@ -28,20 +28,20 @@ const Layout: React.FC = () => {
   
   // Admin navigation
   const adminNavigation = [
-    { name: 'Panel Principal', to: '/', icon: LayoutIcon },
-    { name: 'Crear Certificado', to: '/create', icon: Award },
-    { name: 'Certificados', to: '/certificates', icon: ScrollText },
-    { name: 'Plantillas', to: '/templates', icon: FileText },
-    { name: 'Destinatarios', to: '/recipients', icon: Users },
-    { name: 'Exportar Sitio', to: '/export', icon: Download },
-    { name: 'LinkedIn', to: '/linkedin', icon: Share2 },
-    { name: 'Notificaciones', to: '/notifications', icon: Mail },
-    { name: 'Documentación', to: '/docs', icon: Book }
+    { name: 'Panel Principal', to: '/dashboard', icon: LayoutIcon },
+    { name: 'Crear Certificado', to: '/dashboard/create', icon: Award },
+    { name: 'Certificados', to: '/dashboard/certificates', icon: ScrollText },
+    { name: 'Plantillas', to: '/dashboard/templates', icon: FileText },
+    { name: 'Destinatarios', to: '/dashboard/recipients', icon: Users },
+    { name: 'Exportar Sitio', to: '/dashboard/export', icon: Download },
+    { name: 'LinkedIn', to: '/dashboard/linkedin', icon: Share2 },
+    { name: 'Notificaciones', to: '/dashboard/notifications', icon: Mail },
+    { name: 'Documentación', to: '/dashboard/docs', icon: Book }
   ];
 
   // Student navigation
   const studentNavigation = [
-    { name: 'Mi Panel', to: '/', icon: LayoutIcon },
+    { name: 'Mi Panel', to: '/dashboard', icon: LayoutIcon },
     { name: 'Verificar Certificado', to: '/verify', icon: Shield }
   ];
 
@@ -84,7 +84,7 @@ const Layout: React.FC = () => {
       {/* Desktop sidebar with enhanced design */}
       <div className="hidden lg:flex lg:fixed lg:inset-y-0 lg:flex-col lg:w-72 lg:bg-white lg:shadow-xl lg:border-r lg:border-gray-100">
         <div className="flex items-center justify-center flex-shrink-0 px-6 py-6 bg-gradient-to-r from-blue-600 to-purple-600">
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link to="/dashboard" className="flex items-center space-x-3 group">
             <div className="relative">
               <Award className="h-10 w-10 text-white" />
               <Sparkles className="h-4 w-4 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
@@ -165,7 +165,7 @@ const Layout: React.FC = () => {
         <div className="p-4 border-t border-gray-100">
           {user?.role === 'admin' && (
             <Link
-              to="/create"
+              to="/dashboard/create"
               className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl mb-3"
             >
               <Award className="h-4 w-4 mr-2" />
@@ -198,7 +198,7 @@ const Layout: React.FC = () => {
         } fixed inset-y-0 left-0 z-20 w-72 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden`}
       >
         <div className="flex items-center justify-center h-20 bg-gradient-to-r from-blue-600 to-purple-600">
-          <Link to="/" className="flex items-center space-x-3" onClick={toggleMobileMenu}>
+          <Link to="/dashboard" className="flex items-center space-x-3" onClick={toggleMobileMenu}>
             <div className="relative">
               <Award className="h-8 w-8 text-white" />
               <Sparkles className="h-3 w-3 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
@@ -280,7 +280,7 @@ const Layout: React.FC = () => {
         <div className="p-4 border-t border-gray-100">
           {user?.role === 'admin' && (
             <Link
-              to="/create"
+              to="/dashboard/create"
               onClick={toggleMobileMenu}
               className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg mb-3"
             >

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { LogIn, User, Lock, Eye, EyeOff, UserPlus, Shield, GraduationCap } from 'lucide-react';
 
 const LoginForm: React.FC = () => {
   const { login, register, isLoading } = useAuthStore();
+  const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,6 +27,8 @@ const LoginForm: React.FC = () => {
         success = await login(formData.email, formData.password);
         if (!success) {
           setError('Credenciales incorrectas. Intenta de nuevo.');
+        } else {
+          navigate('/dashboard');
         }
       } else {
         success = await register({
@@ -35,6 +39,8 @@ const LoginForm: React.FC = () => {
         });
         if (!success) {
           setError('El usuario ya existe o hubo un error en el registro.');
+        } else {
+          navigate('/dashboard');
         }
       }
     } catch (err) {

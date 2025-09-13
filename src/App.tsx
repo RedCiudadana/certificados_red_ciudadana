@@ -23,77 +23,75 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public routes */}
+        {/* Public index route */}
         <Route path="/" element={
-          isAuthenticated ? (
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          ) : (
-            <PublicIndex />
-          )
-        }>
-          {isAuthenticated && (
-            <Route index element={
-              user?.role === 'admin' ? <Dashboard /> : <StudentDashboard />
-            } />
-          )}
-          
-          {/* Admin-only routes */}
-          {isAuthenticated && (
-            <>
-              <Route path="create" element={
-                <ProtectedRoute requiredRole="admin">
-                  <CreateCertificate />
-                </ProtectedRoute>
-              } />
-              <Route path="certificates" element={
-                <ProtectedRoute requiredRole="admin">
-                  <Certificates />
-                </ProtectedRoute>
-              } />
-              <Route path="templates" element={
-                <ProtectedRoute requiredRole="admin">
-                  <TemplateManager />
-                </ProtectedRoute>
-              } />
-              <Route path="recipients" element={
-                <ProtectedRoute requiredRole="admin">
-                  <RecipientManager />
-                </ProtectedRoute>
-              } />
-              <Route path="export" element={
-                <ProtectedRoute requiredRole="admin">
-                  <ExportSite />
-                </ProtectedRoute>
-              } />
-              <Route path="linkedin" element={
-                <ProtectedRoute requiredRole="admin">
-                  <LinkedInIntegration />
-                </ProtectedRoute>
-              } />
-              <Route path="notifications" element={
-                <ProtectedRoute requiredRole="admin">
-                  <EmailNotifications />
-                </ProtectedRoute>
-              } />
-              <Route path="docs" element={
-                <ProtectedRoute requiredRole="admin">
-                  <Documentation />
-                </ProtectedRoute>
-              } />
-            </>
-          )}
-          
-          {!isAuthenticated && <Route path="*" element={<Navigate to="/" replace />} />}
-        </Route>
+          !isAuthenticated ? <PublicIndex /> : <Navigate to="/dashboard" replace />
+        } />
         
         {/* Login route */}
-        <Route path="/login" element={<LoginForm />} />
+        <Route path="/login" element={
+          !isAuthenticated ? <LoginForm /> : <Navigate to="/dashboard" replace />
+        } />
         
         {/* Public verification route */}
         <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
+        
+        {/* Protected routes with Layout */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
+          <Route index element={
+            user?.role === 'admin' ? <Dashboard /> : <StudentDashboard />
+          } />
+          
+          {/* Admin-only routes */}
+          <Route path="create" element={
+            <ProtectedRoute requiredRole="admin">
+              <CreateCertificate />
+            </ProtectedRoute>
+          } />
+          <Route path="certificates" element={
+            <ProtectedRoute requiredRole="admin">
+              <Certificates />
+            </ProtectedRoute>
+          } />
+          <Route path="templates" element={
+            <ProtectedRoute requiredRole="admin">
+              <TemplateManager />
+            </ProtectedRoute>
+          } />
+          <Route path="recipients" element={
+            <ProtectedRoute requiredRole="admin">
+              <RecipientManager />
+            </ProtectedRoute>
+          } />
+          <Route path="export" element={
+            <ProtectedRoute requiredRole="admin">
+              <ExportSite />
+            </ProtectedRoute>
+          } />
+          <Route path="linkedin" element={
+            <ProtectedRoute requiredRole="admin">
+              <LinkedInIntegration />
+            </ProtectedRoute>
+          } />
+          <Route path="notifications" element={
+            <ProtectedRoute requiredRole="admin">
+              <EmailNotifications />
+            </ProtectedRoute>
+          } />
+          <Route path="docs" element={
+            <ProtectedRoute requiredRole="admin">
+              <Documentation />
+            </ProtectedRoute>
+          } />
+        </Route>
+        
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
