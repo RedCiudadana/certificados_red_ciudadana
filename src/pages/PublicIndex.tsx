@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalLink, ArrowRight, Sparkles, Users, BookOpen } from 'lucide-react';
+import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalLink, ArrowRight, Sparkles, Users, BookOpen, Download } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
+import { generateCertificatePDF } from '../utils/certificateGenerator';
 
 const PublicIndex: React.FC = () => {
   const { certificates, recipients, templates } = useCertificateStore();
@@ -69,6 +70,111 @@ const PublicIndex: React.FC = () => {
     const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.origin + '/verify/' + certificate.id)}&certId=${encodeURIComponent(certificate.id)}`;
     
     window.open(linkedInUrl, '_blank', 'width=600,height=600');
+  };
+
+  const handleDownloadCertificate = async (certificateId: string) => {
+    const certificate = certificates.find(c => c.id === certificateId);
+    const recipient = recipients.find(r => r.id === certificate?.recipientId);
+    const template = templates.find(t => t.id === certificate?.templateId);
+    
+    if (!certificate || !recipient || !template) return;
+    
+    // Create a temporary container for rendering the certificate
+    const container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.left = '-9999px';
+    container.style.top = '0';
+    container.style.width = '800px';
+    container.style.height = '566px';
+    document.body.appendChild(container);
+
+    try {
+      // Create certificate preview
+      const certificateDiv = document.createElement('div');
+      certificateDiv.className = 'certificate-preview';
+      certificateDiv.style.width = '100%';
+      certificateDiv.style.height = '100%';
+      certificateDiv.style.position = 'relative';
+      certificateDiv.style.backgroundColor = 'white';
+      certificateDiv.style.overflow = 'hidden';
+
+      // Add template background
+      const img = document.createElement('img');
+      img.src = template.imageUrl;
+      img.alt = 'Certificate template';
+      img.style.position = 'absolute';
+      img.style.top = '0';
+      img.style.left = '0';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      certificateDiv.appendChild(img);
+
+      // Wait for image to load
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        setTimeout(resolve, 5000);
+      });
+
+      // Add text fields
+      template.fields.forEach(field => {
+        if (field.type === 'qrcode') return;
+        
+        const fieldDiv = document.createElement('div');
+        fieldDiv.style.position = 'absolute';
+        fieldDiv.style.left = `${field.x}%`;
+        fieldDiv.style.top = `${field.y}%`;
+        fieldDiv.style.transform = 'translate(-50%, -50%)';
+        fieldDiv.style.textAlign = 'center';
+        fieldDiv.style.width = '100%';
+        fieldDiv.style.maxWidth = '80%';
+        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
+        fieldDiv.style.color = field.color || '#000';
+        fieldDiv.style.zIndex = '1';
+        fieldDiv.style.fontWeight = 'bold';
+        fieldDiv.style.textShadow = '1px 1px 2px rgba(255,255,255,0.8)';
+
+        switch (field.type) {
+          case 'text':
+            let textValue = '';
+            if (field.name === 'recipient') {
+              textValue = recipient.name;
+            } else if (field.name === 'course') {
+              textValue = recipient.course || field.defaultValue || '';
+            } else if (recipient.customFields && recipient.customFields[field.name]) {
+              textValue = recipient.customFields[field.name];
+            } else {
+              textValue = field.defaultValue || '';
+            }
+            fieldDiv.textContent = textValue;
+            break;
+
+          case 'date':
+            fieldDiv.textContent = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            break;
+        }
+
+        certificateDiv.appendChild(fieldDiv);
+      });
+
+      container.appendChild(certificateDiv);
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
+      await generateCertificatePDF(certificateDiv, fileName);
+
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
+    } finally {
+      document.body.removeChild(container);
+    }
   };
 
   return (
@@ -293,6 +399,13 @@ const PublicIndex: React.FC = () => {
                               <Shield className="mr-1 h-3 w-3" />
                               Ver Certificado
                             </Link>
+                            <button
+                              onClick={() => handleDownloadCertificate(certificate.id)}
+                              className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full hover:bg-green-200 transition-colors duration-200"
+                            >
+                              <Download className="mr-1 h-3 w-3" />
+                              Descargar PDF
+                            </button>
                             <button
                               onClick={() => handleShareToLinkedIn(certificate.id)}
                               className="inline-flex items-center px-3 py-1 bg-[#0A66C2] text-white text-xs font-medium rounded-full hover:bg-[#004182] transition-colors duration-200"
