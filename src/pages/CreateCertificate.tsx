@@ -78,7 +78,6 @@ export default function CreateCertificate() {
     
     const certificateIds = generateBulkCertificates(recipientIds, currentTemplateId);
     setGeneratedCertificateIds(certificateIds);
-    setActiveStep(6); // Move to success step
     setShowSuccess(true);
   };
   
@@ -391,8 +390,8 @@ export default function CreateCertificate() {
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">¡Certificados Generados!</h2>
               <p className="text-gray-600">
-              {generatedCertificateIds.length} certificado(s) han sido generados exitosamente.
-            </p>
+                {generatedCertificateIds.length} certificado(s) han sido generados exitosamente.
+              </p>
             </div>
           </div>
           <div className="p-8">
@@ -474,7 +473,7 @@ export default function CreateCertificate() {
                 </button>
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center px-6 py-3 bg-white text-gray-700 text-sm font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center px-6 py-3 bg-white text-gray-700 text-sm font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
                   Volver al Dashboard
                 </Link>
