@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Award, Save, Users, FileSpreadsheet, Share2, Download, CheckCircle, ArrowLeft, Sparkles } from 'lucide-react';
+import { ChevronRight, Award, Save, Users, FileSpreadsheet, Share2, Download, CheckCircle, ArrowLeft, Sparkles, FileText, Plus } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import TemplateCard from '../components/TemplateCard';
 import RecipientForm from '../components/RecipientForm';
@@ -473,6 +473,13 @@ export default function CreateCertificate() {
                   Crear Otro Certificado
                 </button>
                 <Link
+                  to="/dashboard"
+                  className="inline-flex items-center px-6 py-3 bg-white text-gray-700 text-sm font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Volver al Dashboard
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
