@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalLink, ArrowRight, Sparkles, Users, BookOpen, Download } from 'lucide-react';
+import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalLink, ArrowRight, Sparkles, Users, BookOpen, Download, Facebook, Linkedin, Youtube } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { useAuthStore } from '../store/authStore';
 import { generateCertificatePDF } from '../utils/certificateGenerator';
@@ -182,6 +182,42 @@ const PublicIndex: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Top Social Media Bar */}
+      <div className="bg-gray-900 text-white py-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-end items-center space-x-4">
+            <span className="text-sm text-gray-300">Síguenos:</span>
+            <a
+              href="https://www.facebook.com/Redciudadanagt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white transition-colors duration-200"
+              aria-label="Facebook"
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/red-ciudadana"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white transition-colors duration-200"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCQwc62j7beStZYFzwPxBEQg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-white transition-colors duration-200"
+              aria-label="YouTube"
+            >
+              <Youtube className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
