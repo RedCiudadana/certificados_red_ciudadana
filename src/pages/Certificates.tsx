@@ -106,88 +106,110 @@ const Certificates: React.FC = () => {
 
     if (!certificate || !recipient || !template) return;
 
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    container.style.width = '800px';
-    container.style.height = '566px';
-    document.body.appendChild(container);
-
     try {
-      const certificateDiv = document.createElement('div');
-      certificateDiv.className = 'certificate-preview';
-      certificateDiv.style.width = '100%';
-      certificateDiv.style.height = '100%';
-      certificateDiv.style.position = 'relative';
-      certificateDiv.style.backgroundColor = 'white';
-      certificateDiv.style.overflow = 'hidden';
+      // Create a temporary container for rendering the certificate
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = '800px';
+      container.style.height = '566px';
+      container.style.backgroundColor = 'white';
+      document.body.appendChild(container);
 
-      const img = document.createElement('img');
-      img.src = template.imageUrl;
-      img.alt = 'Certificate template';
-      img.style.position = 'absolute';
-      img.style.top = '0';
-      img.style.left = '0';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'cover';
-      certificateDiv.appendChild(img);
+      try {
+        // Create certificate preview using React-like structure
+        const certificateDiv = document.createElement('div');
+        certificateDiv.className = 'certificate-preview';
+        certificateDiv.style.cssText = `
+          position: relative;
+          width: 100%;
+          height: 100%;
+          background-color: white;
+          overflow: hidden;
+          background-image: url('${template.imageUrl}');
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+        `;
 
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        setTimeout(resolve, 5000);
-      });
+        // Wait for background image to load
+        await new Promise((resolve) => {
+          const testImg = new Image();
+          testImg.crossOrigin = 'anonymous';
+          testImg.onload = () => resolve(true);
+          testImg.onerror = () => resolve(true); // Continue even if image fails
+          testImg.src = template.imageUrl;
+          setTimeout(() => resolve(true), 5000); // Fallback timeout
+        });
 
-      template.fields.forEach(field => {
-        const fieldDiv = document.createElement('div');
-        fieldDiv.style.position = 'absolute';
-        fieldDiv.style.left = `${field.x}%`;
-        fieldDiv.style.top = `${field.y}%`;
-        fieldDiv.style.transform = 'translate(-50%, -50%)';
-        fieldDiv.style.textAlign = 'center';
-        fieldDiv.style.width = '100%';
-        fieldDiv.style.maxWidth = '80%';
-        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
-        fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
-        fieldDiv.style.color = field.color || '#000';
-        fieldDiv.style.zIndex = '1';
+        // Add text fields
+        template.fields.forEach(field => {
+          if (field.type === 'qrcode') return; // Skip QR code for now
+          
+          const fieldDiv = document.createElement('div');
+          fieldDiv.style.cssText = `
+            position: absolute;
+            left: ${field.x}%;
+            top: ${field.y}%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            max-width: 80%;
+            font-family: ${field.fontFamily || 'serif'};
+            font-size: ${field.fontSize || 16}px;
+            color: ${field.color || '#000'};
+            z-index: 1;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            word-wrap: break-word;
+          `;
 
-        switch (field.type) {
-          case 'text':
-            let textValue = '';
-            if (field.name === 'recipient') {
-              textValue = recipient.name;
-            } else if (field.name === 'course') {
-              textValue = recipient.course || field.defaultValue || '';
-            } else if (recipient.customFields && recipient.customFields[field.name]) {
-              textValue = recipient.customFields[field.name];
-            } else {
-              textValue = field.defaultValue || '';
-            }
-            fieldDiv.textContent = textValue;
-            break;
+          let textValue = '';
+          switch (field.type) {
+            case 'text':
+              if (field.name === 'recipient') {
+                textValue = recipient.name;
+              } else if (field.name === 'course') {
+                textValue = recipient.course || field.defaultValue || '';
+              } else if (recipient.customFields && recipient.customFields[field.name]) {
+                textValue = recipient.customFields[field.name];
+              } else {
+                textValue = field.defaultValue || '';
+              }
+              break;
 
-          case 'date':
-            fieldDiv.textContent = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            });
-            break;
+            case 'date':
+              textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+              break;
+          }
+
+          fieldDiv.textContent = textValue;
+          certificateDiv.appendChild(fieldDiv);
+        });
+
+        container.appendChild(certificateDiv);
+
+        // Wait a bit for rendering
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Generate PDF
+        const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
+        await generateCertificatePDF(certificateDiv, fileName);
+
+      } finally {
+        // Clean up
+        if (document.body.contains(container)) {
+          document.body.removeChild(container);
         }
-
-        certificateDiv.appendChild(fieldDiv);
-      });
-
-      container.appendChild(certificateDiv);
-
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      await generateCertificatePDF(certificateDiv, `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`);
-    } finally {
-      document.body.removeChild(container);
+      }
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
     }
   };
 
