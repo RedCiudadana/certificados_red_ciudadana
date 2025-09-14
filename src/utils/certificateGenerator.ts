@@ -252,23 +252,22 @@ export const generateCertificatePDF = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
-    // Wait for any pending renders
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    // Generate canvas directly from the existing element
+    // Generate canvas with better settings
     const canvas = await html2canvas(certificateRef, {
       scale: 3,
       useCORS: true,
       allowTaint: false,
       backgroundColor: '#ffffff',
       logging: false,
+      width: 1200,
+      height: 848,
       foreignObjectRendering: false,
       imageTimeout: 15000
     });
 
     const imgData = canvas.toDataURL('image/png', 1.0);
     
-    // Check if canvas is valid
+    // Check if canvas is blank
     if (canvas.width === 0 || canvas.height === 0) {
       throw new Error('Canvas rendering failed - empty canvas');
     }
