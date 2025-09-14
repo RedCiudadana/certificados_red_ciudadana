@@ -215,21 +215,24 @@ export const generateCertificatePDF = async (
     await new Promise(resolve => setTimeout(resolve, 100));
     
     const canvas = await html2canvas(certificateRef, {
-      scale: 2,
+      scale: 3,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
       logging: false,
       width: certificateRef.offsetWidth,
-      height: certificateRef.offsetHeight
+      height: certificateRef.offsetHeight,
+      dpi: 300,
+      foreignObjectRendering: true
     });
 
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL('image/png', 1.0);
     
     const pdf = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
-      format: 'a4'
+      format: 'a4',
+      compress: false
     });
     
     const imgProps = pdf.getImageProperties(imgData);
@@ -241,7 +244,7 @@ export const generateCertificatePDF = async (
       ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
       : 0;
     
-    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight, undefined, 'FAST');
     
     pdf.save(`${filename}.pdf`);
   } catch (error) {
@@ -344,25 +347,28 @@ export const downloadAllCertificatesAsPDF = async (
         try {
           // Generate PDF for this certificate
           const canvas = await html2canvas(certificateDiv, {
-            scale: 1.5,
+            scale: 3,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
-            logging: false
+            logging: false,
+            dpi: 300,
+            foreignObjectRendering: true
           });
 
-          const imgData = canvas.toDataURL('image/jpeg', 0.92);
+          const imgData = canvas.toDataURL('image/png', 1.0);
           
           const pdf = new jsPDF({
             orientation: 'landscape',
             unit: 'mm',
+            compress: false
           });
           
           const imgProps = pdf.getImageProperties(imgData);
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
           
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
           
           const pdfBlob = pdf.output('blob');
           const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate.pdf`;
@@ -391,7 +397,11 @@ export const generateCertificateImage = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
-    const dataUrl = await toPng(certificateRef, { quality: 0.95 });
+    const dataUrl = await toPng(certificateRef, { 
+      quality: 1.0,
+      pixelRatio: 3,
+      backgroundColor: '#ffffff'
+    });
     
     const byteString = atob(dataUrl.split(',')[1]);
     const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];

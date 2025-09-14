@@ -20,6 +20,9 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   const handleDownloadPDF = async () => {
     if (certificateRef.current) {
       try {
+        // Wait for fonts and images to load
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         await generateCertificatePDF(
           certificateRef.current, 
           `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
@@ -34,6 +37,9 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   const handleDownloadImage = async () => {
     if (certificateRef.current) {
       try {
+        // Wait for fonts and images to load
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         await generateCertificateImage(
           certificateRef.current, 
           `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
