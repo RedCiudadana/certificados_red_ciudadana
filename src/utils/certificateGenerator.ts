@@ -252,25 +252,57 @@ export const generateCertificatePDF = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
-    // Wait for all images to load completely
-    await waitForImagesToLoad(certificateRef);
+    // Create a clone of the certificate element
+    const clone = certificateRef.cloneNode(true) as HTMLElement;
     
-    const canvas = await html2canvas(certificateRef, {
-      scale: 2,
+    // Create a temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'fixed';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '1200px';
+    tempContainer.style.height = '848px';
+    tempContainer.style.backgroundColor = 'white';
+    tempContainer.style.zIndex = '-1000';
+    
+    // Style the clone
+    clone.style.width = '100%';
+    clone.style.height = '100%';
+    clone.style.position = 'relative';
+    clone.style.backgroundColor = 'white';
+    
+    tempContainer.appendChild(clone);
+    document.body.appendChild(tempContainer);
+    
+    // Wait for images to load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Generate canvas with better settings
+    const canvas = await html2canvas(clone, {
+      scale: 3,
       useCORS: true,
-      allowTaint: true,
+      allowTaint: false,
       backgroundColor: '#ffffff',
-      logging: false,
-      width: certificateRef.offsetWidth,
-      height: certificateRef.offsetHeight,
-      foreignObjectRendering: true,
-      imageTimeout: 15000,
+      logging: true,
+      width: 1200,
+      height: 848,
+      foreignObjectRendering: false,
+      imageTimeout: 30000,
+      onclone: (clonedDoc) => {
+        // Ensure all styles are applied to the cloned document
+        const clonedElement = clonedDoc.querySelector('div') as HTMLElement;
+        if (clonedElement) {
+          clonedElement.style.width = '1200px';
+          clonedElement.style.height = '848px';
+          clonedElement.style.backgroundColor = 'white';
+        }
+      }
     });
 
     const imgData = canvas.toDataURL('image/png', 1.0);
     
     // Check if canvas is blank
-    if (canvas.width === 0 || canvas.height === 0) {
+    if (canvas.width === 0 || canvas.height === 0 || imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==') {
       throw new Error('Canvas rendering failed - empty canvas');
     }
     
@@ -293,6 +325,11 @@ export const generateCertificatePDF = async (
     pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
     
     pdf.save(`${filename}.pdf`);
+    
+    // Clean up
+    if (document.body.contains(tempContainer)) {
+      document.body.removeChild(tempContainer);
+    }
   } catch (error) {
     console.error('Error generating certificate PDF:', error);
     throw error;

@@ -20,13 +20,16 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   const handleDownloadPDF = async () => {
     if (certificateRef.current) {
       try {
+        // Ensure the certificate is visible and rendered
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         await generateCertificatePDF(
           certificateRef.current, 
           `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`
         );
       } catch (error) {
         console.error('Error downloading PDF:', error);
-        alert(`Error al descargar el PDF: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        alert('Error al descargar el PDF. Por favor, inténtelo de nuevo.');
       }
     }
   };

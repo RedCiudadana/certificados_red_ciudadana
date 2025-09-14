@@ -107,79 +107,34 @@ const Certificates: React.FC = () => {
     if (!certificate || !recipient || !template) return;
 
     try {
-      // Create a temporary container for rendering the certificate
-      const container = document.createElement('div');
-      container.style.cssText = `
-        position: fixed;
-        left: -9999px;
-        top: 0;
-        width: 1200px;
-        height: 848px;
-        background-color: white;
-        z-index: -1;
-      `;
-      document.body.appendChild(container);
-
-      // Create certificate preview
+      // Create certificate element
       const certificateDiv = document.createElement('div');
-      certificateDiv.className = 'certificate-preview';
-      certificateDiv.style.cssText = `
-        position: relative;
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        overflow: hidden;
-      `;
-
-      // Add background image as img element for better rendering
-      const backgroundImg = document.createElement('img');
-      backgroundImg.src = template.imageUrl;
-      backgroundImg.alt = 'Certificate template';
-      backgroundImg.style.cssText = `
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 0;
-      `;
-      backgroundImg.crossOrigin = 'anonymous';
-      certificateDiv.appendChild(backgroundImg);
-
-      // Wait for background image to load
-      await new Promise((resolve, reject) => {
-        backgroundImg.onload = () => resolve(true);
-        backgroundImg.onerror = () => resolve(true); // Continue even if image fails
-        // If already loaded
-        if (backgroundImg.complete) resolve(true);
-        // Fallback timeout
-        setTimeout(() => resolve(true), 10000);
-      });
+      certificateDiv.style.position = 'relative';
+      certificateDiv.style.width = '1200px';
+      certificateDiv.style.height = '848px';
+      certificateDiv.style.backgroundColor = 'white';
+      certificateDiv.style.backgroundImage = `url(${template.imageUrl})`;
+      certificateDiv.style.backgroundSize = 'cover';
+      certificateDiv.style.backgroundPosition = 'center';
+      certificateDiv.style.backgroundRepeat = 'no-repeat';
 
       // Add text fields
       template.fields.forEach(field => {
         if (field.type === 'qrcode') return; // Skip QR code for PDF
         
         const fieldDiv = document.createElement('div');
-        fieldDiv.style.cssText = `
-          position: absolute;
-          left: ${field.x}%;
-          top: ${field.y}%;
-          transform: translate(-50%, -50%);
-          text-align: center;
-          width: 100%;
-          max-width: 80%;
-          font-family: ${field.fontFamily || 'serif'};
-          font-size: ${field.fontSize || 16}px;
-          color: ${field.color || '#000'};
-          z-index: 1;
-          font-weight: bold;
-          text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-          word-wrap: break-word;
-          white-space: nowrap;
-          overflow: visible;
-        `;
+        fieldDiv.style.position = 'absolute';
+        fieldDiv.style.left = `${field.x}%`;
+        fieldDiv.style.top = `${field.y}%`;
+        fieldDiv.style.transform = 'translate(-50%, -50%)';
+        fieldDiv.style.textAlign = 'center';
+        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`; // Scale up for better quality
+        fieldDiv.style.color = field.color || '#000';
+        fieldDiv.style.fontWeight = 'bold';
+        fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
+        fieldDiv.style.whiteSpace = 'nowrap';
+        fieldDiv.style.zIndex = '10';
 
         let textValue = '';
         switch (field.type) {
@@ -208,19 +163,9 @@ const Certificates: React.FC = () => {
         certificateDiv.appendChild(fieldDiv);
       });
 
-      container.appendChild(certificateDiv);
-
-      // Wait for rendering to complete
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
       // Generate PDF
       const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
       await generateCertificatePDF(certificateDiv, fileName);
-
-      // Clean up
-      if (document.body.contains(container)) {
-        document.body.removeChild(container);
-      }
 
     } catch (error) {
       console.error('Error downloading certificate:', error);
