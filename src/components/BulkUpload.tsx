@@ -23,6 +23,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
   const [preview, setPreview] = useState<PreviewData[]>([]);
   const [uploadComplete, setUploadComplete] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const processExcelFile = useCallback(async (file: File) => {
     setIsProcessing(true);
@@ -102,6 +103,17 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
     }
   }, [processExcelFile]);
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processExcelFile(file);
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
@@ -162,17 +174,39 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
                   Drag and drop your Excel file here, or click to select a file
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  downloadTemplate();
-                }}
-                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <FileSpreadsheet className="mr-2 h-4 w-4" />
-                Download Template
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUploadClick();
+                  }}
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg"
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Seleccionar Archivo Excel
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    downloadTemplate();
+                  }}
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                >
+                  <FileSpreadsheet className="mr-2 h-4 w-4" />
+                  Descargar Plantilla
+                </button>
+              </div>
+              
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
             </div>
           </div>
         ) : (
