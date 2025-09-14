@@ -211,28 +211,34 @@ export const generateCertificatePDF = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
-    // Wait a moment for any animations to complete
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Wait longer for fonts and images to load
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const canvas = await html2canvas(certificateRef, {
-      scale: 3,
+      scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
       logging: false,
       width: certificateRef.offsetWidth,
       height: certificateRef.offsetHeight,
-      dpi: 300,
-      foreignObjectRendering: true
+      foreignObjectRendering: false,
+      imageTimeout: 15000,
+      removeContainer: true
     });
 
     const imgData = canvas.toDataURL('image/png', 1.0);
+    
+    // Check if canvas is blank
+    if (canvas.width === 0 || canvas.height === 0) {
+      throw new Error('Canvas rendering failed - empty canvas');
+    }
     
     const pdf = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
       format: 'a4',
-      compress: false
+      compress: true
     });
     
     const imgProps = pdf.getImageProperties(imgData);
@@ -244,7 +250,7 @@ export const generateCertificatePDF = async (
       ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
       : 0;
     
-    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight, undefined, 'FAST');
+    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
     
     pdf.save(`${filename}.pdf`);
   } catch (error) {
