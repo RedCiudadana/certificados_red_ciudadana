@@ -47,16 +47,11 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
       
       setTotalRecords(jsonData.length);
       
-      // Validate required fields
+      // Validate required fields - only check for name
       const missingFields: string[] = [];
       jsonData.forEach((row, index) => {
-        if (!row.name) missingFields.push(`Name missing in row ${index + 1}`);
-        
-        // Validate field names against template definitions
-        const templateFields = templates.find(t => t.id === currentTemplateId)?.fields.map(f => f.name) || [];
-        const invalidFields = Object.keys(row).filter(key => !templateFields.includes(key) && !['name', 'email', 'course', 'issueDate'].includes(key));
-        if (invalidFields.length > 0) {
-          throw new Error(`Invalid fields in row ${index + 1}: ${invalidFields.join(', ')}`);
+        if (!row.name && !row.Name && !row.NAME) {
+          missingFields.push(`Name missing in row ${index + 1}`);
         }
       });
       
@@ -66,12 +61,14 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
       
       // Process and format data
       const formattedData = jsonData.map(row => ({
-        name: String(row.name || '').trim(),
-        email: String(row.email || '').trim(),
-        course: String(row.course || '').trim(),
-        issueDate: row.issueDate ? new Date(row.issueDate).toISOString() : new Date().toISOString(),
+        name: String(row.name || row.Name || row.NAME || '').trim(),
+        email: String(row.email || row.Email || row.EMAIL || '').trim(),
+        course: String(row.course || row.Course || row.COURSE || row.curso || row.Curso || '').trim(),
+        issueDate: row.issueDate || row.IssueDate || row.date || row.Date || row.fecha || row.Fecha 
+          ? new Date(row.issueDate || row.IssueDate || row.date || row.Date || row.fecha || row.Fecha).toISOString() 
+          : new Date().toISOString(),
         customFields: Object.entries(row)
-          .filter(([key]) => !['name', 'email', 'course', 'issueDate'].includes(key))
+          .filter(([key]) => !['name', 'Name', 'NAME', 'email', 'Email', 'EMAIL', 'course', 'Course', 'COURSE', 'curso', 'Curso', 'issueDate', 'IssueDate', 'date', 'Date', 'fecha', 'Fecha'].includes(key))
           .reduce((acc, [key, value]) => ({
             ...acc,
             [key]: String(value)
@@ -96,7 +93,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
     } finally {
       setIsProcessing(false);
     }
-  }, [addRecipients, onUploaded, templates, currentTemplateId]);
+  }, [addRecipients, onUploaded]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -118,18 +115,22 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
   const downloadTemplate = () => {
     const ws = XLSX.utils.json_to_sheet([
       {
-        name: 'John Doe',
-        email: 'john@example.com',
-        course: 'Web Development',
-        issueDate: new Date().toISOString().split('T')[0],
-        customField1: 'Value 1',
-        customField2: 'Value 2'
+        name: 'Juan Pérez',
+        email: 'juan@ejemplo.com',
+        course: 'Desarrollo Web',
+        issueDate: new Date().toISOString().split('T')[0]
+      },
+      {
+        name: 'María García',
+        email: 'maria@ejemplo.com',
+        course: 'Ciencia de Datos',
+        issueDate: new Date().toISOString().split('T')[0]
       }
     ]);
     
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Recipients');
-    XLSX.writeFile(wb, 'certificate-recipients-template.xlsx');
+    XLSX.writeFile(wb, 'plantilla-destinatarios-certificados.xlsx');
   };
 
   return (
@@ -228,9 +229,10 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
                           {row.email || 'No email'} • {row.course || 'No course'}
                         </p>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                <li>Columnas requeridas: name (o Name, NAME)</li>
+                <li>Columnas opcionales: email, course (o curso), issueDate (o date, fecha)</li>
+                <li>Cualquier columna adicional se guardará como campo personalizado</li>
+                <li>El sistema detecta automáticamente variaciones en mayúsculas/minúsculas</li>
               </ul>
             </div>
           </div>
