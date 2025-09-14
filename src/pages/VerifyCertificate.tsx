@@ -157,9 +157,6 @@ const VerifyCertificate: React.FC = () => {
 
       container.appendChild(certificateDiv);
 
-      // Wait a moment for rendering
-      await new Promise(resolve => setTimeout(resolve, 100));
-
       // Generate PDF
       const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
       await generateCertificatePDF(certificateDiv, fileName);

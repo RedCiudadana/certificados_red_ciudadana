@@ -5,6 +5,47 @@ import { Certificate, Recipient, Template } from '../types';
 import JSZip from 'jszip';
 import { toPng } from 'html-to-image';
 
+// Helper function to wait for all images to load
+const waitForImagesToLoad = async (element: HTMLElement): Promise<void> => {
+  const images = element.querySelectorAll('img');
+  const imagePromises = Array.from(images).map(img => {
+    if (img.complete) {
+      return Promise.resolve();
+    }
+    return new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => resolve(); // Continue even if image fails to load
+      // Fallback timeout
+      setTimeout(() => resolve(), 10000);
+    });
+  });
+  
+  // Also wait for background images
+  const elementsWithBgImages = element.querySelectorAll('*');
+  const bgImagePromises = Array.from(elementsWithBgImages).map(el => {
+    const bgImage = window.getComputedStyle(el).backgroundImage;
+    if (bgImage && bgImage !== 'none' && bgImage.includes('url(')) {
+      const imageUrl = bgImage.match(/url\(["']?([^"']*)["']?\)/)?.[1];
+      if (imageUrl) {
+        return new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // Continue even if image fails to load
+          img.src = imageUrl;
+          // Fallback timeout
+          setTimeout(() => resolve(), 10000);
+        });
+      }
+    }
+    return Promise.resolve();
+  });
+  
+  await Promise.all([...imagePromises, ...bgImagePromises]);
+  
+  // Additional wait for rendering
+  await new Promise(resolve => setTimeout(resolve, 500));
+};
+
 export const generateStaticSite = (
   certificates: Certificate[],
   recipients: Recipient[],
@@ -211,8 +252,8 @@ export const generateCertificatePDF = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
-    // Wait longer for fonts and images to load
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for all images to load completely
+    await waitForImagesToLoad(certificateRef);
     
     const canvas = await html2canvas(certificateRef, {
       scale: 2,
@@ -222,9 +263,8 @@ export const generateCertificatePDF = async (
       logging: false,
       width: certificateRef.offsetWidth,
       height: certificateRef.offsetHeight,
-      foreignObjectRendering: false,
+      foreignObjectRendering: true,
       imageTimeout: 15000,
-      removeContainer: true
     });
 
     const imgData = canvas.toDataURL('image/png', 1.0);
@@ -255,7 +295,7 @@ export const generateCertificatePDF = async (
     pdf.save(`${filename}.pdf`);
   } catch (error) {
     console.error('Error generating certificate PDF:', error);
-    throw new Error('Hubo un error al generar el PDF. Por favor, inténtelo de nuevo.');
+    throw error;
   }
 };
 
@@ -358,9 +398,8 @@ export const downloadAllCertificatesAsPDF = async (
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            foreignObjectRendering: false,
+            foreignObjectRendering: true,
             imageTimeout: 15000,
-            removeContainer: true
           });
 
           const imgData = canvas.toDataURL('image/png', 1.0);
@@ -410,6 +449,9 @@ export const generateCertificateImage = async (
   filename: string = 'certificate'
 ): Promise<void> => {
   try {
+    // Wait for all images to load completely
+    await waitForImagesToLoad(certificateRef);
+    
     const dataUrl = await toPng(certificateRef, { 
       quality: 1.0,
       pixelRatio: 3,
