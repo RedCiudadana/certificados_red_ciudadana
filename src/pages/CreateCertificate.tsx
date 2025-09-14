@@ -433,6 +433,7 @@ export default function CreateCertificate() {
                   
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
+                     type="button"
                       onClick={handleDownloadCertificate}
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
@@ -441,6 +442,7 @@ export default function CreateCertificate() {
                     </button>
                     
                     <button
+                     type="button"
                       onClick={handleShareToLinkedIn}
                       disabled={isSharing}
                       className="inline-flex items-center px-6 py-3 bg-[#0A66C2] text-white text-sm font-medium rounded-xl hover:bg-[#004182] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0A66C2] disabled:opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -467,6 +469,7 @@ export default function CreateCertificate() {
                   <div className="mt-6 space-y-4">
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                       <button
+                       type="button"
                         onClick={handleBulkDownload}
                         disabled={isDownloadingBulk}
                         className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -476,6 +479,7 @@ export default function CreateCertificate() {
                       </button>
                       
                       <button
+                       type="button"
                         onClick={() => {
                           const emailList = recipients
                             .filter(r => generatedCertificateIds.some(certId => {
@@ -521,6 +525,7 @@ Red Ciudadana`);
               
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <button
+                 type="button"
                   onClick={() => {
                     setShowSuccess(false);
                     setActiveStep(1);
