@@ -229,10 +229,9 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
                           {row.email || 'No email'} • {row.course || 'No course'}
                         </p>
                       </div>
-                <li>Columnas requeridas: name (o Name, NAME)</li>
-                <li>Columnas opcionales: email, course (o curso), issueDate (o date, fecha)</li>
-                <li>Cualquier columna adicional se guardará como campo personalizado</li>
-                <li>El sistema detecta automáticamente variaciones en mayúsculas/minúsculas</li>
+                    </div>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
