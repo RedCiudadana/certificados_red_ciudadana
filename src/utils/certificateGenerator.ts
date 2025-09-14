@@ -344,63 +344,79 @@ export const downloadAllCertificatesAsPDF = async (
   try {
     const zip = new JSZip();
     
-    // Create a temporary container for rendering certificates
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    document.body.appendChild(container);
-
     for (const certificate of certificates) {
       const recipient = recipients.find(r => r.id === certificate.recipientId);
       const template = templates.find(t => t.id === certificate.templateId);
       
       if (recipient && template) {
-        // Clear previous certificate
-        container.innerHTML = '';
+        // Create a temporary container for each certificate
+        const container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.width = '1200px';
+        container.style.height = '848px';
+        container.style.zIndex = '-1000';
+        document.body.appendChild(container);
         
         // Create certificate preview
         const certificateDiv = document.createElement('div');
         certificateDiv.className = 'certificate-preview';
-        certificateDiv.style.width = '800px';
-        certificateDiv.style.height = '566px';
+        certificateDiv.style.width = '100%';
+        certificateDiv.style.height = '100%';
         certificateDiv.style.position = 'relative';
         certificateDiv.style.backgroundColor = 'white';
+        certificateDiv.style.overflow = 'hidden';
         
-        // Add template image
-        certificateDiv.style.backgroundImage = `url('${template.imageUrl}')`;
-        certificateDiv.style.backgroundSize = 'contain';
-        certificateDiv.style.backgroundRepeat = 'no-repeat';
-        certificateDiv.style.backgroundPosition = 'center';
+        // Add template background image as img element
+        const img = document.createElement('img');
+        img.src = template.imageUrl;
+        img.alt = 'Certificate template';
+        img.style.position = 'absolute';
+        img.style.top = '0';
+        img.style.left = '0';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.crossOrigin = 'anonymous';
+        certificateDiv.appendChild(img);
 
-        // Pre-load the image to avoid blank captures
+        // Wait for image to load
         await new Promise((resolve, reject) => {
-          const testImg = new Image();
-          testImg.crossOrigin = 'anonymous';
-          testImg.src = template.imageUrl;
-          testImg.onload = () => resolve(true);
-          testImg.onerror = reject;
-          // fallback
-          setTimeout(resolve, 5000);
+          if (img.complete) {
+            resolve(true);
+          } else {
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(true); // Continue even if image fails
+            setTimeout(() => resolve(true), 10000);
+          }
         });
         
-        // Add fields
+        // Add text fields
         template.fields.forEach(field => {
+          if (field.type === 'qrcode') return; // Skip QR code for now
+          
           const fieldDiv = document.createElement('div');
           fieldDiv.style.position = 'absolute';
           fieldDiv.style.left = `${field.x}%`;
-          fieldDiv.style.top  = `${field.y}%`;
+          fieldDiv.style.top = `${field.y}%`;
           fieldDiv.style.transform = 'translate(-50%, -50%)';
           fieldDiv.style.textAlign = 'center';
           fieldDiv.style.width = '100%';
           fieldDiv.style.maxWidth = '80%';
           fieldDiv.style.fontFamily = field.fontFamily || 'serif';
-          fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
+          fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`; // Scale up for better quality
           fieldDiv.style.color = field.color || '#000';
+          fieldDiv.style.fontWeight = 'bold';
+          fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
+          fieldDiv.style.whiteSpace = 'nowrap';
+          fieldDiv.style.zIndex = '10';
+          fieldDiv.style.overflow = 'visible';
+
+          let textValue = '';
           
           switch (field.type) {
             case 'text':
-              let textValue = '';
               if (field.name === 'recipient') {
                 textValue = recipient.name;
               } else if (field.name === 'course') {
@@ -410,11 +426,10 @@ export const downloadAllCertificatesAsPDF = async (
               } else {
                 textValue = field.defaultValue || '';
               }
-              fieldDiv.textContent = textValue;
               break;
               
             case 'date':
-              fieldDiv.textContent = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+              textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -422,34 +437,52 @@ export const downloadAllCertificatesAsPDF = async (
               break;
           }
           
+          // Set the text content
+          fieldDiv.textContent = textValue;
           certificateDiv.appendChild(fieldDiv);
         });
         
         container.appendChild(certificateDiv);
         
+        // Wait for rendering
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         try {
           // Generate PDF for this certificate
           const canvas = await html2canvas(certificateDiv, {
-            scale: 2,
+            scale: 3,
             useCORS: true,
-            allowTaint: true,
+            allowTaint: false,
             backgroundColor: '#ffffff',
-            logging: false,
-            foreignObjectRendering: true,
-            imageTimeout: 15000,
+            logging: true,
+            width: 1200,
+            height: 848,
+            foreignObjectRendering: false,
+            imageTimeout: 30000,
+            onclone: (clonedDoc) => {
+              // Ensure all styles are applied to the cloned document
+              const clonedElement = clonedDoc.querySelector('div') as HTMLElement;
+              if (clonedElement) {
+                clonedElement.style.width = '1200px';
+                clonedElement.style.height = '848px';
+                clonedElement.style.backgroundColor = 'white';
+              }
+            }
           });
 
           const imgData = canvas.toDataURL('image/png', 1.0);
           
-          // Skip if canvas is blank
-          if (canvas.width === 0 || canvas.height === 0) {
-            console.warn(`Skipping blank certificate for ${recipient.name}`);
+          // Check if canvas is blank
+          if (canvas.width === 0 || canvas.height === 0 || imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==') {
+            console.warn(`Canvas rendering failed for ${recipient.name} - empty canvas`);
+            document.body.removeChild(container);
             continue;
           }
           
           const pdf = new jsPDF({
             orientation: 'landscape',
             unit: 'mm',
+            format: 'a4',
             compress: true
           });
           
@@ -457,19 +490,27 @@ export const downloadAllCertificatesAsPDF = async (
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
           
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          // Center the image if it's smaller than the page
+          const yOffset = pdfHeight < pdf.internal.pageSize.getHeight() 
+            ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
+            : 0;
+          
+          pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
           
           const pdfBlob = pdf.output('blob');
           const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate.pdf`;
           zip.file(fileName, pdfBlob);
+          
         } catch (error) {
           console.error(`Error generating PDF for ${recipient.name}:`, error);
         }
+        
+        // Clean up container for this certificate
+        if (document.body.contains(container)) {
+          document.body.removeChild(container);
+        }
       }
     }
-    
-    // Remove temporary container
-    document.body.removeChild(container);
     
     // Generate and download zip file
     const content = await zip.generateAsync({ type: 'blob' });
