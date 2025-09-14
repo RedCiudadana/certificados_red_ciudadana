@@ -106,7 +106,7 @@ const VerifyCertificate: React.FC = () => {
       await new Promise((resolve, reject) => {
         img.onload = resolve;
         img.onerror = reject;
-        setTimeout(resolve, 5000); // Fallback timeout
+        setTimeout(resolve, 10000); // Longer fallback timeout
       });
 
       // Add text fields

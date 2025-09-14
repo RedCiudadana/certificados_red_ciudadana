@@ -353,28 +353,35 @@ export const downloadAllCertificatesAsPDF = async (
         try {
           // Generate PDF for this certificate
           const canvas = await html2canvas(certificateDiv, {
-            scale: 3,
+            scale: 2,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
-            dpi: 300,
-            foreignObjectRendering: true
+            foreignObjectRendering: false,
+            imageTimeout: 15000,
+            removeContainer: true
           });
 
           const imgData = canvas.toDataURL('image/png', 1.0);
           
+          // Skip if canvas is blank
+          if (canvas.width === 0 || canvas.height === 0) {
+            console.warn(`Skipping blank certificate for ${recipient.name}`);
+            continue;
+          }
+          
           const pdf = new jsPDF({
             orientation: 'landscape',
             unit: 'mm',
-            compress: false
+            compress: true
           });
           
           const imgProps = pdf.getImageProperties(imgData);
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
           
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
           
           const pdfBlob = pdf.output('blob');
           const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate.pdf`;

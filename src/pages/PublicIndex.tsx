@@ -116,7 +116,7 @@ const PublicIndex: React.FC = () => {
       await new Promise((resolve, reject) => {
         img.onload = resolve;
         img.onerror = reject;
-        setTimeout(resolve, 5000);
+        setTimeout(resolve, 10000);
       });
 
       // Add text fields
