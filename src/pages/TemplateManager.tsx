@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { PlusCircle, FileText, X } from 'lucide-react';
+import { PlusCircle, FileText, X, Upload, Link as LinkIcon } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import TemplateCard from '../components/TemplateCard';
+import ImageUpload from '../components/ImageUpload';
 import { Template, TemplateField } from '../types';
 import { nanoid } from 'nanoid';
 
@@ -10,6 +11,7 @@ const TemplateManager: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingTemplateId, setEditingTemplateId] = useState<string | null>(null);
+  const [uploadMethod, setUploadMethod] = useState<'url' | 'upload'>('upload');
   
   const [formData, setFormData] = useState<Omit<Template, 'id'>>({
     name: '',
@@ -33,6 +35,7 @@ const TemplateManager: React.FC = () => {
         { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 80, y: 90 }
       ]
     });
+    setUploadMethod('upload');
     setIsCreating(true);
     setIsEditing(false);
   };
@@ -45,6 +48,7 @@ const TemplateManager: React.FC = () => {
         imageUrl: template.imageUrl,
         fields: [...template.fields]
       });
+      setUploadMethod(template.imageUrl.startsWith('data:') ? 'upload' : 'url');
       setEditingTemplateId(id);
       setIsEditing(true);
       setIsCreating(false);
@@ -91,6 +95,13 @@ const TemplateManager: React.FC = () => {
     }));
   };
   
+  const handleImageUploaded = (imageUrl: string) => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl
+    }));
+  };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -124,21 +135,63 @@ const TemplateManager: React.FC = () => {
         </div>
         
         <div>
-          <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">
-            Background Image URL
-          </label>
-          <input
-            type="url"
-            id="imageUrl"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleInputChange}
-            required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-          <p className="mt-1 text-xs text-gray-500">
-            Enter a URL for the certificate background image
-          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Imagen de Fondo del Certificado
+              </label>
+              
+              {/* Upload Method Toggle */}
+              <div className="flex space-x-4 mb-4">
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod('upload')}
+                  className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors duration-200 ${
+                    uploadMethod === 'upload'
+                      ? 'bg-blue-50 border-blue-200 text-blue-700'
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Subir Imagen
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMethod('url')}
+                  className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors duration-200 ${
+                    uploadMethod === 'url'
+                      ? 'bg-blue-50 border-blue-200 text-blue-700'
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <LinkIcon className="mr-2 h-4 w-4" />
+                  URL de Imagen
+                </button>
+              </div>
+            </div>
+            
+            {uploadMethod === 'upload' ? (
+              <ImageUpload
+                onImageUploaded={handleImageUploaded}
+                currentImageUrl={formData.imageUrl}
+              />
+            ) : (
+              <div>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://ejemplo.com/imagen-certificado.jpg"
+                  className="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Ingresa la URL de la imagen de fondo para el certificado
+                </p>
+              </div>
+            )}
+          </div>
         </div>
         
         <div>
