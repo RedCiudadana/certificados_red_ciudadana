@@ -109,104 +109,119 @@ const Certificates: React.FC = () => {
     try {
       // Create a temporary container for rendering the certificate
       const container = document.createElement('div');
-      container.style.position = 'fixed';
-      container.style.left = '-9999px';
-      container.style.top = '0';
-      container.style.width = '800px';
-      container.style.height = '566px';
-      container.style.backgroundColor = 'white';
+      container.style.cssText = `
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: 1200px;
+        height: 848px;
+        background-color: white;
+        z-index: -1;
+      `;
       document.body.appendChild(container);
 
-      try {
-        // Create certificate preview using React-like structure
-        const certificateDiv = document.createElement('div');
-        certificateDiv.className = 'certificate-preview';
-        certificateDiv.style.cssText = `
-          position: relative;
+      // Create certificate preview
+      const certificateDiv = document.createElement('div');
+      certificateDiv.className = 'certificate-preview';
+      certificateDiv.style.cssText = `
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        overflow: hidden;
+      `;
+
+      // Add background image as img element for better rendering
+      const backgroundImg = document.createElement('img');
+      backgroundImg.src = template.imageUrl;
+      backgroundImg.alt = 'Certificate template';
+      backgroundImg.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      `;
+      backgroundImg.crossOrigin = 'anonymous';
+      certificateDiv.appendChild(backgroundImg);
+
+      // Wait for background image to load
+      await new Promise((resolve, reject) => {
+        backgroundImg.onload = () => resolve(true);
+        backgroundImg.onerror = () => resolve(true); // Continue even if image fails
+        // If already loaded
+        if (backgroundImg.complete) resolve(true);
+        // Fallback timeout
+        setTimeout(() => resolve(true), 10000);
+      });
+
+      // Add text fields
+      template.fields.forEach(field => {
+        if (field.type === 'qrcode') return; // Skip QR code for PDF
+        
+        const fieldDiv = document.createElement('div');
+        fieldDiv.style.cssText = `
+          position: absolute;
+          left: ${field.x}%;
+          top: ${field.y}%;
+          transform: translate(-50%, -50%);
+          text-align: center;
           width: 100%;
-          height: 100%;
-          background-color: white;
-          overflow: hidden;
-          background-image: url('${template.imageUrl}');
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: center;
+          max-width: 80%;
+          font-family: ${field.fontFamily || 'serif'};
+          font-size: ${field.fontSize || 16}px;
+          color: ${field.color || '#000'};
+          z-index: 1;
+          font-weight: bold;
+          text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+          word-wrap: break-word;
+          white-space: nowrap;
+          overflow: visible;
         `;
 
-        // Wait for background image to load
-        await new Promise((resolve) => {
-          const testImg = new Image();
-          testImg.crossOrigin = 'anonymous';
-          testImg.onload = () => resolve(true);
-          testImg.onerror = () => resolve(true); // Continue even if image fails
-          testImg.src = template.imageUrl;
-          setTimeout(() => resolve(true), 5000); // Fallback timeout
-        });
+        let textValue = '';
+        switch (field.type) {
+          case 'text':
+            if (field.name === 'recipient') {
+              textValue = recipient.name;
+            } else if (field.name === 'course') {
+              textValue = recipient.course || field.defaultValue || '';
+            } else if (recipient.customFields && recipient.customFields[field.name]) {
+              textValue = recipient.customFields[field.name];
+            } else {
+              textValue = field.defaultValue || '';
+            }
+            break;
 
-        // Add text fields
-        template.fields.forEach(field => {
-          if (field.type === 'qrcode') return; // Skip QR code for now
-          
-          const fieldDiv = document.createElement('div');
-          fieldDiv.style.cssText = `
-            position: absolute;
-            left: ${field.x}%;
-            top: ${field.y}%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            width: 100%;
-            max-width: 80%;
-            font-family: ${field.fontFamily || 'serif'};
-            font-size: ${field.fontSize || 16}px;
-            color: ${field.color || '#000'};
-            z-index: 1;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-            word-wrap: break-word;
-          `;
-
-          let textValue = '';
-          switch (field.type) {
-            case 'text':
-              if (field.name === 'recipient') {
-                textValue = recipient.name;
-              } else if (field.name === 'course') {
-                textValue = recipient.course || field.defaultValue || '';
-              } else if (recipient.customFields && recipient.customFields[field.name]) {
-                textValue = recipient.customFields[field.name];
-              } else {
-                textValue = field.defaultValue || '';
-              }
-              break;
-
-            case 'date':
-              textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              });
-              break;
-          }
-
-          fieldDiv.textContent = textValue;
-          certificateDiv.appendChild(fieldDiv);
-        });
-
-        container.appendChild(certificateDiv);
-
-        // Wait a bit for rendering
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Generate PDF
-        const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
-        await generateCertificatePDF(certificateDiv, fileName);
-
-      } finally {
-        // Clean up
-        if (document.body.contains(container)) {
-          document.body.removeChild(container);
+          case 'date':
+            textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            break;
         }
+
+        fieldDiv.textContent = textValue;
+        certificateDiv.appendChild(fieldDiv);
+      });
+
+      container.appendChild(certificateDiv);
+
+      // Wait for rendering to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Generate PDF
+      const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
+      await generateCertificatePDF(certificateDiv, fileName);
+
+      // Clean up
+      if (document.body.contains(container)) {
+        document.body.removeChild(container);
       }
+
     } catch (error) {
       console.error('Error downloading certificate:', error);
       alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
