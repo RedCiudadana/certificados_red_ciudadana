@@ -7,7 +7,7 @@ import RecipientForm from '../components/RecipientForm';
 import CertificatePreview from '../components/CertificatePreview';
 import BulkUpload from '../components/BulkUpload';
 import { toPng } from 'html-to-image';
-import { generateCertificatePDF } from '../utils/certificateGenerator';
+import { generateCertificatePDF, downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
 
 export default function CreateCertificate() {
   const {
@@ -29,6 +29,7 @@ export default function CreateCertificate() {
   const [formData, setFormData] = useState<any>(null);
   const [certificateImage, setCertificateImage] = useState<string | null>(null);
   const [isSharing, setIsSharing] = useState(false);
+  const [isDownloadingBulk, setIsDownloadingBulk] = useState(false);
   
   useEffect(() => {
     if (!currentTemplateId && templates.length > 0) {
@@ -115,6 +116,25 @@ export default function CreateCertificate() {
       console.error('Error al compartir en LinkedIn:', error);
     } finally {
       setIsSharing(false);
+    }
+  };
+  
+  const handleBulkDownload = async () => {
+    if (generatedCertificateIds.length === 0) return;
+    
+    setIsDownloadingBulk(true);
+    try {
+      // Get certificates that were just generated
+      const generatedCertificates = certificates.filter(cert => 
+        generatedCertificateIds.includes(cert.id)
+      );
+      
+      await downloadAllCertificatesAsPDF(generatedCertificates, recipients, templates);
+    } catch (error) {
+      console.error('Error downloading bulk certificates:', error);
+      alert('Error al descargar los certificados. Por favor, inténtelo de nuevo.');
+    } finally {
+      setIsDownloadingBulk(false);
     }
   };
   
@@ -444,7 +464,50 @@ export default function CreateCertificate() {
                     <p className="text-gray-600 mt-1">certificados creados exitosamente</p>
                   </div>
                   
-                  <div className="mt-4">
+                  <div className="mt-6 space-y-4">
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                      <button
+                        onClick={handleBulkDownload}
+                        disabled={isDownloadingBulk}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                      >
+                        <Download className="mr-2 h-5 w-5" />
+                        {isDownloadingBulk ? 'Generando PDFs...' : 'Descargar Todos los PDFs'}
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          const emailList = recipients
+                            .filter(r => generatedCertificateIds.some(certId => {
+                              const cert = certificates.find(c => c.id === certId);
+                              return cert?.recipientId === r.id;
+                            }))
+                            .map(r => r.email)
+                            .filter(email => email)
+                            .join(';');
+                          
+                          const subject = encodeURIComponent('Tu Certificado Digital de Red Ciudadana');
+                          const body = encodeURIComponent(`¡Felicitaciones!
+
+Tu certificado digital de Red Ciudadana está listo. Puedes verificar y descargar tu certificado visitando:
+
+${window.location.origin}/verify
+
+Ingresa tu código de certificado para acceder a tu certificado digital.
+
+¡Gracias por participar en nuestros programas!
+
+Red Ciudadana`);
+                          
+                          window.open(`mailto:${emailList}?subject=${subject}&body=${body}`);
+                        }}
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                      >
+                        <Share2 className="mr-2 h-5 w-5" />
+                        Enviar por Email
+                      </button>
+                    </div>
+                    
                     <Link
                       to="/dashboard/certificates"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
