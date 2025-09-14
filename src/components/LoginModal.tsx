@@ -64,9 +64,6 @@ const LoginModal: React.FC = () => {
     setIsLoginMode(true);
   };
 
-  const demoCredentials = [
-    { email: 'admin@redciudadana.org', password: 'admin123', role: 'Administrador' }
-  ];
 
   if (!isLoginModalOpen) return null;
 
@@ -105,30 +102,6 @@ const LoginModal: React.FC = () => {
             </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 mb-6">
-            <h3 className="text-sm font-semibold text-blue-800 mb-2">Credenciales de Demostración:</h3>
-            <div className="space-y-2 text-xs">
-              {demoCredentials.map((cred, index) => (
-                <div key={index} className="bg-white rounded-lg p-2 border border-blue-100">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-blue-700">{cred.role}:</span>
-                    <button
-                      type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, email: cred.email, password: cred.password }))}
-                      className="text-blue-600 hover:text-blue-800 text-xs underline"
-                    >
-                      Usar estas credenciales
-                    </button>
-                  </div>
-                  <div className="text-gray-600 mt-1">
-                    <div>Email: {cred.email}</div>
-                    <div>Password: {cred.password}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>

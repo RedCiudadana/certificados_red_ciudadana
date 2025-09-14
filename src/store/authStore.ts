@@ -29,7 +29,7 @@ const mockUsers: Array<User & { password: string }> = [
   {
     id: '1',
     email: 'admin@redciudadana.org',
-    password: 'admin123',
+    password: 'her08236',
     name: 'Administrador Red Ciudadana',
     role: 'admin',
     createdAt: new Date().toISOString()
