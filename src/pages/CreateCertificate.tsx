@@ -315,4 +315,10 @@ export default function CreateCertificate() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        );
+    }
+  };
+}
                 
