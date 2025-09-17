@@ -338,11 +338,29 @@ export const downloadAllCertificatesAsPDF = async (
           certificateDiv.style.backgroundColor = 'white';
           certificateDiv.style.overflow = 'hidden';
           
-          // Add template background
-          certificateDiv.style.backgroundImage = `url(${template.imageUrl})`;
-          certificateDiv.style.backgroundSize = 'cover';
-          certificateDiv.style.backgroundPosition = 'center';
-          certificateDiv.style.backgroundRepeat = 'no-repeat';
+          // Add template background as an img element for better rendering
+          const backgroundImg = document.createElement('img');
+          backgroundImg.src = template.imageUrl;
+          backgroundImg.alt = 'Certificate template';
+          backgroundImg.style.position = 'absolute';
+          backgroundImg.style.top = '0';
+          backgroundImg.style.left = '0';
+          backgroundImg.style.width = '100%';
+          backgroundImg.style.height = '100%';
+          backgroundImg.style.objectFit = 'cover';
+          backgroundImg.style.zIndex = '0';
+          certificateDiv.appendChild(backgroundImg);
+          
+          // Wait for background image to load
+          await new Promise((resolve, reject) => {
+            if (backgroundImg.complete) {
+              resolve(void 0);
+            } else {
+              backgroundImg.onload = () => resolve(void 0);
+              backgroundImg.onerror = () => resolve(void 0); // Continue even if image fails
+              setTimeout(() => resolve(void 0), 10000); // Fallback timeout
+            }
+          });
           
           // Add text fields
           template.fields.forEach(field => {
@@ -396,27 +414,42 @@ export const downloadAllCertificatesAsPDF = async (
           
           container.appendChild(certificateDiv);
           
-          // Wait for rendering
-          await new Promise(resolve => setTimeout(resolve, 1500));
+          // Wait for rendering and fonts to load
+          await new Promise(resolve => setTimeout(resolve, 2000));
           
-          // Generate PDF for this certificate
+          // Generate PDF for this certificate with improved settings
           const canvas = await html2canvas(certificateDiv, {
-            scale: 3,
+            scale: 2,
             useCORS: true,
-            allowTaint: false,
+            allowTaint: true,
             backgroundColor: '#ffffff',
             logging: false,
             width: 1200,
             height: 848,
-            foreignObjectRendering: false,
-            imageTimeout: 30000
+            foreignObjectRendering: true,
+            imageTimeout: 15000,
+            removeContainer: false,
+            onclone: (clonedDoc) => {
+              // Ensure all images are loaded in the cloned document
+              const clonedImages = clonedDoc.querySelectorAll('img');
+              clonedImages.forEach(img => {
+                if (!img.complete) {
+                  img.src = img.src; // Force reload
+                }
+              });
+            }
           });
 
           const imgData = canvas.toDataURL('image/png', 1.0);
           
-          // Check if canvas is blank
-          if (canvas.width === 0 || canvas.height === 0 || imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==') {
-            console.warn(`Canvas rendering failed for ${recipient.name} - empty canvas`);
+          // More robust check for blank canvas
+          const isBlankCanvas = canvas.width === 0 || 
+                               canvas.height === 0 || 
+                               imgData.length < 1000 ||
+                               imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+          
+          if (isBlankCanvas) {
+            console.warn(`Canvas rendering failed for ${recipient.name} - blank or invalid canvas`);
             errorCount++;
           } else {
             const pdf = new jsPDF({
@@ -448,7 +481,7 @@ export const downloadAllCertificatesAsPDF = async (
           errorCount++;
         } finally {
           // Clean up container for this certificate
-          if (document.body.contains(container)) {
+          if (container && document.body.contains(container)) {
             document.body.removeChild(container);
           }
         }
