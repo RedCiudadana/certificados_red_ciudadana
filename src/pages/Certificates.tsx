@@ -106,6 +106,8 @@ const Certificates: React.FC = () => {
 
     if (!certificate || !recipient || !template) return;
 
+    let tempContainer: HTMLDivElement | null = null;
+
     try {
       // Create certificate element
       const certificateDiv = document.createElement('div');
@@ -163,6 +165,15 @@ const Certificates: React.FC = () => {
         certificateDiv.appendChild(fieldDiv);
       });
 
+      // Create temporary container and attach to DOM
+      tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '-9999px';
+      tempContainer.style.visibility = 'hidden';
+      document.body.appendChild(tempContainer);
+      tempContainer.appendChild(certificateDiv);
+
       // Generate PDF
       const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
       await generateCertificatePDF(certificateDiv, fileName);
@@ -170,6 +181,11 @@ const Certificates: React.FC = () => {
     } catch (error) {
       console.error('Error downloading certificate:', error);
       alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
+    } finally {
+      // Clean up temporary container
+      if (tempContainer && tempContainer.parentNode) {
+        tempContainer.parentNode.removeChild(tempContainer);
+      }
     }
   };
 
