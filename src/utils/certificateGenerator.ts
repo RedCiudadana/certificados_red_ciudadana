@@ -532,10 +532,12 @@ export const downloadAllCertificatesAsPDF = async (
       const recipient = recipients.find(r => r.id === certificate.recipientId);
       const template = templates.find(t => t.id === certificate.templateId);
       
+      let container: HTMLElement | null = null;
+      
       if (recipient && template) {
         try {
           // Create a temporary container for each certificate
-          const container = document.createElement('div');
+          container = document.createElement('div');
           container.style.position = 'fixed';
           container.style.left = '-9999px';
           container.style.top = '0';
