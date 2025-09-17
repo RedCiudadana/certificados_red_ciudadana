@@ -315,10 +315,297 @@ export default function CreateCertificate() {
                   </button>
                 </div>
               </div>
+              <div className="p-6">
+                {templates.length > 0 ? (
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {templates.map((template) => (
+                      <TemplateCard
+                        key={template.id}
+                        template={template}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <FileText className="mx-auto h-12 w-12 text-gray-300" />
+                    <h3 className="mt-2 text-sm font-medium text-gray-900">No hay plantillas disponibles</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Necesitas crear una plantilla antes de generar certificados.
+                    </p>
+                    <div className="mt-6">
+                      <Link
+                        to="/dashboard/templates"
+                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+                        Crear Plantilla
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                
+                {templates.length > 0 && currentTemplateId && (
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={() => setActiveStep(3)}
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg"
+                    >
+                      Continuar
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         );
+      
+      case 3:
+        return (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+              <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100 flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    {isBulkMode ? 'Cargar Destinatarios' : 'Agregar Destinatario'}
+                  </h2>
+                  <p className="text-gray-600">
+                    {isBulkMode 
+                      ? 'Sube un archivo Excel con los datos de los destinatarios.'
+                      : 'Ingresa los datos del destinatario del certificado.'
+                    }
+                  </p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep(2)}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Volver
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                {isBulkMode ? (
+                  <BulkUpload onUploaded={handleBulkGenerate} />
+                ) : (
+                  <RecipientForm
+                    onSubmit={handleRecipientSubmit}
+                    onCancel={() => setActiveStep(2)}
+                  />
+                )}
+                
+                {!isBulkMode && formData && (
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={handleContinueToPreview}
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg"
+                    >
+                      Ver Vista Previa
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 5:
+        return (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+              <div className="px-6 py-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-100 flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Vista Previa del Certificado</h2>
+                  <p className="text-gray-600">
+                    Revisa el certificado antes de generarlo.
+                  </p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveStep(3)}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Volver
+                  </button>
+                </div>
+              </div>
+              <div className="p-6">
+                {currentTemplate && currentRecipient && (
+                  <CertificatePreview
+                    template={currentTemplate}
+                    recipient={currentRecipient}
+                    qrCodeUrl={`${window.location.origin}/verify/preview`}
+                  />
+                )}
+                
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    onClick={handleGenerateCertificate}
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg"
+                  >
+                    <Award className="mr-2 h-4 w-4" />
+                    Generar Certificado
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
     }
   };
+
+  // Show success message if certificates were generated
+  if (showSuccess) {
+    return (
+      <div className="space-y-8 animate-fadeIn">
+        <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+          <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+            <h2 className="text-2xl font-bold text-green-900 mb-2 flex items-center">
+              <CheckCircle className="mr-3 h-8 w-8 text-green-600" />
+              ¡Certificado{generatedCertificateIds.length > 1 ? 's' : ''} Generado{generatedCertificateIds.length > 1 ? 's' : ''}!
+            </h2>
+            <p className="text-green-700">
+              {generatedCertificateIds.length > 1 
+                ? `Se generaron ${generatedCertificateIds.length} certificados exitosamente.`
+                : 'El certificado se generó exitosamente.'
+              }
+            </p>
+          </div>
+          <div className="p-6">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {generatedCertificateIds.length === 1 ? (
+                <>
+                  <button
+                    onClick={handleDownloadCertificate}
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Descargar PDF
+                  </button>
+                  <button
+                    onClick={handleShareToLinkedIn}
+                    disabled={isSharing}
+                    className="inline-flex items-center px-6 py-3 bg-[#0A66C2] text-white text-sm font-medium rounded-xl hover:bg-[#004182] transition-all duration-200 shadow-lg"
+                  >
+                    <Share2 className="mr-2 h-4 w-4" />
+                    {isSharing ? 'Compartiendo...' : 'Compartir en LinkedIn'}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={handleBulkDownload}
+                  disabled={isDownloadingBulk}
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  {isDownloadingBulk ? 'Descargando...' : 'Descargar Todos los PDFs'}
+                </button>
+              )}
+              <Link
+                to="/dashboard/certificates"
+                className="inline-flex items-center px-6 py-3 bg-white text-gray-700 border border-gray-300 text-sm font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg"
+              >
+                Ver Todos los Certificados
+              </Link>
+              <button
+                onClick={() => {
+                  setActiveStep(1);
+                  setShowSuccess(false);
+                  setGeneratedCertificateIds([]);
+                  setCurrentRecipientId(null);
+                  setFormData(null);
+                  setCertificateImage(null);
+                }}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Crear Otro Certificado
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="space-y-8">
+      <div className="sm:flex sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Crear Certificado</h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Genera certificados profesionales paso a paso
+          </p>
+        </div>
+      </div>
+
+      {/* Progress Steps */}
+      <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+        <div className="px-6 py-4">
+          <nav aria-label="Progress">
+            <ol className="flex items-center">
+              {[
+                { id: 1, name: 'Modo', status: getStepStatus(1) },
+                { id: 2, name: 'Plantilla', status: getStepStatus(2) },
+                { id: 3, name: 'Destinatario', status: getStepStatus(3) },
+                { id: 5, name: 'Vista Previa', status: getStepStatus(5) }
+              ].map((step, stepIdx) => (
+                <li key={step.name} className={stepIdx !== 3 ? 'flex-1' : ''}>
+                  <div className="flex items-center">
+                    <div className="relative flex items-center justify-center">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
+                          step.status === 'complete'
+                            ? 'bg-green-600 text-white'
+                            : step.status === 'current'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-200 text-gray-500'
+                        }`}
+                      >
+                        {step.status === 'complete' ? (
+                          <CheckCircle className="w-6 h-6" />
+                        ) : (
+                          step.id
+                        )}
+                      </div>
+                    </div>
+                    <div className="ml-4 min-w-0 flex-1">
+                      <p
+                        className={`text-sm font-medium ${
+                          step.status === 'current' ? 'text-blue-600' : 'text-gray-500'
+                        }`}
+                      >
+                        {step.name}
+                      </p>
+                    </div>
+                    {stepIdx !== 3 && (
+                      <div className="flex-1 ml-4">
+                        <div
+                          className={`h-0.5 ${
+                            step.status === 'complete' ? 'bg-green-600' : 'bg-gray-200'
+                          }`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+      {/* Step Content */}
+      {renderStepContent()}
+    </div>
+  );
 }
-                
