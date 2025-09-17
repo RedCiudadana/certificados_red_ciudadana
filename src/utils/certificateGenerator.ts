@@ -277,53 +277,6 @@ document.getElementById('certificate-id').addEventListener('keypress', function(
 
 </body>
 </html>`;
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-5 my-2">
-          <img class="logo_footer" src="/assets/img/footer_2025/WEB_PI-67.png">
-          <p class="text_footer">
-            En Red Ciudadana trabajamos para fortalecer la transparencia,
-            promover la participación ciudadana y construir un futuro más 
-            justo e inclusivo para todos los guatemaltecos.
-          </p>
-          <div class="d-flex">
-            <a href="https://www.facebook.com/Redciudadanagt"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-62.png"></a>
-            <a href="https://twitter.com/redxguate"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-63.png"></a>
-            <a href="https://www.instagram.com/redxguate/"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-64.png"></a>
-            <a href="https://www.linkedin.com/company/red-ciudadana"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-65.png"></a>
-            <a href="https://www.youtube.com/channel/UCQwc62j7beStZYFzwPxBEQg"><img class="red_footer" src="/assets/img/footer_2025/WEB_PI-66.png"></a>
-          </div>
-        </div>
-        <div class="col-lg-3 my-2 flex-container">
-          <div class="links-footer text-left">
-            <a href="/index.html">Inicio</a>
-          </div>                          
-        </div>
-        <div class="col-lg-4 my-2 flex-container2">
-          <div>
-            <h4 class="title_footer">Dirección</h4>
-            <p class="text_footer">Zona 10, Ciudad de Guatemala, Guatemala</p>
-            <h4 class="title_footer">Correo Electrónico</h4>
-            <p class="text_footer">info@redciudadana.org.gt</p>
-            <h4 class="title_footer">Horario de Atención</h4>
-            <p class="text_footer">Lunes a Viernes, 8:00am - 5:00pm</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="py-4" style="background-color: white;">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <p class="text_footer_2">Asociación Civil Red Ciudadana 2025</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-<script src="/assets/js/bootstrap.min.js"></script>
-<script src="/assets/js/jquery-1.12.4.min.js"></script>`;
 
   // Generate individual verification pages
   certificates.forEach(certificate => {

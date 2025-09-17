@@ -257,7 +257,6 @@ git push -u origin main
                       <div className="text-sm text-green-600">Plantillas</div>
                     </div>
                   </div>
-                  </p>
                 </div>
               </div>
             </div>
