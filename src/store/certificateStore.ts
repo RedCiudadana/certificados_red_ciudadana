@@ -2,6 +2,249 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { nanoid } from 'nanoid';
 import { Template, Recipient, Certificate, CertificateCollection } from '../types';
+// Default certificate templates - Add your templates here
+const defaultTemplates: Template[] = [
+  {
+    id: 'default-professional',
+    name: 'Professional Certificate',
+    imageUrl: '/assets/certificate-templates/professional-certificate.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: 'serif', 
+        color: '#1a365d',
+        defaultValue: 'Recipient Name'
+      },
+      { 
+        id: nanoid(), 
+        name: 'course', 
+        type: 'text', 
+        x: 50, 
+        y: 60, 
+        fontSize: 20, 
+        fontFamily: 'serif', 
+        color: '#2d3748',
+        defaultValue: 'Course Name'
+      },
+      { 
+        id: nanoid(), 
+        name: 'date', 
+        type: 'date', 
+        x: 30, 
+        y: 85, 
+        fontSize: 16, 
+        fontFamily: 'serif', 
+        color: '#4a5568'
+      },
+      { 
+        id: nanoid(), 
+        name: 'qrcode', 
+        type: 'qrcode', 
+        x: 85, 
+        y: 90 
+      }
+    ]
+  },
+  {
+    id: 'default-completion',
+    name: 'Course Completion Certificate',
+    imageUrl: '/assets/certificate-templates/completion-certificate.png',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 35, 
+        fontSize: 32, 
+        fontFamily: 'serif', 
+        color: '#744210',
+        defaultValue: 'Student Name'
+      },
+      { 
+        id: nanoid(), 
+        name: 'course', 
+        type: 'text', 
+        x: 50, 
+        y: 55, 
+        fontSize: 24, 
+        fontFamily: 'serif', 
+        color: '#975a16',
+        defaultValue: 'Course Title'
+      },
+      { 
+        id: nanoid(), 
+        name: 'institution', 
+        type: 'text', 
+        x: 50, 
+        y: 70, 
+        fontSize: 18, 
+        fontFamily: 'serif', 
+        color: '#a0522d',
+        defaultValue: 'Red Ciudadana'
+      },
+      { 
+        id: nanoid(), 
+        name: 'date', 
+        type: 'date', 
+        x: 25, 
+        y: 85, 
+        fontSize: 14, 
+        fontFamily: 'serif', 
+        color: '#6b7280'
+      },
+      { 
+        id: nanoid(), 
+        name: 'qrcode', 
+        type: 'qrcode', 
+        x: 80, 
+        y: 85 
+      }
+    ]
+  },
+  {
+    id: 'default-achievement',
+    name: 'Achievement Award',
+    imageUrl: '/assets/certificate-templates/achievement-award.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 42, 
+        fontSize: 30, 
+        fontFamily: 'serif', 
+        color: '#065f46',
+        defaultValue: 'Recipient Name'
+      },
+      { 
+        id: nanoid(), 
+        name: 'achievement', 
+        type: 'text', 
+        x: 50, 
+        y: 58, 
+        fontSize: 22, 
+        fontFamily: 'serif', 
+        color: '#047857',
+        defaultValue: 'Outstanding Achievement'
+      },
+      { 
+        id: nanoid(), 
+        name: 'description', 
+        type: 'text', 
+        x: 50, 
+        y: 72, 
+        fontSize: 16, 
+        fontFamily: 'serif', 
+        color: '#059669',
+        defaultValue: 'For exceptional performance and dedication'
+      },
+      { 
+        id: nanoid(), 
+        name: 'date', 
+        type: 'date', 
+        x: 50, 
+        y: 88, 
+        fontSize: 14, 
+        fontFamily: 'serif', 
+        color: '#6b7280'
+      },
+      { 
+        id: nanoid(), 
+        name: 'qrcode', 
+        type: 'qrcode', 
+        x: 85, 
+        y: 92 
+      }
+    ]
+  }
+];
+
+// Default recipients for testing and validation - Add your recipients here
+const defaultRecipients: Recipient[] = [
+  {
+    id: 'recipient-demo-001',
+    name: 'María García López',
+    email: 'maria.garcia@example.com',
+    course: 'Desarrollo Web Frontend',
+    issueDate: '2024-01-15T00:00:00.000Z',
+    customFields: {
+      institution: 'Red Ciudadana',
+      instructor: 'Carlos Mendoza',
+      duration: '40 horas académicas'
+    }
+  },
+  {
+    id: 'recipient-demo-002',
+    name: 'Juan Carlos Pérez',
+    email: 'juan.perez@example.com',
+    course: 'Ciencia de Datos',
+    issueDate: '2024-02-20T00:00:00.000Z',
+    customFields: {
+      institution: 'Red Ciudadana',
+      instructor: 'Ana Rodríguez',
+      duration: '60 horas académicas'
+    }
+  },
+  {
+    id: 'recipient-demo-003',
+    name: 'Ana Sofía Martínez',
+    email: 'ana.martinez@example.com',
+    course: 'Participación Ciudadana Digital',
+    issueDate: '2024-03-10T00:00:00.000Z',
+    customFields: {
+      institution: 'Red Ciudadana',
+      instructor: 'Roberto Silva',
+      duration: '30 horas académicas'
+    }
+  }
+];
+
+// Default certificates for validation - Add your certificates here
+const defaultCertificates: Certificate[] = [
+  {
+    id: 'CERT-2024-001',
+    recipientId: 'recipient-demo-001',
+    templateId: 'default-professional',
+    qrCodeUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-001`,
+    issueDate: '2024-01-15T00:00:00.000Z',
+    verificationUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-001`,
+    status: 'published'
+  },
+  {
+    id: 'CERT-2024-002',
+    recipientId: 'recipient-demo-002',
+    templateId: 'default-completion',
+    qrCodeUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-002`,
+    issueDate: '2024-02-20T00:00:00.000Z',
+    verificationUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-002`,
+    status: 'published'
+  },
+  {
+    id: 'CERT-2024-003',
+    recipientId: 'recipient-demo-003',
+    templateId: 'default-achievement',
+    qrCodeUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-003`,
+    issueDate: '2024-03-10T00:00:00.000Z',
+    verificationUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/CERT-2024-003`,
+    status: 'published'
+  },
+  {
+    id: '1234', // Short ID for easy testing
+    recipientId: 'recipient-demo-001',
+    templateId: 'default-professional',
+    qrCodeUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/1234`,
+    issueDate: '2024-01-15T00:00:00.000Z',
+    verificationUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/verify/1234`,
+    status: 'published'
+  }
+];
 
 interface CertificateState {
   templates: Template[];
@@ -27,6 +270,12 @@ interface CertificateState {
   generateBulkCertificates: (recipientIds: string[], templateId: string) => string[];
   updateCertificate: (id: string, certificate: Partial<Certificate>) => void;
   deleteCertificate: (id: string) => void;
+  
+  // Utility actions
+  loadDefaultData: () => void;
+  clearAllData: () => void;
+  exportData: () => string;
+  importData: (jsonData: string) => boolean;
 
   // Collection actions
   createCollection: (name: string, templateId: string, description?: string) => string;
@@ -86,8 +335,8 @@ export const useCertificateStore = create<CertificateState>()(
   persist(
     (set, get) => ({
       templates: defaultTemplates,
-      recipients: [],
-      certificates: [],
+      recipients: defaultRecipients,
+      certificates: defaultCertificates,
       collections: [],
       currentTemplateId: null,
 
@@ -216,6 +465,54 @@ export const useCertificateStore = create<CertificateState>()(
           collections: state.collections.filter((c) => c.id !== id)
         }));
       },
+      
+      // Utility actions
+      loadDefaultData: () => {
+        set({
+          templates: [...defaultTemplates],
+          recipients: [...defaultRecipients],
+          certificates: [...defaultCertificates],
+          currentTemplateId: defaultTemplates[0]?.id || null
+        });
+      },
+      
+      clearAllData: () => {
+        set({
+          templates: [],
+          recipients: [],
+          certificates: [],
+          currentTemplateId: null
+        });
+      },
+      
+      exportData: () => {
+        const state = get();
+        return JSON.stringify({
+          templates: state.templates,
+          recipients: state.recipients,
+          certificates: state.certificates,
+          exportDate: new Date().toISOString()
+        }, null, 2);
+      },
+      
+      importData: (jsonData) => {
+        try {
+          const data = JSON.parse(jsonData);
+          if (data.templates && data.recipients && data.certificates) {
+            set({
+              templates: data.templates,
+              recipients: data.recipients,
+              certificates: data.certificates,
+              currentTemplateId: data.templates[0]?.id || null
+            });
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Error importing data:', error);
+          return false;
+        }
+      }
       addCertificatesToCollection: (collectionId, certificateIds) => {
         const { certificates: allCertificates } = get();
         set((state) => ({
