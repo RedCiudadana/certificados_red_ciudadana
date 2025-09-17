@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Github, FileJson, ExternalLink, Copy, Check, Code } from 'lucide-react';
+import { Download, Github, FileJson, ExternalLink, Copy, Check, Code, Globe, Zap, Shield, Search, BarChart3 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { generateStaticSite } from '../utils/certificateGenerator';
 import JSZip from 'jszip';
@@ -11,6 +11,7 @@ const ExportSite: React.FC = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [hasCopied, setHasCopied] = useState(false);
   const [exportedFiles, setExportedFiles] = useState<Record<string, string> | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
   const handleGeneratePreview = () => {
     setIsGenerating(true);
@@ -19,6 +20,12 @@ const ExportSite: React.FC = () => {
     setTimeout(() => {
       const files = generateStaticSite(certificates, recipients, templates);
       setExportedFiles(files);
+      
+      // Create preview URL
+      const blob = new Blob([files['index.html']], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
+      
       setIsGenerating(false);
     }, 1500);
   };
@@ -44,26 +51,96 @@ const ExportSite: React.FC = () => {
       // Add README.md with instructions
       const readmeContent = `# Certificate Verification Site
 
-This folder contains static HTML files for your certificate verification site.
+This folder contains a complete static website for certificate verification.
 
-## Deployment Instructions
+## 🌟 Features
 
-### GitHub Pages
+- **Modern Design**: Responsive design with Red Ciudadana branding
+- **Real-time Search**: JavaScript-powered certificate verification
+- **SEO Optimized**: Includes sitemap.xml and meta tags
+- **Mobile Friendly**: Works perfectly on all devices
+- **Fast Loading**: Optimized CSS and minimal dependencies
+- **Security Headers**: Includes .htaccess with security configurations
+
+## 📊 Statistics
+
+- ${certificates.length} certificates available for verification
+- ${recipients.length} certified recipients
+- ${templates.length} certificate templates
+
+## 🚀 Quick Deploy Options
+
+### Option 1: Netlify (Recommended)
+1. Go to [Netlify](https://netlify.com)
+2. Drag and drop this entire folder to Netlify
+3. Your site will be live instantly with HTTPS
+4. Custom domain available
+
+### Option 2: GitHub Pages
 1. Create a new repository on GitHub
 2. Upload these files to the repository
 3. Go to the repository settings
 4. Scroll down to the GitHub Pages section
 5. Select the main branch as the source
-6. Your site will be published at https://yourusername.github.io/repository-name/
+6. Your site will be published at \`https://yourusername.github.io/repository-name/\`
 
-### Netlify
-1. Sign up for a free Netlify account
-2. Drag and drop this folder to Netlify's upload area
-3. Your site will be deployed immediately
+### Option 3: Vercel
+1. Go to [Vercel](https://vercel.com)
+2. Import your GitHub repository or upload files
+3. Deploy with one click
+4. Automatic HTTPS and global CDN
+
+### Option 4: Traditional Web Hosting
+1. Upload all files to your web hosting via FTP
+2. Point your domain to the folder
+3. The .htaccess file will handle Apache configurations
 
 ## File Structure
-- \`index.html\`: Main verification page where users can enter certificate IDs
-- \`verify/\`: Folder containing individual certificate verification pages
+
+\`\`\`
+certificate-verification-site/
+├── index.html              # Main verification page
+├── verify/                 # Individual certificate pages
+│   ├── CERT-001.html      # Certificate verification pages
+│   └── ...
+├── 404.html               # Custom error page
+├── sitemap.xml            # SEO sitemap
+├── robots.txt             # Search engine instructions
+├── .htaccess              # Apache server configuration
+└── README.md              # This file
+\`\`\`
+
+## 🔧 Customization
+
+- Edit the CSS in the \`<style>\` section of index.html to match your branding
+- Update contact information in the footer
+- Modify the hero section text and statistics
+- Add your own domain name in sitemap.xml
+
+## 📱 Testing
+
+1. Open index.html in a web browser
+2. Test certificate verification with existing IDs
+3. Check mobile responsiveness
+4. Verify all links work correctly
+
+## 🔒 Security Features
+
+- XSS protection headers
+- Content type validation
+- Frame options security
+- Compressed file delivery
+- Cache optimization
+
+## 📞 Support
+
+For technical support or questions about the verification system:
+- Email: info@redciudadana.org.gt
+- Website: https://redciudadana.org
+
+---
+
+Generated on ${new Date().toLocaleDateString('es-ES')} by Red Ciudadana Certificate System
 `;
       zip.file('README.md', readmeContent);
       
@@ -96,42 +173,97 @@ git push -u origin main
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Export Verification Site</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Exportar Sitio de Verificación</h1>
         <p className="mt-2 text-lg text-gray-600">
-          Generate a static website for verifying certificates.
+          Genera un sitio web estático completo para verificar certificados con diseño profesional.
         </p>
       </div>
       
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-        <div className="px-4 py-5 sm:px-6">
-          <h2 className="text-lg font-medium text-gray-900">
-            Generate Verification Site
+      {/* Features Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+          <div className="flex items-center">
+            <Globe className="h-8 w-8 text-blue-500" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Sitio Completo</p>
+              <p className="text-2xl font-bold text-gray-900">Listo</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+          <div className="flex items-center">
+            <Zap className="h-8 w-8 text-green-500" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Despliegue</p>
+              <p className="text-2xl font-bold text-gray-900">Rápido</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+          <div className="flex items-center">
+            <Shield className="h-8 w-8 text-purple-500" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Seguridad</p>
+              <p className="text-2xl font-bold text-gray-900">Incluida</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+          <div className="flex items-center">
+            <BarChart3 className="h-8 w-8 text-orange-500" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">SEO</p>
+              <p className="text-2xl font-bold text-gray-900">Optimizado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+        <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+            <Globe className="mr-3 h-7 w-7 text-blue-600" />
+            Generar Sitio de Verificación
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            This will create a static website with verification pages for all of your certificates.
-            The site can be hosted on GitHub Pages, Netlify, or any static hosting service.
+          <p className="text-gray-600 mt-2">
+            Crea un sitio web estático completo con páginas de verificación para todos tus certificados.
+            Compatible con GitHub Pages, Netlify, Vercel y cualquier servicio de hosting estático.
           </p>
         </div>
         
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
+        <div className="p-6">
           <div className="space-y-6">
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clipRule="evenodd" />
-                  </svg>
+                  <BarChart3 className="h-8 w-8 text-blue-600" />
                 </div>
-                <div className="ml-3 flex-1 md:flex md:justify-between">
-                  <p className="text-sm text-blue-700">
-                    You have {certificates.length} certificate(s) that will be included in the export.
+                <div className="ml-4 flex-1">
+                  <h3 className="text-lg font-semibold text-blue-900 mb-2">Estadísticas del Sitio</h3>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-blue-700">{certificates.length}</div>
+                      <div className="text-sm text-blue-600">Certificados</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-700">{recipients.length}</div>
+                      <div className="text-sm text-purple-600">Destinatarios</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-green-700">{templates.length}</div>
+                      <div className="text-sm text-green-600">Plantillas</div>
+                    </div>
+                  </div>
                   </p>
                 </div>
               </div>
             </div>
             
             {certificates.length === 0 ? (
-              <div className="bg-yellow-50 rounded-lg p-4">
+              <div className="bg-yellow-50 rounded-xl p-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -140,54 +272,68 @@ git push -u origin main
                   </div>
                   <div className="ml-3">
                     <h3 className="text-sm font-medium text-yellow-800">
-                      No certificates found
+                      No se encontraron certificados
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
                       <p>
-                        You need to generate at least one certificate before you can export a verification site.
+                        Necesitas generar al menos un certificado antes de poder exportar un sitio de verificación.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
+              <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                 {!exportedFiles ? (
                   <button
                     onClick={handleGeneratePreview}
                     disabled={isGenerating || certificates.length === 0}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                   >
                     {isGenerating ? (
                       <>
                         <div className="mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-                        Generating...
+                        Generando Sitio...
                       </>
                     ) : (
                       <>
-                        <FileJson className="mr-2 h-4 w-4" aria-hidden="true" />
-                        Generate Preview
+                        <Globe className="mr-2 h-5 w-5" aria-hidden="true" />
+                        Generar Sitio Web
                       </>
                     )}
                   </button>
                 ) : (
-                  <button
-                    onClick={handleExportZip}
-                    disabled={isExporting}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    {isExporting ? (
-                      <>
-                        <div className="mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-                        Preparing Download...
-                      </>
-                    ) : (
-                      <>
-                        <Download className="mr-2 h-4 w-4" aria-hidden="true" />
-                        Download as ZIP
-                      </>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                      onClick={handleExportZip}
+                      disabled={isExporting}
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg"
+                    >
+                      {isExporting ? (
+                        <>
+                          <div className="mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+                          Preparando Descarga...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="mr-2 h-5 w-5" aria-hidden="true" />
+                          Descargar Sitio ZIP
+                        </>
+                      )}
+                    </button>
+                    
+                    {previewUrl && (
+                      <a
+                        href={previewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 shadow-lg"
+                      >
+                        <ExternalLink className="mr-2 h-5 w-5" />
+                        Vista Previa
+                      </a>
                     )}
-                  </button>
+                  </div>
                 )}
               </div>
             )}
@@ -197,86 +343,227 @@ git push -u origin main
       
       {exportedFiles && (
         <>
-          <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-            <div className="px-4 py-5 sm:px-6">
-              <h2 className="text-lg font-medium text-gray-900">
-                Deployment Instructions
+          {/* Site Features */}
+          <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+            <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <Zap className="mr-3 h-7 w-7 text-green-600" />
+                Características del Sitio Generado
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
-                Follow these steps to deploy your verification site.
+              <p className="text-gray-600 mt-2">
+                Tu sitio incluye todas estas características profesionales
               </p>
             </div>
             
-            <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-md font-medium text-gray-900 flex items-center">
-                    <Github className="h-5 w-5 mr-2" /> GitHub Pages
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <Globe className="h-8 w-8 text-blue-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-blue-900">Diseño Moderno</h3>
+                  </div>
+                  <ul className="text-sm text-blue-800 space-y-2">
+                    <li>• Diseño responsive para móviles</li>
+                    <li>• Branding de Red Ciudadana</li>
+                    <li>• Interfaz intuitiva y profesional</li>
+                    <li>• Animaciones y transiciones suaves</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <Search className="h-8 w-8 text-green-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-green-900">Búsqueda Avanzada</h3>
+                  </div>
+                  <ul className="text-sm text-green-800 space-y-2">
+                    <li>• Búsqueda en tiempo real</li>
+                    <li>• Soporte para IDs parciales</li>
+                    <li>• Validación instantánea</li>
+                    <li>• Mensajes de error claros</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <Shield className="h-8 w-8 text-purple-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-purple-900">Seguridad</h3>
+                  </div>
+                  <ul className="text-sm text-purple-800 space-y-2">
+                    <li>• Headers de seguridad incluidos</li>
+                    <li>• Protección XSS</li>
+                    <li>• Configuración Apache (.htaccess)</li>
+                    <li>• Validación de contenido</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <BarChart3 className="h-8 w-8 text-orange-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-orange-900">SEO Optimizado</h3>
+                  </div>
+                  <ul className="text-sm text-orange-800 space-y-2">
+                    <li>• Sitemap.xml incluido</li>
+                    <li>• Meta tags optimizados</li>
+                    <li>• Robots.txt configurado</li>
+                    <li>• URLs amigables</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <Zap className="h-8 w-8 text-red-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-red-900">Rendimiento</h3>
+                  </div>
+                  <ul className="text-sm text-red-800 space-y-2">
+                    <li>• CSS optimizado y minificado</li>
+                    <li>• Carga rápida sin dependencias</li>
+                    <li>• Compresión habilitada</li>
+                    <li>• Cache optimizado</li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                    <FileJson className="h-8 w-8 text-indigo-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-indigo-900">Archivos Incluidos</h3>
+                  </div>
+                  <ul className="text-sm text-indigo-800 space-y-2">
+                    <li>• Página principal (index.html)</li>
+                    <li>• Páginas de verificación individuales</li>
+                    <li>• Página 404 personalizada</li>
+                    <li>• Documentación completa</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+            <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <Code className="mr-3 h-7 w-7 text-blue-600" />
+                Instrucciones de Despliegue
+              </h2>
+              <p className="text-gray-600 mt-2">
+                Sigue estos pasos para publicar tu sitio de verificación
+              </p>
+            </div>
+            
+            <div className="p-6">
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-green-900 flex items-center mb-4">
+                    <Zap className="h-6 w-6 mr-2" /> Netlify (Recomendado)
                   </h3>
-                  <ol className="mt-2 text-sm text-gray-600 list-decimal pl-5 space-y-2">
-                    <li>Download the ZIP file using the button above</li>
-                    <li>Create a new repository on GitHub</li>
-                    <li>Upload the extracted files to the repository</li>
-                    <li>Go to the repository settings</li>
-                    <li>Scroll down to the GitHub Pages section</li>
-                    <li>Select the main branch as the source</li>
-                    <li>Your site will be published at <code>https://yourusername.github.io/repository-name/</code></li>
+                  <ol className="text-sm text-green-800 list-decimal pl-5 space-y-2">
+                    <li>Descarga el archivo ZIP usando el botón de arriba</li>
+                    <li>Ve a <a href="https://netlify.com" target="_blank" className="text-green-600 underline">Netlify.com</a> y crea una cuenta gratuita</li>
+                    <li>Arrastra y suelta la carpeta extraída en Netlify</li>
+                    <li>Tu sitio estará en línea instantáneamente con HTTPS</li>
+                    <li>Opcionalmente configura un dominio personalizado</li>
                   </ol>
-                  <div className="mt-4">
+                  <div className="mt-4 p-3 bg-green-200 rounded-lg">
+                    <p className="text-sm text-green-800">
+                      <strong>✨ Ventajas:</strong> Despliegue instantáneo, HTTPS automático, CDN global, dominio personalizado gratuito
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
+                    <Github className="h-6 w-6 mr-2" /> GitHub Pages
+                  </h3>
+                  <ol className="text-sm text-gray-700 list-decimal pl-5 space-y-2">
+                    <li>Descarga el archivo ZIP usando el botón de arriba</li>
+                    <li>Crea un nuevo repositorio en GitHub</li>
+                    <li>Sube los archivos extraídos al repositorio</li>
+                    <li>Ve a la configuración del repositorio</li>
+                    <li>Busca la sección GitHub Pages</li>
+                    <li>Selecciona la rama principal como fuente</li>
+                    <li>Tu sitio estará en <code className="bg-gray-200 px-2 py-1 rounded">https://tuusuario.github.io/nombre-repositorio/</code></li>
+                  </ol>
+                  <div className="mt-4 flex items-center justify-between">
                     <button
                       onClick={handleCopyDeployCommands}
-                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors duration-200"
                     >
                       {hasCopied ? (
                         <>
-                          <Check className="mr-1.5 h-3 w-3 text-green-500" />
-                          Copied!
+                          <Check className="mr-2 h-4 w-4" />
+                          ¡Copiado!
                         </>
                       ) : (
                         <>
-                          <Copy className="mr-1.5 h-3 w-3" />
-                          Copy deployment commands
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copiar comandos Git
                         </>
                       )}
                     </button>
                   </div>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-md font-medium text-gray-900 flex items-center">
-                    <Code className="h-5 w-5 mr-2" /> Netlify Drop
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-blue-900 flex items-center mb-4">
+                    <Code className="h-6 w-6 mr-2" /> Vercel
                   </h3>
-                  <ol className="mt-2 text-sm text-gray-600 list-decimal pl-5 space-y-2">
-                    <li>Download the ZIP file using the button above</li>
-                    <li>Extract the ZIP file to a folder on your computer</li>
-                    <li>Go to <a href="https://app.netlify.com/drop" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 inline-flex items-center">Netlify Drop <ExternalLink className="h-3 w-3 ml-1" /></a></li>
-                    <li>Drag and drop the folder to the upload area</li>
-                    <li>Your site will be deployed immediately with a unique URL</li>
-                    <li>You can customize the URL in the Netlify dashboard</li>
+                  <ol className="text-sm text-blue-800 list-decimal pl-5 space-y-2">
+                    <li>Ve a <a href="https://vercel.com" target="_blank" className="text-blue-600 underline">Vercel.com</a></li>
+                    <li>Importa tu repositorio de GitHub o sube archivos</li>
+                    <li>Despliega con un clic</li>
+                    <li>HTTPS automático y CDN global incluidos</li>
+                  </ol>
+                </div>
+                
+                <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-orange-900 flex items-center mb-4">
+                    <Globe className="h-6 w-6 mr-2" /> Hosting Tradicional
+                  </h3>
+                  <ol className="text-sm text-orange-800 list-decimal pl-5 space-y-2">
+                    <li>Sube todos los archivos a tu hosting web vía FTP</li>
+                    <li>Apunta tu dominio a la carpeta</li>
+                    <li>El archivo .htaccess manejará las configuraciones de Apache</li>
+                    <li>Verifica que el sitio funcione correctamente</li>
                   </ol>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-            <div className="px-4 py-5 sm:px-6">
-              <h2 className="text-lg font-medium text-gray-900">Preview</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                Preview of the generated site files.
+          <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <FileJson className="mr-3 h-7 w-7 text-gray-600" />
+                Archivos Generados
+              </h2>
+              <p className="text-gray-600 mt-2">
+                Vista previa de todos los archivos incluidos en tu sitio web
               </p>
             </div>
             
-            <div className="border-t border-gray-200">
-              <ul className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
+            <div>
+              <ul className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
                 {Object.keys(exportedFiles).map((path) => (
-                  <li key={path} className="px-4 py-3 flex justify-between items-center hover:bg-gray-50">
+                  <li key={path} className="px-6 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200">
                     <div className="flex items-center">
-                      <FileJson className="h-5 w-5 text-gray-400 mr-3" />
-                      <span className="text-sm text-gray-900 font-mono">{path}</span>
+                      {path.endsWith('.html') ? (
+                        <Globe className="h-5 w-5 text-blue-500 mr-3" />
+                      ) : path.endsWith('.xml') ? (
+                        <Code className="h-5 w-5 text-green-500 mr-3" />
+                      ) : path.endsWith('.txt') ? (
+                        <FileText className="h-5 w-5 text-orange-500 mr-3" />
+                      ) : (
+                        <FileJson className="h-5 w-5 text-gray-400 mr-3" />
+                      )}
+                      <div>
+                        <span className="text-sm text-gray-900 font-mono">{path}</span>
+                        {path === 'index.html' && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Página Principal</span>}
+                        {path === '404.html' && <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Error 404</span>}
+                        {path === 'sitemap.xml' && <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">SEO</span>}
+                      </div>
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {(exportedFiles[path].length / 1024).toFixed(1)} KB
+                    <div className="text-xs text-gray-500 text-right">
+                      <div>{(exportedFiles[path].length / 1024).toFixed(1)} KB</div>
+                      {path.startsWith('verify/') && <div className="text-xs text-blue-600">Verificación</div>}
                     </div>
                   </li>
                 ))}
