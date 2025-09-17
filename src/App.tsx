@@ -12,6 +12,7 @@ import RecipientManager from './pages/RecipientManager';
 import VerifyCertificate from './pages/VerifyCertificate';
 import ExportSite from './pages/ExportSite';
 import Documentation from './pages/Documentation';
+import SourceCodeManager from './pages/SourceCodeManager';
 import LinkedInIntegration from './pages/LinkedInIntegration';
 import EmailNotifications from './pages/EmailNotifications';
 import Certificates from './pages/Certificates';
@@ -80,6 +81,11 @@ function AppContent() {
           <Route path="docs" element={
             <ProtectedRoute requiredRole="admin">
               <Documentation />
+            </ProtectedRoute>
+          } />
+          <Route path="source-code" element={
+            <ProtectedRoute requiredRole="admin">
+              <SourceCodeManager />
             </ProtectedRoute>
           } />
         </Route>

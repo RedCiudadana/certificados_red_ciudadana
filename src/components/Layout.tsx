@@ -16,7 +16,8 @@ import {
   Sparkles,
   Shield,
   LogOut,
-  User
+  User,
+  Code2
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 
@@ -34,6 +35,7 @@ const Layout: React.FC = () => {
     { name: 'Certificados', to: '/dashboard/certificates', icon: ScrollText },
     { name: 'Plantillas', to: '/dashboard/templates', icon: FileText },
     { name: 'Destinatarios', to: '/dashboard/recipients', icon: Users },
+    { name: 'Código Fuente', to: '/dashboard/source-code', icon: Code2 },
     { name: 'Exportar Sitio', to: '/dashboard/export', icon: Download },
     { name: 'LinkedIn', to: '/dashboard/linkedin', icon: Share2 },
     { name: 'Notificaciones', to: '/dashboard/notifications', icon: Mail },
