@@ -53,68 +53,230 @@ export const generateStaticSite = (
 ): Record<string, string> => {
   const files: Record<string, string> = {};
 
-  // Partes comunes
+  // Common HTML components with Red Ciudadana branding
   const head = `
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificate Verification System</title>
+  <title>Sistema de Verificación de Certificados - Red Ciudadana</title>
   <meta name="description" content="Verify the authenticity of digital certificates">
-  <link rel="shortcut icon" type="image/x-icon" href="/assets/img/redciudadana.png">
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/footer.css">
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="shortcut icon" type="image/x-icon" href="https://www.redciudadana.org/assets/img/redciudadana.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 1rem 0; }
+    .header-content { display: flex; justify-content: space-between; align-items: center; }
+    .logo img { height: 50px; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { text-decoration: none; color: #4a5568; font-weight: 500; }
+    .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4rem 0; text-align: center; }
+    .hero h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+    .search-container { background: white; padding: 3rem 0; }
+    .search-box { max-width: 600px; margin: 0 auto; display: flex; gap: 1rem; }
+    .search-input { flex: 1; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1.1rem; }
+    .search-btn { padding: 1rem 2rem; background: #4299e1; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .search-btn:hover { background: #3182ce; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 3rem 0; }
+    .stat-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+    .stat-number { font-size: 2.5rem; font-weight: bold; color: #4299e1; }
+    .stat-label { color: #718096; margin-top: 0.5rem; }
+    .certificate-valid { background: #f0fff4; border: 2px solid #68d391; border-radius: 12px; padding: 2rem; margin: 2rem 0; }
+    .certificate-invalid { background: #fff5f5; border: 2px solid #fc8181; border-radius: 12px; padding: 2rem; margin: 2rem 0; }
+    .certificate-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .detail-item { background: white; padding: 1rem; border-radius: 8px; }
+    .detail-label { font-weight: 600; color: #4a5568; font-size: 0.9rem; }
+    .detail-value { color: #2d3748; margin-top: 0.25rem; }
+    .footer { background: #2d3748; color: white; padding: 3rem 0 1rem; margin-top: 4rem; }
+    .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+    .footer-section h3 { margin-bottom: 1rem; }
+    .footer-section a { color: #a0aec0; text-decoration: none; }
+    .footer-section a:hover { color: white; }
+    .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid #4a5568; margin-top: 2rem; color: #a0aec0; }
+    .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s; }
+    .btn-primary { background: #4299e1; color: white; }
+    .btn-primary:hover { background: #3182ce; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
+    .step { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+    .step-number { width: 60px; height: 60px; background: #4299e1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 1rem; }
+    .step h3 { margin-bottom: 1rem; color: #2d3748; }
+    .step p { color: #718096; }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .search-box { flex-direction: column; }
+      .header-content { flex-direction: column; gap: 1rem; }
+    }
+  </style>
 </head>`;
 
   const header = `
-<header class="default-header">
-  <div class="main-menu-area menu-2 pl-155 pr-115">
-    <div class="container-fluid">
-      <div class="row d-flex align-items-center padmen" id="menu">
-        <div class="col-xl-2 col-lg-3 p0">
-          <div class="logo">
-            <a href="/index.html"><img src="/assets/img/LOGO-RED_NEGRO.png" alt="Logo Red Ciudadana" style="margin: 0 5%;" /></a>
-          </div>
-        </div>
-        <div class="col-xl-7 col-lg-9">
-          <div class="main-menu f-left ml-120">
-            <nav id="mobile-menu">
-              <ul class="nav-items">
-                <li id="inicio"><a href="/index.html">INICIO</a></li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-3 d-none d-xl-block flex-container2">
-          <div class="header-02-wrapper">
-            <div class="header-lang mr-10 pos-rel f-right">
-              <div class="lang-icon traduccion">
-                <img width="22%" src="/assets/img/red/BANDERA.png" alt="Red Ciudadan Ingles">
-                <a class="notranslate" href="https://redciudadana-org.translate.goog/index.html?_x_tr_sl=es&_x_tr_tl=en&_x_tr_hl=es&_x_tr_pto=wapp">En</a>
-                <span>|</span>
-                <a class="notranslate" href="https://redciudadana.org/">Es</a>
-              </div>
-            </div>
-            <div class="header-icon header-02-icon f-right">
-              <a target="_blank" href="https://www.instagram.com/redxguate/"><i class="fab fa-instagram"></i></a>
-              <a target="_blank" href="https://www.tiktok.com/@redxguate"><i class="fa-brands fa-tiktok"></i></a>
-              <a target="_blank" href="https://twitter.com/redxguate"><i class="fa-brands fa-x-twitter"></i></a>
-              <a target="_blank" href="https://www.facebook.com/Redciudadanagt"><i class="fab fa-facebook-f"></i></a>
-              <a target="_blank" href="https://www.youtube.com/channel/UCQwc62j7beStZYFzwPxBEQg"><i class="fab fa-youtube"></i></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mobile-menu"></div>
-        </div>
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="index.html">
+          <img src="https://www.redciudadana.org/assets/img/red/LOGO-RED_NEGRO.png" alt="Red Ciudadana" />
+        </a>
       </div>
+      <nav class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="https://redciudadana.org" target="_blank">Red Ciudadana</a>
+      </nav>
     </div>
   </div>
 </header>`;
 
   const footer = `
-<footer>
-  <div class="py-4" style="background-color: black;">
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <img src="https://www.redciudadana.org/assets/img/footer_2025/WEB_PI-67.png" alt="Red Ciudadana" style="height: 60px; margin-bottom: 1rem;">
+        <p>En Red Ciudadana trabajamos para fortalecer la transparencia, promover la participación ciudadana y construir un futuro más justo e inclusivo para todos los guatemaltecos.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Enlaces</h3>
+        <p><a href="index.html">Verificar Certificado</a></p>
+        <p><a href="https://redciudadana.org" target="_blank">Red Ciudadana</a></p>
+      </div>
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <p>Zona 10, Ciudad de Guatemala, Guatemala</p>
+        <p>info@redciudadana.org.gt</p>
+        <p>Lunes a Viernes, 8:00am - 5:00pm</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Asociación Civil Red Ciudadana. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>`;
+
+  // Generate main index.html with enhanced design
+  files['index.html'] = `
+<!DOCTYPE html>
+<html lang="es">
+${head}
+<body>
+${header}
+
+<section class="hero">
+  <div class="container">
+    <h1>Verificación de Certificados</h1>
+    <p>Sistema oficial de verificación de certificados digitales de Red Ciudadana</p>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number">${certificates.length}</div>
+        <div class="stat-label">Certificados Emitidos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${recipients.length}</div>
+        <div class="stat-label">Estudiantes Certificados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${templates.length}</div>
+        <div class="stat-label">Programas Disponibles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="search-container">
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="certificate-id" class="search-input" placeholder="Ingresa el ID del certificado (ej: 1234 o CERT-2024-001)">
+      <button class="search-btn" onclick="verifyCertificate()">Verificar Certificado</button>
+    </div>
+    <div id="search-result"></div>
+  </div>
+</section>
+
+<section class="container">
+  <h2 style="text-align: center; margin: 3rem 0 2rem; color: #2d3748; font-size: 2.5rem;">Cómo Verificar un Certificado</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>Busca el Código</h3>
+      <p>Localiza el número de identificación en tu certificado. Puede ser de 4 dígitos o el código completo.</p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>Ingresa el Código</h3>
+      <p>Escribe el código en el buscador de arriba y presiona "Verificar Certificado".</p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>Ver Detalles</h3>
+      <p>La página te mostrará todos los detalles del certificado y confirmará su autenticidad.</p>
+    </div>
+  </div>
+</section>
+
+${footer}
+
+<script>
+const certificates = ${JSON.stringify(certificates.map(cert => {
+    const recipient = recipients.find(r => r.id === cert.recipientId);
+    return {
+      id: cert.id,
+      recipientName: recipient?.name || 'Unknown',
+      course: recipient?.course || 'Unknown Course',
+      issueDate: recipient?.issueDate || cert.issueDate,
+      status: cert.status
+    };
+  }))};
+
+function verifyCertificate() {
+  const id = document.getElementById('certificate-id').value.trim();
+  const resultDiv = document.getElementById('search-result');
+  
+  if (!id) {
+    showResult('Por favor ingresa un ID de certificado.', 'error');
+    return;
+  }
+  
+  // Show loading
+  resultDiv.innerHTML = '<div style="text-align: center; padding: 2rem;"><div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #4299e1; border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="margin-top: 1rem; color: #718096;">Verificando certificado...</p></div>';
+  
+  setTimeout(() => {
+    const certificate = certificates.find(c => 
+      c.id === id || 
+      c.id.slice(-4) === id || 
+      c.id.toLowerCase().includes(id.toLowerCase())
+    );
+    
+    if (certificate) {
+      window.location.href = 'verify/' + certificate.id + '.html';
+    } else {
+      showResult('Certificado no encontrado. Verifica que el ID sea correcto.', 'error');
+    }
+  }, 1500);
+}
+
+function showResult(message, type) {
+  const resultDiv = document.getElementById('search-result');
+  const className = type === 'error' ? 'certificate-invalid' : 'certificate-valid';
+  resultDiv.innerHTML = '<div class="' + className + '"><p>' + message + '</p></div>';
+}
+
+// Allow Enter key to trigger search
+document.getElementById('certificate-id').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    verifyCertificate();
+  }
+});
+</script>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+</body>
+</html>`;
     <div class="container">
       <div class="row">
         <div class="col-lg-5 my-2">
@@ -163,37 +325,6 @@ export const generateStaticSite = (
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/jquery-1.12.4.min.js"></script>`;
 
-  // Generate main index.html
-  files['index.html'] = `
-<!DOCTYPE html>
-<html lang="en">
-${head}
-<body>
-${header}
-<div style="background-color: #eff0f4;">
-  <div class="container py-5">
-    <div class="row justify-content-center mb-5">
-      <div class="col-md-12" style="background-color: #fff;">
-        <div class="input-group search-box">
-          <input id="certificate-id" type="text" class="form-control" placeholder="Ingresa el ID del certificado...">
-          <button class="btn btn-dark" type="button" onclick="verifyCertificate()">Verificar →</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-${footer}
-<script>
-function verifyCertificate() {
-  const id = document.getElementById('certificate-id').value.trim();
-  if (id) {
-    window.location.href = '/verify/' + id + '.html';
-  }
-}
-</script>
-</body>
-</html>`;
-
   // Generate individual verification pages
   certificates.forEach(certificate => {
     const recipient = recipients.find(r => r.id === certificate.recipientId);
@@ -202,22 +333,74 @@ function verifyCertificate() {
     if (recipient && template) {
       files[`verify/${certificate.id}.html`] = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 ${head}
 <body>
 ${header}
-<div style="background-color: #eff0f4;">
-  <div class="container py-5">
-    <div class="text-center">
-      <h1 class="mb-4">Certificado Válido</h1>
-      <p><strong>Nombre:</strong> ${recipient.name}</p>
-      <p><strong>Fecha de Emisión:</strong> ${new Date(recipient.issueDate).toLocaleDateString('es-ES')}</p>
-      ${recipient.course ? `<p><strong>Curso:</strong> ${recipient.course}</p>` : ''}
-      <p><strong>ID:</strong> ${certificate.id}</p>
-      <a href="/index.html" class="btn btn-primary mt-4">Verificar otro certificado</a>
+
+<section class="hero" style="padding: 2rem 0;">
+  <div class="container">
+    <h1 style="color: #22c55e; font-size: 2.5rem;">✓ Certificado Válido</h1>
+    <p>Este certificado es auténtico y ha sido verificado exitosamente</p>
+  </div>
+</section>
+
+<section class="container" style="margin: 3rem auto;">
+  <div class="certificate-valid">
+    <h2 style="color: #16a34a; margin-bottom: 2rem; text-align: center;">Detalles del Certificado</h2>
+    <div class="certificate-details">
+      <div class="detail-item">
+        <div class="detail-label">Nombre del Destinatario</div>
+        <div class="detail-value" style="font-size: 1.2rem; font-weight: 600;">${recipient.name}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Fecha de Emisión</div>
+        <div class="detail-value">${new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}</div>
+      </div>
+      ${recipient.course ? `
+      <div class="detail-item">
+        <div class="detail-label">Curso/Programa</div>
+        <div class="detail-value">${recipient.course}</div>
+      </div>` : ''}
+      <div class="detail-item">
+        <div class="detail-label">ID del Certificado</div>
+        <div class="detail-value" style="font-family: monospace; background: #f7fafc; padding: 0.5rem; border-radius: 4px;">${certificate.id}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Estado</div>
+        <div class="detail-value" style="color: #16a34a; font-weight: 600;">✓ Verificado y Válido</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Institución Emisora</div>
+        <div class="detail-value">Red Ciudadana</div>
+      </div>
+    </div>
+    
+    ${recipient.customFields && Object.keys(recipient.customFields).length > 0 ? `
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+      <h3 style="color: #4a5568; margin-bottom: 1rem;">Información Adicional</h3>
+      <div class="certificate-details">
+        ${Object.entries(recipient.customFields).map(([key, value]) => `
+        <div class="detail-item">
+          <div class="detail-label">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+          <div class="detail-value">${value}</div>
+        </div>
+        `).join('')}
+      </div>
+    </div>
+    ` : ''}
+    
+    <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+      <a href="index.html" class="btn btn-primary" style="margin-right: 1rem;">Verificar Otro Certificado</a>
+      <a href="https://redciudadana.org" target="_blank" class="btn" style="background: #6b7280; color: white;">Visitar Red Ciudadana</a>
     </div>
   </div>
-</div>
+</section>
+
 ${footer}
 </body>
 </html>`;
@@ -227,23 +410,103 @@ ${footer}
   // Generate 404 page
   files['404.html'] = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 ${head}
 <body>
 ${header}
-<div style="background-color: #eff0f4;">
-  <div class="container py-5">
-    <div class="text-center">
-      <h1 class="mb-4 text-danger">Certificado No Encontrado</h1>
-      <p>El ID ingresado no corresponde a un certificado válido.</p>
-      <a href="/index.html" class="btn btn-primary mt-4">Volver a intentar</a>
+
+<section class="hero" style="padding: 2rem 0;">
+  <div class="container">
+    <h1 style="color: #ef4444; font-size: 2.5rem;">❌ Certificado No Encontrado</h1>
+    <p>El ID ingresado no corresponde a un certificado válido en nuestra base de datos</p>
+  </div>
+</section>
+
+<section class="container" style="margin: 3rem auto;">
+  <div class="certificate-invalid">
+    <h2 style="color: #dc2626; margin-bottom: 2rem; text-align: center;">Certificado No Válido</h2>
+    <div style="text-align: center;">
+      <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #7f1d1d;">
+        El código de certificado que ingresaste no existe en nuestro sistema de verificación.
+      </p>
+      <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1.5rem; margin: 2rem 0;">
+        <h3 style="color: #991b1b; margin-bottom: 1rem;">Posibles causas:</h3>
+        <ul style="text-align: left; color: #7f1d1d; max-width: 400px; margin: 0 auto;">
+          <li>El ID del certificado fue ingresado incorrectamente</li>
+          <li>El certificado aún no ha sido publicado</li>
+          <li>El certificado ha sido revocado o cancelado</li>
+          <li>El ID no pertenece a un certificado de Red Ciudadana</li>
+        </ul>
+      </div>
+      <div style="margin-top: 2rem;">
+        <a href="index.html" class="btn btn-primary" style="margin-right: 1rem;">Intentar Nuevamente</a>
+        <a href="https://redciudadana.org/contacto" target="_blank" class="btn" style="background: #6b7280; color: white;">Contactar Soporte</a>
+      </div>
     </div>
   </div>
-</div>
+</section>
+
 ${footer}
 </body>
 </html>`;
 
+  // Generate sitemap.xml for SEO
+  files['sitemap.xml'] = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://certificados.redciudadana.org/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  ${certificates.map(cert => `
+  <url>
+    <loc>https://certificados.redciudadana.org/verify/${cert.id}.html</loc>
+    <lastmod>${cert.issueDate.split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join('')}
+</urlset>`;
+
+  // Generate robots.txt
+  files['robots.txt'] = `User-agent: *
+Allow: /
+
+Sitemap: https://certificados.redciudadana.org/sitemap.xml`;
+
+  // Generate .htaccess for Apache servers
+  files['.htaccess'] = `# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Set cache headers
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+</IfModule>
+
+# Custom 404 page
+ErrorDocument 404 /404.html
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>`;
   return files;
 };
 
