@@ -3,127 +3,6 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { Template, Recipient, Certificate, CertificateCollection } from '../types';
 import { nanoid } from 'nanoid';
 
-// Default templates
-const defaultTemplates: Template[] = [
-  {
-    id: 'professional-cert',
-    name: 'Professional Certificate',
-    imageUrl: '/assets/certificate-templates/professional-certificate.jpg',
-    fields: [
-      { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 40, fontSize: 28, fontFamily: 'serif', color: '#1a365d' },
-      { id: nanoid(), name: 'course', type: 'text', x: 50, y: 60, fontSize: 20, fontFamily: 'serif', color: '#2d3748' },
-      { id: nanoid(), name: 'institution', type: 'text', x: 50, y: 70, fontSize: 18, fontFamily: 'serif', color: '#4a5568', defaultValue: 'Red Ciudadana' },
-      { id: nanoid(), name: 'date', type: 'date', x: 30, y: 85, fontSize: 16, fontFamily: 'serif', color: '#6b7280' },
-      { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 85, y: 90 }
-    ]
-  },
-  {
-    id: 'completion-cert',
-    name: 'Course Completion Certificate',
-    imageUrl: '/assets/certificate-templates/completion-certificate.png',
-    fields: [
-      { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 35, fontSize: 32, fontFamily: 'serif', color: '#1a365d' },
-      { id: nanoid(), name: 'course', type: 'text', x: 50, y: 55, fontSize: 24, fontFamily: 'serif', color: '#2d3748' },
-      { id: nanoid(), name: 'institution', type: 'text', x: 50, y: 70, fontSize: 18, fontFamily: 'serif', color: '#4a5568', defaultValue: 'Red Ciudadana' },
-      { id: nanoid(), name: 'date', type: 'date', x: 25, y: 85, fontSize: 16, fontFamily: 'serif', color: '#6b7280' },
-      { id: nanoid(), name: 'signature', type: 'text', x: 75, y: 85, fontSize: 14, fontFamily: 'cursive', color: '#374151', defaultValue: 'Director' },
-      { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 85, y: 92 }
-    ]
-  },
-  {
-    id: 'achievement-cert',
-    name: 'Achievement Award',
-    imageUrl: '/assets/certificate-templates/achievement-award.jpg',
-    fields: [
-      { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 42, fontSize: 28, fontFamily: 'serif', color: '#744210' },
-      { id: nanoid(), name: 'achievement', type: 'text', x: 50, y: 58, fontSize: 22, fontFamily: 'serif', color: '#047857', defaultValue: 'Outstanding Achievement' },
-      { id: nanoid(), name: 'description', type: 'text', x: 50, y: 72, fontSize: 16, fontFamily: 'serif', color: '#059669', defaultValue: 'For exceptional performance and dedication' },
-      { id: nanoid(), name: 'date', type: 'date', x: 50, y: 88, fontSize: 14, fontFamily: 'serif', color: '#6b7280' },
-      { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 85, y: 92 }
-    ]
-  }
-];
-
-// Default recipients
-const defaultRecipients: Recipient[] = [
-  {
-    id: 'recipient-001',
-    name: 'Ana García Rodríguez',
-    email: 'ana.garcia@example.com',
-    course: 'Desarrollo Web Frontend',
-    issueDate: '2024-01-15T00:00:00.000Z',
-    customFields: {
-      institution: 'Red Ciudadana',
-      duration: '40 horas',
-      level: 'Intermedio'
-    }
-  },
-  {
-    id: 'recipient-002',
-    name: 'Carlos López Martínez',
-    email: 'carlos.lopez@example.com',
-    course: 'Ciencia de Datos',
-    issueDate: '2024-02-20T00:00:00.000Z',
-    customFields: {
-      institution: 'Red Ciudadana',
-      duration: '60 horas',
-      level: 'Avanzado'
-    }
-  },
-  {
-    id: 'recipient-003',
-    name: 'María Fernanda Silva',
-    email: 'maria.silva@example.com',
-    course: 'Ciudadanía Digital',
-    issueDate: '2024-03-10T00:00:00.000Z',
-    customFields: {
-      institution: 'Red Ciudadana',
-      duration: '20 horas',
-      level: 'Básico'
-    }
-  }
-];
-
-// Default certificates
-const defaultCertificates: Certificate[] = [
-  {
-    id: '1234',
-    recipientId: 'recipient-001',
-    templateId: 'professional-cert',
-    qrCodeUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/1234',
-    issueDate: '2024-01-15T00:00:00.000Z',
-    verificationUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/1234',
-    status: 'published'
-  },
-  {
-    id: 'CERT-2024-001',
-    recipientId: 'recipient-002',
-    templateId: 'completion-cert',
-    qrCodeUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-001',
-    issueDate: '2024-02-20T00:00:00.000Z',
-    verificationUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-001',
-    status: 'published'
-  },
-  {
-    id: 'CERT-2024-002',
-    recipientId: 'recipient-003',
-    templateId: 'achievement-cert',
-    qrCodeUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-002',
-    issueDate: '2024-03-10T00:00:00.000Z',
-    verificationUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-002',
-    status: 'published'
-  },
-  {
-    id: 'CERT-2024-003',
-    recipientId: 'recipient-001',
-    templateId: 'achievement-cert',
-    qrCodeUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-003',
-    issueDate: '2024-03-15T00:00:00.000Z',
-    verificationUrl: 'https://redciudadana-certifi-ak3z.bolt.host/verify/CERT-2024-003',
-    status: 'published'
-  }
-];
-
 interface CertificateStore {
   // State
   templates: Template[];
@@ -168,11 +47,11 @@ export const useCertificateStore = create<CertificateStore>()(
   persist(
     (set, get) => ({
       // Initial state
-      templates: defaultTemplates,
-      recipients: defaultRecipients,
-      certificates: defaultCertificates,
+      templates: [],
+      recipients: [],
+      certificates: [],
       collections: [],
-      currentTemplateId: defaultTemplates[0]?.id || null,
+      currentTemplateId: null,
       
       // Template actions
       addTemplate: (template) => {
@@ -376,11 +255,11 @@ export const useCertificateStore = create<CertificateStore>()(
       // Utility actions
       loadDefaultData: () => {
         set({
-          templates: defaultTemplates,
-          recipients: defaultRecipients,
-          certificates: defaultCertificates,
+          templates: [],
+          recipients: [],
+          certificates: [],
           collections: [],
-          currentTemplateId: defaultTemplates[0]?.id || null
+          currentTemplateId: null
         });
       },
       
