@@ -185,13 +185,13 @@ const VerifyCertificate: React.FC = () => {
 
   // Verification Steps Component
   const VerificationSteps = () => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-600 rounded-xl flex items-center justify-center">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -213,7 +213,7 @@ const VerifyCertificate: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-6">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-gray-500 to-gray-500 rounded-full flex items-center justify-center mb-6">
             <Award className="h-10 w-10 text-white" />
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -236,14 +236,14 @@ const VerifyCertificate: React.FC = () => {
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
                 placeholder="Ingresa el código de tu certificado..."
-                className="block w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                className="block w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl text-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
                 disabled={isLoading}
               />
             </div>
             <button
               type="submit"
               disabled={isLoading || !searchId.trim()}
-              className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full mt-4 bg-gradient-to-r from-gray-600 to-gray-600 text-white py-4 px-6 rounded-xl text-lg font-semibold hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -263,7 +263,7 @@ const VerifyCertificate: React.FC = () => {
         {/* Verification Steps */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-6">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-6">
               <span className="text-2xl font-bold text-white">1</span>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h3>
@@ -273,7 +273,7 @@ const VerifyCertificate: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-6">
               <span className="text-2xl font-bold text-white">2</span>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h3>
@@ -283,7 +283,7 @@ const VerifyCertificate: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-shadow duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mb-6">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-6">
               <span className="text-2xl font-bold text-white">3</span>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h3>
@@ -294,11 +294,11 @@ const VerifyCertificate: React.FC = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
+        <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-2xl p-8">
           <div className="flex items-start space-x-4">
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Shield className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                <Shield className="h-6 w-6 text-gray-600" />
               </div>
             </div>
             <div>
@@ -312,15 +312,15 @@ const VerifyCertificate: React.FC = () => {
               </p>
               <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                 <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                  <CheckCircle className="h-4 w-4 text-gray-500 mr-2" />
                   Verificación instantánea
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                  <CheckCircle className="h-4 w-4 text-gray-500 mr-2" />
                   Códigos únicos e irrepetibles
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                  <CheckCircle className="h-4 w-4 text-gray-500 mr-2" />
                   Base de datos segura
                 </div>
               </div>
@@ -337,9 +337,9 @@ const VerifyCertificate: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-6">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-gray-500 to-gray-500 rounded-full flex items-center justify-center mb-6">
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-white border-t-transparent"></div>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -361,9 +361,9 @@ const VerifyCertificate: React.FC = () => {
   
   if (!isValid) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full text-center">
-          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center mb-6">
+          <div className="w-20 h-20 mx-auto bg-gradient-to-r from-red-500 to-gray-500 rounded-full flex items-center justify-center mb-6">
             <AlertTriangle className="h-10 w-10 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -380,7 +380,7 @@ const VerifyCertificate: React.FC = () => {
                 setSearchId('');
                 navigate('/verify', { replace: true });
               }}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+              className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
             >
               Intentar Nuevamente
             </button>
@@ -399,16 +399,16 @@ const VerifyCertificate: React.FC = () => {
   
   if (certificateId === 'preview') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 flex justify-between items-center">
+          <div className="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-50 flex justify-between items-center">
             <div className="flex items-center">
-              <div className="bg-blue-100 rounded-full p-3">
-                <CheckCircle className="h-6 w-6 text-blue-600" />
+              <div className="bg-gray-100 rounded-full p-3">
+                <CheckCircle className="h-6 w-6 text-gray-600" />
               </div>
-              <h2 className="ml-4 text-xl font-bold text-blue-800">Vista Previa del Certificado</h2>
+              <h2 className="ml-4 text-xl font-bold text-gray-800">Vista Previa del Certificado</h2>
             </div>
-            <span className="px-4 py-2 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
+            <span className="px-4 py-2 bg-gray-100 text-gray-800 text-sm font-semibold rounded-full">
               Modo Vista Previa
             </span>
           </div>
@@ -420,7 +420,7 @@ const VerifyCertificate: React.FC = () => {
               </p>
               <Link
                 to="/"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Volver a la Aplicación
@@ -433,27 +433,27 @@ const VerifyCertificate: React.FC = () => {
   }
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-          <div className="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-blue-50 flex justify-between items-center">
+          <div className="px-6 py-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-50 flex justify-between items-center">
             <div className="flex items-center">
-              <div className="bg-green-100 rounded-full p-3">
-                <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="bg-gray-100 rounded-full p-3">
+                <CheckCircle className="h-8 w-8 text-gray-600" />
               </div>
               <div className="ml-4">
-                <h2 className="text-2xl font-bold text-green-800">Certificado Verificado</h2>
-                <p className="text-green-600">Este certificado es auténtico y válido</p>
+                <h2 className="text-2xl font-bold text-gray-800">Certificado Verificado</h2>
+                <p className="text-gray-600">Este certificado es auténtico y válido</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <span className="px-4 py-2 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
+              <span className="px-4 py-2 bg-gray-100 text-gray-800 text-sm font-semibold rounded-full">
                 ✓ Auténtico
               </span>
               <button
                 onClick={handleDownloadCertificate}
-                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg"
+                className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-xl hover:bg-gray-700 transition-colors duration-200 shadow-lg"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Descargar PDF
@@ -475,7 +475,7 @@ const VerifyCertificate: React.FC = () => {
             {template && (
               <div className="bg-white rounded-2xl shadow-xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <FileText className="mr-2 h-5 w-5 text-blue-600" />
+                  <FileText className="mr-2 h-5 w-5 text-gray-600" />
                   Certificado Digital
                 </h3>
                 <div className="relative bg-gray-50 rounded-xl p-4 overflow-hidden">
@@ -548,7 +548,7 @@ const VerifyCertificate: React.FC = () => {
             {/* Recipient Info */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <User className="mr-2 h-5 w-5 text-blue-600" />
+                <User className="mr-2 h-5 w-5 text-gray-600" />
                 Información del Destinatario
               </h3>
               <div className="space-y-4">
@@ -574,7 +574,7 @@ const VerifyCertificate: React.FC = () => {
             {/* Certificate Details */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Award className="mr-2 h-5 w-5 text-purple-600" />
+                <Award className="mr-2 h-5 w-5 text-gray-600" />
                 Detalles del Certificado
               </h3>
               <div className="space-y-4">
@@ -603,7 +603,7 @@ const VerifyCertificate: React.FC = () => {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-gray-500">Estado</label>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
                     <CheckCircle className="mr-1 h-4 w-4" />
                     Válido y Verificado
                   </span>
@@ -632,7 +632,7 @@ const VerifyCertificate: React.FC = () => {
               <div className="space-y-3">
                 <button
                   onClick={handleDownloadCertificate}
-                  className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
+                  className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
                 >
                   <Download className="inline-block mr-2 h-4 w-4" />
                   Descargar Certificado PDF
@@ -643,7 +643,7 @@ const VerifyCertificate: React.FC = () => {
                     setSearchId('');
                     navigate('/verify', { replace: true });
                   }}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                  className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
                 >
                   <Search className="inline-block mr-2 h-4 w-4" />
                   Verificar Otro Certificado

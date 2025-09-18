@@ -153,7 +153,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-8 text-center ${
               isDragActive
-                ? 'border-blue-400 bg-blue-50'
+                ? 'border-gray-400 bg-gray-50'
                 : 'border-gray-300 hover:border-gray-400'
             }`}
           >
@@ -161,7 +161,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
             <div className="space-y-4">
               <Upload
                 className={`mx-auto h-12 w-12 ${
-                  isDragActive ? 'text-blue-500' : 'text-gray-400'
+                  isDragActive ? 'text-gray-500' : 'text-gray-400'
                 }`}
               />
               <div className="space-y-1">
@@ -181,7 +181,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
                     e.stopPropagation();
                     handleUploadClick();
                   }}
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg"
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-600 text-white text-sm font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-lg"
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   Seleccionar Archivo Excel
@@ -192,7 +192,7 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
                     e.stopPropagation();
                     downloadTemplate();
                   }}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
                 >
                   <FileSpreadsheet className="mr-2 h-4 w-4" />
                   Descargar Plantilla
@@ -210,10 +210,10 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
             </div>
           </div>
         ) : (
-          <div className="bg-green-50 rounded-lg p-6 text-center">
-            <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
-            <h3 className="mt-2 text-lg font-medium text-green-900">Upload Complete!</h3>
-            <p className="mt-1 text-sm text-green-700">
+          <div className="bg-gray-50 rounded-lg p-6 text-center">
+            <CheckCircle className="mx-auto h-12 w-12 text-gray-500" />
+            <h3 className="mt-2 text-lg font-medium text-gray-900">Upload Complete!</h3>
+            <p className="mt-1 text-sm text-gray-700">
               Successfully processed {totalRecords} recipient{totalRecords !== 1 ? 's' : ''}
             </p>
           </div>
@@ -222,8 +222,8 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
         {isProcessing && (
           <div className="mt-4 text-center">
             <div className="inline-flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent mr-2"></div>
-              <span className="text-blue-600">Processing file...</span>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-600 border-t-transparent mr-2"></div>
+              <span className="text-gray-600">Processing file...</span>
             </div>
           </div>
         )}

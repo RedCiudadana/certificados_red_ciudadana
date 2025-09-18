@@ -12,9 +12,9 @@ const Dashboard: React.FC = () => {
       name: 'Plantillas', 
       count: templates.length, 
       icon: FileText, 
-      color: 'from-blue-500 to-blue-600', 
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
+      color: 'from-gray-500 to-gray-600', 
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-700',
       to: '/dashboard/templates',
       description: 'Diseños disponibles'
     },
@@ -22,9 +22,9 @@ const Dashboard: React.FC = () => {
       name: 'Destinatarios', 
       count: recipients.length, 
       icon: Users, 
-      color: 'from-green-500 to-green-600', 
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700',
+      color: 'from-gray-500 to-gray-600', 
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-700',
       to: '/dashboard/recipients',
       description: 'Personas registradas'
     },
@@ -32,9 +32,9 @@ const Dashboard: React.FC = () => {
       name: 'Certificados', 
       count: certificates.length, 
       icon: Award, 
-      color: 'from-purple-500 to-purple-600', 
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-700',
+      color: 'from-gray-500 to-gray-600', 
+      bgColor: 'bg-gray-50',
+      textColor: 'text-gray-700',
       to: '/dashboard/certificates',
       description: 'Certificados generados'
     }
@@ -59,16 +59,15 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header with improved styling */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl shadow-xl" style={{ backgroundColor: '#232831' }}>
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="relative px-8 py-12">
           <div className="sm:flex sm:items-center sm:justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
                 ¡Bienvenido a CertifyPro! 
-                <span className="inline-block ml-2 animate-bounce">🎓</span>
               </h1>
-              <p className="text-xl text-blue-100">
+              <p className="text-xl text-gray-100">
                 Gestiona tus certificados y genera nuevos de manera profesional
               </p>
             </div>
@@ -91,7 +90,8 @@ const Dashboard: React.FC = () => {
               </Link>
               <Link
                 to="/dashboard/create"
-                className="inline-flex items-center px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center px-6 py-3 bg-white text-sm font-medium rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                style={{ color: '#232831' }}
               >
                 <Plus className="mr-2 h-5 w-5" />
                 Crear Certificado
@@ -112,7 +112,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="p-6">
               <div className="flex items-center justify-between">
-                <div className={`flex-shrink-0 rounded-xl p-3 bg-gradient-to-r ${stat.color} shadow-lg`}>
+                <div className={`flex-shrink-0 rounded-xl p-3 shadow-lg`} style={{ backgroundColor: "#232831" }}>
                   <stat.icon className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-right">
@@ -122,22 +122,22 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="mt-4">
                 <h3 className="text-lg font-semibold text-gray-900">{stat.name}</h3>
-                <div className="mt-2 flex items-center text-blue-600 group-hover:text-blue-700 transition-colors">
+                <div className="mt-2 flex items-center group-hover:text-gray-700 transition-colors" style={{ color: "#232831" }}>
                   <span className="text-sm font-medium">Ver todos</span>
                   <ChevronRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </div>
-            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`}></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`} style={{ backgroundColor: "#232831" }}></div>
           </Link>
         ))}
       </div>
 
       {/* Quick insights */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4" style={{ borderColor: "#232831" }}>
           <div className="flex items-center">
-            <TrendingUp className="h-8 w-8 text-blue-500" />
+            <TrendingUp className="h-8 w-8" style={{ color: "#232831" }} />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Actividad Reciente</p>
               <p className="text-2xl font-bold text-gray-900">{recentActivity}</p>
@@ -145,9 +145,9 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4" style={{ borderColor: "#232831" }}>
           <div className="flex items-center">
-            <CheckCircle className="h-8 w-8 text-green-500" />
+            <CheckCircle className="h-8 w-8" style={{ color: "#232831" }} />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Tasa de Finalización</p>
               <p className="text-2xl font-bold text-gray-900">{completionRate}%</p>
@@ -155,9 +155,9 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4" style={{ borderColor: "#232831" }}>
           <div className="flex items-center">
-            <Clock className="h-8 w-8 text-purple-500" />
+            <Clock className="h-8 w-8" style={{ color: "#232831" }} />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Último Certificado</p>
               <p className="text-sm font-bold text-gray-900">
@@ -173,14 +173,15 @@ const Dashboard: React.FC = () => {
       
       {/* Enhanced recent certificates section */}
       <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-        <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200 flex justify-between items-center">
+        <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-200 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Certificados Recientes</h2>
             <p className="text-gray-600 mt-1">Últimos certificados generados</p>
           </div>
           <Link
             to="/dashboard/certificates"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center text-white px-4 py-2 text-sm font-medium rounded-xl hover:opacity-90 transition-colors duration-200 shadow-lg hover:shadow-xl"
+            style={{ backgroundColor: "#232831" }}
           >
             Ver todos
             <ChevronRight className="ml-1 h-4 w-4" />
@@ -198,7 +199,7 @@ const Dashboard: React.FC = () => {
                     <div className="px-6 py-5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center min-w-0">
-                          <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                          <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center mr-4" style={{ backgroundColor: "#232831" }}>
                             <Award className="h-6 w-6 text-white" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -215,13 +216,13 @@ const Dashboard: React.FC = () => {
                             <p className="text-sm text-gray-500">
                               {new Date(certificate.issueDate).toLocaleDateString('es-ES')}
                             </p>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                               {certificate.status === 'published' ? 'Publicado' : 'Borrador'}
                             </span>
                           </div>
                           <button
                             onClick={() => handleDownloadAll()}
-                            className="inline-flex items-center px-3 py-2 text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200"
+                            className="inline-flex items-center px-3 py-2 text-sm text-gray-600 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                           >
                             <Download className="h-4 w-4 mr-1" />
                             Descargar
@@ -244,7 +245,7 @@ const Dashboard: React.FC = () => {
               </p>
               <Link
                 to="/dashboard/create"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white text-sm font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Plus className="mr-2 h-5 w-5" />
                 Crear Primer Certificado

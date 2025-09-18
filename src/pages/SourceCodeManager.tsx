@@ -170,7 +170,7 @@ set({
             onClick={() => setActiveTab('templates')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'templates'
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-gray-500 text-gray-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -181,7 +181,7 @@ set({
             onClick={() => setActiveTab('data')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'data'
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-gray-500 text-gray-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -192,7 +192,7 @@ set({
             onClick={() => setActiveTab('guide')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'guide'
-                ? 'border-blue-500 text-blue-600'
+                ? 'border-gray-500 text-gray-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -207,15 +207,15 @@ set({
         <div className="space-y-6">
           {/* Directory Structure */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                <Folder className="mr-3 h-6 w-6 text-blue-600" />
+                <Folder className="mr-3 h-6 w-6 text-gray-600" />
                 Estructura de Directorios
               </h2>
               <p className="text-gray-600 mt-1">Ubicación de archivos para imágenes de certificados</p>
             </div>
             <div className="p-6">
-              <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400">
+              <div className="bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-400">
                 <div className="space-y-1">
                   <div>📁 public/</div>
                   <div className="ml-4">📁 assets/</div>
@@ -226,9 +226,9 @@ set({
                   <div className="ml-12">📄 README.md</div>
                 </div>
               </div>
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2">Especificaciones de Imagen</h3>
-                <ul className="text-sm text-blue-800 space-y-1">
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">Especificaciones de Imagen</h3>
+                <ul className="text-sm text-gray-800 space-y-1">
                   <li>• <strong>Dimensiones:</strong> 2000x1414 píxeles (proporción A4)</li>
                   <li>• <strong>Resolución:</strong> 300 DPI para calidad de impresión</li>
                   <li>• <strong>Formatos:</strong> PNG, JPG, GIF, WebP, SVG</li>
@@ -240,17 +240,17 @@ set({
 
           {/* Template Code */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100 flex justify-between items-center">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                  <Code2 className="mr-3 h-6 w-6 text-green-600" />
+                  <Code2 className="mr-3 h-6 w-6 text-gray-600" />
                   Código para Plantillas
                 </h2>
                 <p className="text-gray-600 mt-1">Agrega plantillas directamente en el código fuente</p>
               </div>
               <button
                 onClick={() => handleCopyCode(templateCode, 'template')}
-                className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-xl hover:bg-green-700 transition-colors duration-200"
+                className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-xl hover:bg-gray-700 transition-colors duration-200"
               >
                 {copiedCode === 'template' ? (
                   <>
@@ -266,7 +266,7 @@ set({
               </button>
             </div>
             <div className="p-6">
-              <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
+              <pre className="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto text-sm">
                 <code>{templateCode}</code>
               </pre>
             </div>
@@ -274,17 +274,17 @@ set({
 
           {/* Recipients Code */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-100 flex justify-between items-center">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                  <Users className="mr-3 h-6 w-6 text-purple-600" />
+                  <Users className="mr-3 h-6 w-6 text-gray-600" />
                   Código para Destinatarios
                 </h2>
                 <p className="text-gray-600 mt-1">Agrega destinatarios para los certificados</p>
               </div>
               <button
                 onClick={() => handleCopyCode(recipientCode, 'recipient')}
-                className="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-xl hover:bg-purple-700 transition-colors duration-200"
+                className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-xl hover:bg-gray-700 transition-colors duration-200"
               >
                 {copiedCode === 'recipient' ? (
                   <>
@@ -300,7 +300,7 @@ set({
               </button>
             </div>
             <div className="p-6">
-              <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
+              <pre className="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto text-sm">
                 <code>{recipientCode}</code>
               </pre>
             </div>
@@ -308,17 +308,17 @@ set({
 
           {/* Certificates Code */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-orange-50 to-red-50 border-b border-gray-100 flex justify-between items-center">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-red-50 border-b border-gray-100 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                  <Award className="mr-3 h-6 w-6 text-orange-600" />
+                  <Award className="mr-3 h-6 w-6 text-gray-600" />
                   Código para Certificados
                 </h2>
                 <p className="text-gray-600 mt-1">Agrega certificados para validación</p>
               </div>
               <button
                 onClick={() => handleCopyCode(certificateCode, 'certificate')}
-                className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-xl hover:bg-orange-700 transition-colors duration-200"
+                className="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-xl hover:bg-gray-700 transition-colors duration-200"
               >
                 {copiedCode === 'certificate' ? (
                   <>
@@ -334,7 +334,7 @@ set({
               </button>
             </div>
             <div className="p-6">
-              <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
+              <pre className="bg-gray-900 text-gray-400 p-4 rounded-lg overflow-x-auto text-sm">
                 <code>{certificateCode}</code>
               </pre>
             </div>
@@ -347,9 +347,9 @@ set({
         <div className="space-y-6">
           {/* Current Data Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-gray-500">
               <div className="flex items-center">
-                <FileText className="h-8 w-8 text-blue-500" />
+                <FileText className="h-8 w-8 text-gray-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Plantillas</p>
                   <p className="text-2xl font-bold text-gray-900">{templates.length}</p>
@@ -357,9 +357,9 @@ set({
               </div>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-gray-500">
               <div className="flex items-center">
-                <Users className="h-8 w-8 text-green-500" />
+                <Users className="h-8 w-8 text-gray-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Destinatarios</p>
                   <p className="text-2xl font-bold text-gray-900">{recipients.length}</p>
@@ -367,9 +367,9 @@ set({
               </div>
             </div>
             
-            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-gray-500">
               <div className="flex items-center">
-                <Award className="h-8 w-8 text-purple-500" />
+                <Award className="h-8 w-8 text-gray-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Certificados</p>
                   <p className="text-2xl font-bold text-gray-900">{certificates.length}</p>
@@ -380,7 +380,7 @@ set({
 
           {/* Data Management */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-xl font-bold text-gray-900">Gestión de Datos</h2>
               <p className="text-gray-600 mt-1">Exportar, importar y gestionar datos del sistema</p>
             </div>
@@ -393,7 +393,7 @@ set({
                   </p>
                   <button
                     onClick={handleExportData}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                    className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
                   >
                     <Download className="inline-block mr-2 h-4 w-4" />
                     Exportar Datos JSON
@@ -407,7 +407,7 @@ set({
                   </p>
                   <button
                     onClick={() => setShowImportModal(true)}
-                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
+                    className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
                   >
                     <Upload className="inline-block mr-2 h-4 w-4" />
                     Importar Datos JSON
@@ -449,14 +449,14 @@ set({
       {activeTab === 'guide' && (
         <div className="space-y-6">
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-xl font-bold text-gray-900">Guía de Implementación</h2>
               <p className="text-gray-600 mt-1">Pasos para agregar certificados mediante código fuente</p>
             </div>
             <div className="p-6">
               <div className="space-y-8">
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center font-bold">
                     1
                   </div>
                   <div>
@@ -471,7 +471,7 @@ set({
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center font-bold">
                     2
                   </div>
                   <div>
@@ -483,7 +483,7 @@ set({
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center font-bold">
                     3
                   </div>
                   <div>
@@ -495,7 +495,7 @@ set({
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center font-bold">
                     4
                   </div>
                   <div>
@@ -507,8 +507,8 @@ set({
                 </div>
               </div>
 
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2 flex items-center">
+              <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
                   <Info className="mr-2 h-5 w-5" />
                   Enlaces Útiles
                 </h3>
@@ -516,7 +516,7 @@ set({
                   <a
                     href="/CERTIFICATE_SOURCE_CODE_GUIDE.md"
                     target="_blank"
-                    className="flex items-center text-blue-600 hover:text-blue-800"
+                    className="flex items-center text-gray-600 hover:text-gray-800"
                   >
                     <ExternalLink className="mr-1 h-4 w-4" />
                     Guía Completa de Código Fuente
@@ -524,7 +524,7 @@ set({
                   <a
                     href="/TEMPLATE_SETUP_GUIDE.md"
                     target="_blank"
-                    className="flex items-center text-blue-600 hover:text-blue-800"
+                    className="flex items-center text-gray-600 hover:text-gray-800"
                   >
                     <ExternalLink className="mr-1 h-4 w-4" />
                     Guía de Configuración de Plantillas
@@ -558,7 +558,7 @@ set({
                 </button>
                 <button
                   onClick={handleImportData}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gray-600 border border-transparent rounded-md hover:bg-gray-700"
                 >
                   Importar
                 </button>

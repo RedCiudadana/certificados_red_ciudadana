@@ -54,13 +54,13 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-600 rounded-xl flex items-center justify-center">
                 <Award className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -73,7 +73,7 @@ const StudentDashboard: React.FC = () => {
                 <p className="text-sm font-medium text-gray-900">{user?.name}</p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
-              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-gray-500 rounded-full flex items-center justify-center">
                 <User className="h-6 w-6 text-white" />
               </div>
             </div>
@@ -83,12 +83,12 @@ const StudentDashboard: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-2xl shadow-xl mb-8">
+        <div className="bg-gradient-to-r from-gray-600 via-gray-600 to-gray-800 rounded-2xl shadow-xl mb-8">
           <div className="px-8 py-12 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
               ¡Bienvenido a tu Panel de Certificados! 🎓
             </h2>
-            <p className="text-xl text-blue-100 mb-6">
+            <p className="text-xl text-gray-100 mb-6">
               Aquí puedes ver tus certificados aprobados y verificar cualquier certificado por su ID
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -103,9 +103,9 @@ const StudentDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Certificate Verification */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                <Shield className="mr-3 h-6 w-6 text-blue-600" />
+                <Shield className="mr-3 h-6 w-6 text-gray-600" />
                 Verificar Certificado
               </h3>
               <p className="text-gray-600 mt-1">Ingresa el ID de cualquier certificado para verificar su autenticidad</p>
@@ -122,14 +122,14 @@ const StudentDashboard: React.FC = () => {
                     value={searchId}
                     onChange={(e) => setSearchId(e.target.value)}
                     placeholder="Ingresa el ID del certificado (4 dígitos o completo)..."
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                     disabled={isSearching}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSearching || !searchId.trim()}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
+                  className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                 >
                   {isSearching ? (
                     <div className="flex items-center justify-center">
@@ -162,12 +162,12 @@ const StudentDashboard: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                       <div className="flex items-start">
-                        <CheckCircle className="h-6 w-6 text-green-500 mt-0.5" />
+                        <CheckCircle className="h-6 w-6 text-gray-500 mt-0.5" />
                         <div className="ml-3 flex-1">
-                          <h4 className="text-lg font-semibold text-green-800">Certificado Válido</h4>
-                          <div className="mt-2 space-y-1 text-sm text-green-700">
+                          <h4 className="text-lg font-semibold text-gray-800">Certificado Válido</h4>
+                          <div className="mt-2 space-y-1 text-sm text-gray-700">
                             <p><strong>Nombre:</strong> {searchResult.recipient?.name}</p>
                             <p><strong>Curso:</strong> {searchResult.recipient?.course}</p>
                             <p><strong>Fecha:</strong> {new Date(searchResult.recipient?.issueDate).toLocaleDateString('es-ES')}</p>
@@ -175,7 +175,7 @@ const StudentDashboard: React.FC = () => {
                           </div>
                           <Link
                             to={`/verify/${searchResult.certificate?.id}`}
-                            className="inline-flex items-center mt-3 text-green-600 hover:text-green-500 text-sm font-medium"
+                            className="inline-flex items-center mt-3 text-gray-600 hover:text-gray-500 text-sm font-medium"
                           >
                             Ver detalles completos
                             <ExternalLink className="ml-1 h-4 w-4" />
@@ -191,9 +191,9 @@ const StudentDashboard: React.FC = () => {
 
           {/* My Certificates */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                <Award className="mr-3 h-6 w-6 text-purple-600" />
+                <Award className="mr-3 h-6 w-6 text-gray-600" />
                 Mis Certificados
               </h3>
               <p className="text-gray-600 mt-1">Certificados aprobados asociados a tu cuenta</p>
@@ -222,7 +222,7 @@ const StudentDashboard: React.FC = () => {
                             <div className="mt-3 flex flex-wrap gap-2">
                               <Link
                                 to={`/verify/${certificate.id}`}
-                                className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors duration-200"
+                                className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors duration-200"
                               >
                                 <Shield className="mr-1 h-3 w-3" />
                                 Ver Certificado
@@ -237,7 +237,7 @@ const StudentDashboard: React.FC = () => {
                             </div>
                           </div>
                           <div className="ml-4">
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                               <CheckCircle className="mr-1 h-3 w-3" />
                               Aprobado
                             </span>
@@ -262,7 +262,7 @@ const StudentDashboard: React.FC = () => {
 
         {/* Verification Steps */}
         <div className="mt-8 bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
             <h3 className="text-xl font-bold text-gray-900">Cómo Verificar un Certificado</h3>
             <p className="text-gray-600 mt-1">Sigue estos pasos para verificar cualquier certificado</p>
           </div>
@@ -270,7 +270,7 @@ const StudentDashboard: React.FC = () => {
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-white">1</span>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Busca el Código</h4>
@@ -280,7 +280,7 @@ const StudentDashboard: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-white">2</span>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Ingresa el Código</h4>
@@ -290,7 +290,7 @@ const StudentDashboard: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mb-4">
+                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-4">
                   <span className="text-2xl font-bold text-white">3</span>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Ver Detalles</h4>

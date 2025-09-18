@@ -98,7 +98,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           {...getRootProps()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${
             isDragActive
-              ? 'border-blue-400 bg-blue-50'
+              ? 'border-gray-400 bg-gray-50'
               : error
               ? 'border-red-300 bg-red-50'
               : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
@@ -108,7 +108,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           
           {isUploading ? (
             <div className="space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-600 border-t-transparent mx-auto"></div>
               <div>
                 <p className="text-base font-medium text-gray-900">Subiendo imagen...</p>
                 <p className="text-sm text-gray-500">Por favor espera mientras procesamos tu imagen</p>
@@ -118,7 +118,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <div className="space-y-4">
               <Upload
                 className={`mx-auto h-12 w-12 ${
-                  isDragActive ? 'text-blue-500' : error ? 'text-red-400' : 'text-gray-400'
+                  isDragActive ? 'text-gray-500' : error ? 'text-red-400' : 'text-gray-400'
                 }`}
               />
               <div className="space-y-1">
@@ -153,8 +153,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="p-3 bg-green-50 border-t border-green-200">
-              <div className="flex items-center text-green-700">
+            <div className="p-3 bg-gray-50 border-t border-gray-200">
+              <div className="flex items-center text-gray-700">
                 <CheckCircle className="h-4 w-4 mr-2" />
                 <span className="text-sm font-medium">Imagen subida correctamente</span>
               </div>
@@ -175,16 +175,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         </div>
       )}
 
-      <div className="bg-blue-50 rounded-xl p-4">
+      <div className="bg-gray-50 rounded-xl p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">
-            <ImageIcon className="h-5 w-5 text-blue-400 mt-0.5" />
+            <ImageIcon className="h-5 w-5 text-gray-400 mt-0.5" />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">
+            <h3 className="text-sm font-medium text-gray-800">
               Recomendaciones para la imagen
             </h3>
-            <div className="mt-2 text-sm text-blue-700">
+            <div className="mt-2 text-sm text-gray-700">
               <ul className="list-disc list-inside space-y-1">
                 <li>Dimensiones recomendadas: 2000x1414 píxeles (proporción A4)</li>
                 <li>Resolución mínima: 300 DPI para impresión</li>

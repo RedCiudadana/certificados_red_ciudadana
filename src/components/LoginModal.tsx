@@ -88,7 +88,7 @@ const LoginModal: React.FC = () => {
 
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-gray-600 to-gray-600 rounded-full flex items-center justify-center mb-4">
               <Shield className="h-8 w-8 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -121,7 +121,7 @@ const LoginModal: React.FC = () => {
                     required={!isLoginMode}
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                     placeholder="Tu nombre completo"
                   />
                 </div>
@@ -143,7 +143,7 @@ const LoginModal: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                   placeholder="tu@email.com"
                 />
               </div>
@@ -164,7 +164,7 @@ const LoginModal: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
                   placeholder="Tu contraseña"
                 />
                 <button
@@ -206,7 +206,7 @@ const LoginModal: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-gray-600 to-gray-600 hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -234,7 +234,7 @@ const LoginModal: React.FC = () => {
                   setError('');
                   setFormData({ email: '', password: '', name: '', role: 'student' });
                 }}
-                className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+                className="text-gray-600 hover:text-gray-500 text-sm font-medium"
               >
                 {isLoginMode 
                   ? '¿No tienes cuenta? Crear una nueva' 

@@ -181,9 +181,9 @@ git push -u origin main
       
       {/* Features Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-gray-500">
           <div className="flex items-center">
-            <Globe className="h-8 w-8 text-blue-500" />
+            <Globe className="h-8 w-8 text-gray-500" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Sitio Completo</p>
               <p className="text-2xl font-bold text-gray-900">Listo</p>
@@ -191,9 +191,9 @@ git push -u origin main
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-gray-500">
           <div className="flex items-center">
-            <Zap className="h-8 w-8 text-green-500" />
+            <Zap className="h-8 w-8 text-gray-500" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Despliegue</p>
               <p className="text-2xl font-bold text-gray-900">Rápido</p>
@@ -201,9 +201,9 @@ git push -u origin main
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-gray-500">
           <div className="flex items-center">
-            <Shield className="h-8 w-8 text-purple-500" />
+            <Shield className="h-8 w-8 text-gray-500" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Seguridad</p>
               <p className="text-2xl font-bold text-gray-900">Incluida</p>
@@ -211,9 +211,9 @@ git push -u origin main
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-gray-500">
           <div className="flex items-center">
-            <BarChart3 className="h-8 w-8 text-orange-500" />
+            <BarChart3 className="h-8 w-8 text-gray-500" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">SEO</p>
               <p className="text-2xl font-bold text-gray-900">Optimizado</p>
@@ -223,9 +223,9 @@ git push -u origin main
       </div>
 
       <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-        <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+        <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Globe className="mr-3 h-7 w-7 text-blue-600" />
+            <Globe className="mr-3 h-7 w-7 text-gray-600" />
             Generar Sitio de Verificación
           </h2>
           <p className="text-gray-600 mt-2">
@@ -236,25 +236,25 @@ git push -u origin main
         
         <div className="p-6">
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-50 rounded-xl p-6">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <BarChart3 className="h-8 w-8 text-blue-600" />
+                  <BarChart3 className="h-8 w-8 text-gray-600" />
                 </div>
                 <div className="ml-4 flex-1">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-2">Estadísticas del Sitio</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Estadísticas del Sitio</h3>
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold text-blue-700">{certificates.length}</div>
-                      <div className="text-sm text-blue-600">Certificados</div>
+                      <div className="text-2xl font-bold text-gray-700">{certificates.length}</div>
+                      <div className="text-sm text-gray-600">Certificados</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-purple-700">{recipients.length}</div>
-                      <div className="text-sm text-purple-600">Destinatarios</div>
+                      <div className="text-2xl font-bold text-gray-700">{recipients.length}</div>
+                      <div className="text-sm text-gray-600">Destinatarios</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-green-700">{templates.length}</div>
-                      <div className="text-sm text-green-600">Plantillas</div>
+                      <div className="text-2xl font-bold text-gray-700">{templates.length}</div>
+                      <div className="text-sm text-gray-600">Plantillas</div>
                     </div>
                   </div>
                 </div>
@@ -287,7 +287,7 @@ git push -u origin main
                   <button
                     onClick={handleGeneratePreview}
                     disabled={isGenerating || certificates.length === 0}
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white text-sm font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg"
                   >
                     {isGenerating ? (
                       <>
@@ -306,7 +306,7 @@ git push -u origin main
                     <button
                       onClick={handleExportZip}
                       disabled={isExporting}
-                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg"
+                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white text-sm font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-lg"
                     >
                       {isExporting ? (
                         <>
@@ -326,7 +326,7 @@ git push -u origin main
                         href={previewUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-xl hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 shadow-lg"
+                        className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white text-sm font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-lg"
                       >
                         <ExternalLink className="mr-2 h-5 w-5" />
                         Vista Previa
@@ -344,9 +344,9 @@ git push -u origin main
         <>
           {/* Site Features */}
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Zap className="mr-3 h-7 w-7 text-green-600" />
+                <Zap className="mr-3 h-7 w-7 text-gray-600" />
                 Características del Sitio Generado
               </h2>
               <p className="text-gray-600 mt-2">
@@ -356,12 +356,12 @@ git push -u origin main
             
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6">
                   <div className="flex items-center mb-4">
-                    <Globe className="h-8 w-8 text-blue-600" />
-                    <h3 className="ml-3 text-lg font-semibold text-blue-900">Diseño Moderno</h3>
+                    <Globe className="h-8 w-8 text-gray-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-gray-900">Diseño Moderno</h3>
                   </div>
-                  <ul className="text-sm text-blue-800 space-y-2">
+                  <ul className="text-sm text-gray-800 space-y-2">
                     <li>• Diseño responsive para móviles</li>
                     <li>• Branding de Red Ciudadana</li>
                     <li>• Interfaz intuitiva y profesional</li>
@@ -369,12 +369,12 @@ git push -u origin main
                   </ul>
                 </div>
                 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6">
                   <div className="flex items-center mb-4">
-                    <Search className="h-8 w-8 text-green-600" />
-                    <h3 className="ml-3 text-lg font-semibold text-green-900">Búsqueda Avanzada</h3>
+                    <Search className="h-8 w-8 text-gray-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-gray-900">Búsqueda Avanzada</h3>
                   </div>
-                  <ul className="text-sm text-green-800 space-y-2">
+                  <ul className="text-sm text-gray-800 space-y-2">
                     <li>• Búsqueda en tiempo real</li>
                     <li>• Soporte para IDs parciales</li>
                     <li>• Validación instantánea</li>
@@ -382,12 +382,12 @@ git push -u origin main
                   </ul>
                 </div>
                 
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6">
                   <div className="flex items-center mb-4">
-                    <Shield className="h-8 w-8 text-purple-600" />
-                    <h3 className="ml-3 text-lg font-semibold text-purple-900">Seguridad</h3>
+                    <Shield className="h-8 w-8 text-gray-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-gray-900">Seguridad</h3>
                   </div>
-                  <ul className="text-sm text-purple-800 space-y-2">
+                  <ul className="text-sm text-gray-800 space-y-2">
                     <li>• Headers de seguridad incluidos</li>
                     <li>• Protección XSS</li>
                     <li>• Configuración Apache (.htaccess)</li>
@@ -395,12 +395,12 @@ git push -u origin main
                   </ul>
                 </div>
                 
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6">
                   <div className="flex items-center mb-4">
-                    <BarChart3 className="h-8 w-8 text-orange-600" />
-                    <h3 className="ml-3 text-lg font-semibold text-orange-900">SEO Optimizado</h3>
+                    <BarChart3 className="h-8 w-8 text-gray-600" />
+                    <h3 className="ml-3 text-lg font-semibold text-gray-900">SEO Optimizado</h3>
                   </div>
-                  <ul className="text-sm text-orange-800 space-y-2">
+                  <ul className="text-sm text-gray-800 space-y-2">
                     <li>• Sitemap.xml incluido</li>
                     <li>• Meta tags optimizados</li>
                     <li>• Robots.txt configurado</li>
@@ -438,9 +438,9 @@ git push -u origin main
           </div>
 
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Code className="mr-3 h-7 w-7 text-blue-600" />
+                <Code className="mr-3 h-7 w-7 text-gray-600" />
                 Instrucciones de Despliegue
               </h2>
               <p className="text-gray-600 mt-2">
@@ -450,19 +450,19 @@ git push -u origin main
             
             <div className="p-6">
               <div className="space-y-6">
-                <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-green-900 flex items-center mb-4">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
                     <Zap className="h-6 w-6 mr-2" /> Netlify (Recomendado)
                   </h3>
-                  <ol className="text-sm text-green-800 list-decimal pl-5 space-y-2">
+                  <ol className="text-sm text-gray-800 list-decimal pl-5 space-y-2">
                     <li>Descarga el archivo ZIP usando el botón de arriba</li>
-                    <li>Ve a <a href="https://netlify.com" target="_blank" className="text-green-600 underline">Netlify.com</a> y crea una cuenta gratuita</li>
+                    <li>Ve a <a href="https://netlify.com" target="_blank" className="text-gray-600 underline">Netlify.com</a> y crea una cuenta gratuita</li>
                     <li>Arrastra y suelta la carpeta extraída en Netlify</li>
                     <li>Tu sitio estará en línea instantáneamente con HTTPS</li>
                     <li>Opcionalmente configura un dominio personalizado</li>
                   </ol>
-                  <div className="mt-4 p-3 bg-green-200 rounded-lg">
-                    <p className="text-sm text-green-800">
+                  <div className="mt-4 p-3 bg-gray-200 rounded-lg">
+                    <p className="text-sm text-gray-800">
                       <strong>✨ Ventajas:</strong> Despliegue instantáneo, HTTPS automático, CDN global, dominio personalizado gratuito
                     </p>
                   </div>
@@ -501,23 +501,23 @@ git push -u origin main
                   </div>
                 </div>
                 
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-blue-900 flex items-center mb-4">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
                     <Code className="h-6 w-6 mr-2" /> Vercel
                   </h3>
-                  <ol className="text-sm text-blue-800 list-decimal pl-5 space-y-2">
-                    <li>Ve a <a href="https://vercel.com" target="_blank" className="text-blue-600 underline">Vercel.com</a></li>
+                  <ol className="text-sm text-gray-800 list-decimal pl-5 space-y-2">
+                    <li>Ve a <a href="https://vercel.com" target="_blank" className="text-gray-600 underline">Vercel.com</a></li>
                     <li>Importa tu repositorio de GitHub o sube archivos</li>
                     <li>Despliega con un clic</li>
                     <li>HTTPS automático y CDN global incluidos</li>
                   </ol>
                 </div>
                 
-                <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-orange-900 flex items-center mb-4">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center mb-4">
                     <Globe className="h-6 w-6 mr-2" /> Hosting Tradicional
                   </h3>
-                  <ol className="text-sm text-orange-800 list-decimal pl-5 space-y-2">
+                  <ol className="text-sm text-gray-800 list-decimal pl-5 space-y-2">
                     <li>Sube todos los archivos a tu hosting web vía FTP</li>
                     <li>Apunta tu dominio a la carpeta</li>
                     <li>El archivo .htaccess manejará las configuraciones de Apache</li>
@@ -529,7 +529,7 @@ git push -u origin main
           </div>
           
           <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center">
                 <FileJson className="mr-3 h-7 w-7 text-gray-600" />
                 Archivos Generados
@@ -545,24 +545,24 @@ git push -u origin main
                   <li key={path} className="px-6 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors duration-200">
                     <div className="flex items-center">
                       {path.endsWith('.html') ? (
-                        <Globe className="h-5 w-5 text-blue-500 mr-3" />
+                        <Globe className="h-5 w-5 text-gray-500 mr-3" />
                       ) : path.endsWith('.xml') ? (
-                        <Code className="h-5 w-5 text-green-500 mr-3" />
+                        <Code className="h-5 w-5 text-gray-500 mr-3" />
                       ) : path.endsWith('.txt') ? (
-                        <FileText className="h-5 w-5 text-orange-500 mr-3" />
+                        <FileText className="h-5 w-5 text-gray-500 mr-3" />
                       ) : (
                         <FileJson className="h-5 w-5 text-gray-400 mr-3" />
                       )}
                       <div>
                         <span className="text-sm text-gray-900 font-mono">{path}</span>
-                        {path === 'index.html' && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Página Principal</span>}
+                        {path === 'index.html' && <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">Página Principal</span>}
                         {path === '404.html' && <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Error 404</span>}
-                        {path === 'sitemap.xml' && <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">SEO</span>}
+                        {path === 'sitemap.xml' && <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">SEO</span>}
                       </div>
                     </div>
                     <div className="text-xs text-gray-500 text-right">
                       <div>{(exportedFiles[path].length / 1024).toFixed(1)} KB</div>
-                      {path.startsWith('verify/') && <div className="text-xs text-blue-600">Verificación</div>}
+                      {path.startsWith('verify/') && <div className="text-xs text-gray-600">Verificación</div>}
                     </div>
                   </li>
                 ))}

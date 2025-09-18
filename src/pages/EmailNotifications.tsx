@@ -73,7 +73,7 @@ const EmailNotifications: React.FC = () => {
             <button
               onClick={handleBulkSend}
               disabled={sending}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <Send className="mr-2 h-4 w-4" />
               {sending ? 'Enviando...' : `Enviar ${selectedCertificates.length} emails`}
@@ -105,7 +105,7 @@ const EmailNotifications: React.FC = () => {
                               setSelectedCertificates(prev => prev.filter(id => id !== certificate.id));
                             }
                           }}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
                         />
                         <div className="ml-3">
                           <p className="text-sm font-medium text-gray-900">{recipient.name}</p>
@@ -115,7 +115,7 @@ const EmailNotifications: React.FC = () => {
                       </div>
                       <div className="flex items-center space-x-4">
                         {isSent ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                             <CheckCircle className="mr-1 h-4 w-4" />
                             Enviado
                           </span>
@@ -123,7 +123,7 @@ const EmailNotifications: React.FC = () => {
                           <button
                             onClick={() => handleSendEmail(certificate.id)}
                             disabled={sending}
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                           >
                             <Mail className="mr-2 h-4 w-4" />
                             Enviar Email

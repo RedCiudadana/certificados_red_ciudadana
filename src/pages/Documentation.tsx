@@ -216,7 +216,7 @@ const Documentation: React.FC = () => {
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
             placeholder="Search documentation..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -235,7 +235,7 @@ const Documentation: React.FC = () => {
                 <div key={item.title} className="px-4 py-6 sm:px-6">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                      <Book className="h-5 w-5 text-blue-500 mr-2" />
+                      <Book className="h-5 w-5 text-gray-500 mr-2" />
                       {item.title}
                     </h3>
                     <ChevronRight className="h-5 w-5 text-gray-400" />
@@ -253,20 +253,20 @@ const Documentation: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-blue-50 rounded-lg p-4">
+      <div className="bg-gray-50 rounded-lg p-4">
         <div className="flex">
           <div className="flex-shrink-0">
-            <ExternalLink className="h-5 w-5 text-blue-400" />
+            <ExternalLink className="h-5 w-5 text-gray-400" />
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">Need more help?</h3>
-            <div className="mt-2 text-sm text-blue-700">
+            <h3 className="text-sm font-medium text-gray-800">Need more help?</h3>
+            <div className="mt-2 text-sm text-gray-700">
               <p>Our support team is here to help you with any questions or issues.</p>
             </div>
             <div className="mt-3">
               <a
                 href="mailto:support@certifypro.com"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-gray-600 hover:text-gray-500"
               >
                 Contact Support <span aria-hidden="true">&rarr;</span>
               </a>

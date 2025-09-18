@@ -130,7 +130,7 @@ const TemplateManager: React.FC = () => {
             value={formData.name}
             onChange={handleInputChange}
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
           />
         </div>
         
@@ -148,7 +148,7 @@ const TemplateManager: React.FC = () => {
                   onClick={() => setUploadMethod('upload')}
                   className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors duration-200 ${
                     uploadMethod === 'upload'
-                      ? 'bg-blue-50 border-blue-200 text-blue-700'
+                      ? 'bg-gray-50 border-gray-200 text-gray-700'
                       : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -160,7 +160,7 @@ const TemplateManager: React.FC = () => {
                   onClick={() => setUploadMethod('url')}
                   className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors duration-200 ${
                     uploadMethod === 'url'
-                      ? 'bg-blue-50 border-blue-200 text-blue-700'
+                      ? 'bg-gray-50 border-gray-200 text-gray-700'
                       : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -184,7 +184,7 @@ const TemplateManager: React.FC = () => {
                   value={formData.imageUrl}
                   onChange={handleInputChange}
                   placeholder="https://ejemplo.com/imagen-certificado.jpg"
-                  className="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full border border-gray-300 rounded-lg shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                 />
                 <p className="mt-2 text-xs text-gray-500">
                   Ingresa la URL de la imagen de fondo para el certificado
@@ -202,7 +202,7 @@ const TemplateManager: React.FC = () => {
             <button
               type="button"
               onClick={handleAddField}
-              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <PlusCircle className="h-3 w-3 mr-1" />
               Add Field
@@ -228,7 +228,7 @@ const TemplateManager: React.FC = () => {
                     <select
                       value={field.type}
                       onChange={(e) => handleFieldChange(field.id, 'type', e.target.value)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     >
                       <option value="text">Text</option>
                       <option value="date">Date</option>
@@ -241,7 +241,7 @@ const TemplateManager: React.FC = () => {
                       type="text"
                       value={field.name}
                       onChange={(e) => handleFieldChange(field.id, 'name', e.target.value)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     />
                   </div>
                   
@@ -252,7 +252,7 @@ const TemplateManager: React.FC = () => {
                       max="100"
                       value={field.x}
                       onChange={(e) => handleFieldChange(field.id, 'x', parseInt(e.target.value, 10))}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     />
                   </div>
                   
@@ -263,7 +263,7 @@ const TemplateManager: React.FC = () => {
                       max="100"
                       value={field.y}
                       onChange={(e) => handleFieldChange(field.id, 'y', parseInt(e.target.value, 10))}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                     />
                   </div>
                   
@@ -275,7 +275,7 @@ const TemplateManager: React.FC = () => {
                         max="72"
                         value={field.fontSize || 16}
                         onChange={(e) => handleFieldChange(field.id, 'fontSize', parseInt(e.target.value, 10))}
-                        className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                       />
                     )}
                   </div>
@@ -285,7 +285,7 @@ const TemplateManager: React.FC = () => {
                       <select
                         value={field.fontFamily || 'serif'}
                         onChange={(e) => handleFieldChange(field.id, 'fontFamily', e.target.value)}
-                        className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                       >
                         <option value="serif">Serif</option>
                         <option value="sans-serif">Sans-serif</option>
@@ -301,7 +301,7 @@ const TemplateManager: React.FC = () => {
                         type="color"
                         value={field.color || '#000000'}
                         onChange={(e) => handleFieldChange(field.id, 'color', e.target.value)}
-                        className="block w-full h-7 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="block w-full h-7 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                       />
                     )}
                   </div>
@@ -329,13 +329,13 @@ const TemplateManager: React.FC = () => {
               setIsEditing(false);
               setEditingTemplateId(null);
             }}
-            className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
             {isEditing ? 'Update Template' : 'Create Template'}
           </button>
@@ -357,7 +357,7 @@ const TemplateManager: React.FC = () => {
           <div className="mt-4 sm:mt-0">
             <button
               onClick={handleCreateTemplate}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
               New Template
@@ -404,7 +404,7 @@ const TemplateManager: React.FC = () => {
                 <div className="mt-6">
                   <button
                     onClick={handleCreateTemplate}
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                   >
                     <PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
                     New Template

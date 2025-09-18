@@ -46,7 +46,7 @@ const LinkedInIntegration: React.FC = () => {
                   <li key={certificate.id} className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <Award className="h-5 w-5 text-blue-500 mr-3" />
+                        <Award className="h-5 w-5 text-gray-500 mr-3" />
                         <div>
                           <p className="text-sm font-medium text-gray-900">
                             {recipient?.name}
@@ -86,22 +86,22 @@ const LinkedInIntegration: React.FC = () => {
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <CheckCircle className="h-8 w-8 text-blue-600 mb-3" />
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <CheckCircle className="h-8 w-8 text-gray-600 mb-3" />
               <h3 className="text-lg font-medium text-gray-900">Verificación Automática</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Los certificados incluyen un enlace de verificación que valida su autenticidad
               </p>
             </div>
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <Share2 className="h-8 w-8 text-blue-600 mb-3" />
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <Share2 className="h-8 w-8 text-gray-600 mb-3" />
               <h3 className="text-lg font-medium text-gray-900">Compartir con Un Clic</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Agrega certificados a tu perfil de LinkedIn instantáneamente
               </p>
             </div>
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <Award className="h-8 w-8 text-blue-600 mb-3" />
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <Award className="h-8 w-8 text-gray-600 mb-3" />
               <h3 className="text-lg font-medium text-gray-900">Destacar Logros</h3>
               <p className="mt-2 text-sm text-gray-600">
                 Muestra tus certificaciones de manera profesional en tu perfil

@@ -4,6 +4,10 @@ import { Shield, Award, Search, CheckCircle, User, Calendar, FileText, ExternalL
 import { useCertificateStore } from '../store/certificateStore';
 import { useAuthStore } from '../store/authStore';
 import { generateCertificatePDF } from '../utils/certificateGenerator';
+import Slider from '../assets/slider/VRED-SLIDER.png';
+import Icono1 from '../assets/iconos/VRED-01.png';
+import Icono2 from '../assets/iconos/VRED-02.png';
+import Icono3 from '../assets/iconos/VRED-03.png';
 
 const PublicIndex: React.FC = () => {
   const { openLoginModal } = useAuthStore();
@@ -181,7 +185,7 @@ const PublicIndex: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#eef1f5'}}>
       {/* Top Social Media Bar */}
       <div className="bg-gray-900 text-white py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -243,15 +247,17 @@ const PublicIndex: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800">
+      <div
+        className="relative overflow-hidden"
+        style={{ backgroundImage: `url(${Slider})` , backgroundSize: 'cover', backgroundPosition: 'center', height: '600px' }}
+      >
         <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 h-full">
+          <div className="text-center flex items-center justify-center h-full flex-col">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Verifica tu Certificado Digital
-              <span className="inline-block ml-2 animate-bounce">🎓</span>
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-100 mb-8 max-w-3xl mx-auto">
               Sistema oficial de verificación de certificados de Red Ciudadana. 
               Valida la autenticidad de cualquier certificado o consulta tus certificaciones aprobadas.
             </p>
@@ -277,9 +283,9 @@ const PublicIndex: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Certificate Verification */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Shield className="mr-3 h-7 w-7 text-blue-600" />
+                <img src={Icono1} className="mr-3 h-7 w-7 text-gray-600" />
                 Verificar Certificado
               </h3>
               <p className="text-gray-600 mt-2">Ingresa el ID de cualquier certificado para verificar su autenticidad</p>
@@ -296,14 +302,15 @@ const PublicIndex: React.FC = () => {
                     value={searchId}
                     onChange={(e) => setSearchId(e.target.value)}
                     placeholder="Ingresa el ID del certificado (4 dígitos o completo)..."
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-lg"
                     disabled={isSearching}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSearching || !searchId.trim()}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg text-lg"
+                  className="w-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg text-lg hover:opacity-90"
+                  style={{ backgroundColor: '#232831', color: 'white', borderRadius: '10px', padding: '10px', fontSize: '16px', fontWeight: 'bold'}}
                 >
                   {isSearching ? (
                     <div className="flex items-center justify-center">
@@ -336,12 +343,12 @@ const PublicIndex: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                       <div className="flex items-start">
-                        <CheckCircle className="h-6 w-6 text-green-500 mt-0.5" />
+                        <CheckCircle className="h-6 w-6 text-gray-500 mt-0.5" />
                         <div className="ml-3 flex-1">
-                          <h4 className="text-lg font-semibold text-green-800">Certificado Válido ✓</h4>
-                          <div className="mt-2 space-y-1 text-sm text-green-700">
+                          <h4 className="text-lg font-semibold text-gray-800">Certificado Válido ✓</h4>
+                          <div className="mt-2 space-y-1 text-sm text-gray-700">
                             <p><strong>Nombre:</strong> {searchResult.recipient?.name}</p>
                             <p><strong>Curso:</strong> {searchResult.recipient?.course}</p>
                             <p><strong>Fecha:</strong> {new Date(searchResult.recipient?.issueDate).toLocaleDateString('es-ES')}</p>
@@ -349,7 +356,7 @@ const PublicIndex: React.FC = () => {
                           </div>
                           <Link
                             to={`/verify/${searchResult.certificate?.id}`}
-                            className="inline-flex items-center mt-3 text-green-600 hover:text-green-500 text-sm font-medium"
+                            className="inline-flex items-center mt-3 text-gray-600 hover:text-gray-500 text-sm font-medium"
                           >
                             Ver detalles completos
                             <ExternalLink className="ml-1 h-4 w-4" />
@@ -365,9 +372,9 @@ const PublicIndex: React.FC = () => {
 
           {/* Student Certificates */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="px-6 py-6 bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-100">
+            <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Users className="mr-3 h-7 w-7 text-purple-600" />
+                <img src={Icono3} className="mr-3 h-7 w-7 text-gray-600" />
                 Mis Certificados
               </h3>
               <p className="text-gray-600 mt-2">Consulta tus certificados aprobados ingresando tu correo electrónico</p>
@@ -384,14 +391,15 @@ const PublicIndex: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Ingresa tu correo electrónico..."
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-lg"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-lg"
                     disabled={isLoadingStudentCerts}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isLoadingStudentCerts || !email.trim()}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg text-lg"
+                  className="w-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg text-lg hover:opacity-90"
+                  style={{ backgroundColor: '#232831', color: 'white', borderRadius: '10px', padding: '10px', fontSize: '16px', fontWeight: 'bold'}}
                 >
                   {isLoadingStudentCerts ? (
                     <div className="flex items-center justify-center">
@@ -431,14 +439,14 @@ const PublicIndex: React.FC = () => {
                           <div className="mt-3 flex flex-wrap gap-2">
                             <Link
                               to={`/verify/${certificate.id}`}
-                              className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full hover:bg-blue-200 transition-colors duration-200"
+                              className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors duration-200"
                             >
                               <Shield className="mr-1 h-3 w-3" />
                               Ver Certificado
                             </Link>
                             <button
                               onClick={() => handleDownloadCertificate(certificate.id)}
-                              className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full hover:bg-green-200 transition-colors duration-200"
+                              className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors duration-200"
                             >
                               <Download className="mr-1 h-3 w-3" />
                               Descargar PDF
@@ -453,7 +461,7 @@ const PublicIndex: React.FC = () => {
                           </div>
                         </div>
                         <div className="ml-4">
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                             <CheckCircle className="mr-1 h-3 w-3" />
                             Aprobado
                           </span>
@@ -479,9 +487,9 @@ const PublicIndex: React.FC = () => {
 
         {/* Verification Steps */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
-          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
             <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-              <BookOpen className="mr-3 h-7 w-7 text-blue-600" />
+              <img src={Icono2} className="mr-3 h-7 w-7 text-gray-600" />
               Pasos para la Verificación de Certificados
             </h3>
             <p className="text-gray-600 mt-2">Sigue estos sencillos pasos para verificar cualquier certificado</p>
@@ -490,7 +498,7 @@ const PublicIndex: React.FC = () => {
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
                   <span className="text-3xl font-bold text-white">1</span>
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
@@ -498,9 +506,9 @@ const PublicIndex: React.FC = () => {
                   Busca el número de 4 dígitos en tu certificado. También puedes usar el código completo si lo tienes.
                 </p>
               </div>
-              
+
               <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
                   <span className="text-3xl font-bold text-white">2</span>
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h4>
@@ -510,7 +518,7 @@ const PublicIndex: React.FC = () => {
               </div>
               
               <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
                   <span className="text-3xl font-bold text-white">3</span>
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h4>

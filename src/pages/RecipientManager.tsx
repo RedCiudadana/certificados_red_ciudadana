@@ -91,7 +91,7 @@ const RecipientManager: React.FC = () => {
           <div className="mt-4 sm:mt-0 flex space-x-3">
             <button
               onClick={() => setIsBulkUploadOpen(true)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
               Bulk Upload
@@ -100,7 +100,7 @@ const RecipientManager: React.FC = () => {
             <button
               onClick={exportRecipients}
               disabled={recipients.length === 0}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="mr-2 h-4 w-4" aria-hidden="true" />
               Export
@@ -108,7 +108,7 @@ const RecipientManager: React.FC = () => {
             
             <button
               onClick={handleCreateRecipient}
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
               <PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
               Add Recipient
@@ -148,7 +148,7 @@ const RecipientManager: React.FC = () => {
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setIsBulkUploadOpen(false)}
-                className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Cancel
               </button>
@@ -169,7 +169,7 @@ const RecipientManager: React.FC = () => {
                   </div>
                   <input
                     type="text"
-                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                    className="focus:ring-gray-500 focus:border-gray-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                     placeholder="Search recipients..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -254,7 +254,7 @@ const RecipientManager: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             onClick={() => handleEditRecipient(recipient.id)}
-                            className="text-blue-600 hover:text-blue-900 mr-3"
+                            className="text-gray-600 hover:text-gray-900 mr-3"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
@@ -281,7 +281,7 @@ const RecipientManager: React.FC = () => {
                     </p>
                     <button
                       onClick={() => setSearchTerm('')}
-                      className="mt-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      className="mt-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                     >
                       Clear search
                     </button>
@@ -295,14 +295,14 @@ const RecipientManager: React.FC = () => {
                     <div className="mt-6 flex justify-center space-x-3">
                       <button
                         onClick={() => setIsBulkUploadOpen(true)}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                       >
                         <Upload className="mr-2 h-4 w-4" aria-hidden="true" />
                         Bulk Upload
                       </button>
                       <button
                         onClick={handleCreateRecipient}
-                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                       >
                         <PlusCircle className="mr-2 h-4 w-4" aria-hidden="true" />
                         Add Recipient

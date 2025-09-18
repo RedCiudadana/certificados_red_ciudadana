@@ -73,7 +73,7 @@ html {
 
 /* Focus styles */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
 }
 
 /* Button hover effects */
@@ -88,12 +88,12 @@ html {
 
 /* Gradient text */
 .gradient-text {
-  @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-gray-600 to-gray-600 bg-clip-text text-transparent;
 }
 
 /* Loading spinner */
 .spinner {
-  @apply animate-spin rounded-full border-2 border-gray-300 border-t-blue-600;
+  @apply animate-spin rounded-full border-2 border-gray-300 border-t-gray-600;
 }
 
 /* Backdrop blur support */
@@ -104,7 +104,7 @@ html {
 
 /* Enhanced form inputs */
 .form-input {
-  @apply block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200;
+  @apply block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200;
 }
 
 .form-input:focus {
@@ -129,11 +129,11 @@ html {
 
 /* Enhanced buttons */
 .btn-primary {
-  @apply inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl;
+  @apply inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-600 text-white font-medium rounded-xl hover:from-gray-700 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center px-6 py-3 bg-white text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md;
+  @apply inline-flex items-center px-6 py-3 bg-white text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200 shadow-sm hover:shadow-md;
 }
 
 /* Enhanced cards */
@@ -142,7 +142,7 @@ html {
 }
 
 .card-header {
-  @apply px-6 py-4 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-200;
+  @apply px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-200;
 }
 
 .card-body {
@@ -151,7 +151,7 @@ html {
 
 /* Status badges */
 .badge-success {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
 }
 
 .badge-warning {
@@ -163,5 +163,5 @@ html {
 }
 
 .badge-info {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800;
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
 }
