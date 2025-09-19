@@ -12,7 +12,7 @@ const waitForImagesToLoad = async (element: HTMLElement): Promise<void> => {
     if (img.complete) {
       return Promise.resolve();
     }
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       img.onload = () => resolve();
       img.onerror = () => resolve(); // Continue even if image fails to load
       // Fallback timeout
@@ -496,15 +496,14 @@ export const generateCertificatePDF = async (
     });
     
     const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    
-    // Center the image if it's smaller than the page
-    const yOffset = pdfHeight < pdf.internal.pageSize.getHeight() 
-      ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
-      : 0;
-    
-    pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const scale = Math.min(pageW / imgProps.width, pageH / imgProps.height);
+    const drawW = imgProps.width * scale;
+    const drawH = imgProps.height * scale;
+    const x = (pageW - drawW) / 2;
+    const y = (pageH - drawH) / 2;
+    pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
     
     pdf.save(`${filename}.pdf`);
   } catch (error) {
@@ -527,197 +526,173 @@ export const downloadAllCertificatesAsPDF = async (
     const zip = new JSZip();
     let successCount = 0;
     let errorCount = 0;
-    
-    for (const certificate of certificates) {
-      const recipient = recipients.find(r => r.id === certificate.recipientId);
-      const template = templates.find(t => t.id === certificate.templateId);
-      
+
+    // Ensure fonts are loaded
+    try {
+      // @ts-ignore
+      if (document.fonts && document.fonts.ready) {
+        // @ts-ignore
+        await document.fonts.ready;
+      }
+    } catch {}
+
+    const renderCertificateToBlob = async (
+      recipient: Recipient,
+      template: Template
+    ): Promise<Blob | null> => {
       let container: HTMLElement | null = null;
-      
-      if (recipient && template) {
-        try {
-          // Create a temporary container for each certificate
-          container = document.createElement('div');
-          container.style.position = 'fixed';
-          container.style.left = '-9999px';
-          container.style.top = '0';
-          container.style.width = '1200px';
-          container.style.height = '848px';
-          container.style.zIndex = '-1000';
-          container.style.backgroundColor = 'white';
-          document.body.appendChild(container);
-          
-          // Create certificate preview
-          const certificateDiv = document.createElement('div');
-          certificateDiv.className = 'certificate-preview';
-          certificateDiv.style.width = '100%';
-          certificateDiv.style.height = '100%';
-          certificateDiv.style.position = 'relative';
-          certificateDiv.style.backgroundColor = 'white';
-          certificateDiv.style.overflow = 'hidden';
-          
-          // Add template background as an img element for better rendering
-          const backgroundImg = document.createElement('img');
-          backgroundImg.src = template.imageUrl;
-          backgroundImg.alt = 'Certificate template';
-          backgroundImg.style.position = 'absolute';
-          backgroundImg.style.top = '0';
-          backgroundImg.style.left = '0';
-          backgroundImg.style.width = '100%';
-          backgroundImg.style.height = '100%';
-          backgroundImg.style.objectFit = 'cover';
-          backgroundImg.style.zIndex = '0';
-          certificateDiv.appendChild(backgroundImg);
-          
-          // Wait for background image to load
-          await new Promise((resolve, reject) => {
-            if (backgroundImg.complete) {
-              resolve(void 0);
-            } else {
-              backgroundImg.onload = () => resolve(void 0);
-              backgroundImg.onerror = () => resolve(void 0); // Continue even if image fails
-              setTimeout(() => resolve(void 0), 10000); // Fallback timeout
-            }
-          });
-          
-          // Add text fields
-          template.fields.forEach(field => {
-            if (field.type === 'qrcode') return; // Skip QR code for now
-            
-            const fieldDiv = document.createElement('div');
-            fieldDiv.style.position = 'absolute';
-            fieldDiv.style.left = `${field.x}%`;
-            fieldDiv.style.top = `${field.y}%`;
-            fieldDiv.style.transform = 'translate(-50%, -50%)';
-            fieldDiv.style.textAlign = 'center';
-            fieldDiv.style.width = '100%';
-            fieldDiv.style.maxWidth = '80%';
-            fieldDiv.style.fontFamily = field.fontFamily || 'serif';
-            fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`; // Scale up for better quality
-            fieldDiv.style.color = field.color || '#000';
-            fieldDiv.style.fontWeight = 'bold';
-            fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
-            fieldDiv.style.whiteSpace = 'nowrap';
-            fieldDiv.style.zIndex = '10';
-            fieldDiv.style.overflow = 'visible';
+      try {
+        container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.left = '-9999px';
+        container.style.top = '0';
+        container.style.width = '1200px';
+        container.style.height = '848px';
+        container.style.zIndex = '0';
+        container.style.backgroundColor = 'white';
+        document.body.appendChild(container);
 
-            let textValue = '';
-            
-            switch (field.type) {
-              case 'text':
-                if (field.name === 'recipient') {
-                  textValue = recipient.name;
-                } else if (field.name === 'course') {
-                  textValue = recipient.course || field.defaultValue || '';
-                } else if (recipient.customFields && recipient.customFields[field.name]) {
-                  textValue = recipient.customFields[field.name];
-                } else {
-                  textValue = field.defaultValue || '';
-                }
-                break;
-                
-              case 'date':
-                textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                });
-                break;
-            }
-            
-            // Set the text content
-            fieldDiv.textContent = textValue;
-            certificateDiv.appendChild(fieldDiv);
-          });
-          
-          container.appendChild(certificateDiv);
-          
-          // Wait for rendering and fonts to load
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          // Generate PDF for this certificate with improved settings
-          const canvas = await html2canvas(certificateDiv, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            logging: false,
-            width: 1200,
-            height: 848,
-            foreignObjectRendering: true,
-            imageTimeout: 15000,
-            removeContainer: false,
-            onclone: (clonedDoc) => {
-              // Ensure all images are loaded in the cloned document
-              const clonedImages = clonedDoc.querySelectorAll('img');
-              clonedImages.forEach(img => {
-                if (!img.complete) {
-                  img.src = img.src; // Force reload
-                }
+        const certificateDiv = document.createElement('div');
+        certificateDiv.className = 'certificate-preview';
+        certificateDiv.style.width = '100%';
+        certificateDiv.style.height = '100%';
+        certificateDiv.style.position = 'relative';
+        certificateDiv.style.backgroundColor = 'white';
+        certificateDiv.style.overflow = 'hidden';
+
+        const backgroundImg = document.createElement('img');
+        backgroundImg.src = template.imageUrl;
+        backgroundImg.alt = 'Certificate template';
+        backgroundImg.crossOrigin = 'anonymous';
+        backgroundImg.style.position = 'absolute';
+        backgroundImg.style.top = '0';
+        backgroundImg.style.left = '0';
+        backgroundImg.style.width = '100%';
+        backgroundImg.style.height = '100%';
+        backgroundImg.style.objectFit = 'cover';
+        backgroundImg.style.zIndex = '0';
+        certificateDiv.appendChild(backgroundImg);
+
+        await new Promise(resolve => {
+          if (backgroundImg.complete) return resolve(void 0);
+          backgroundImg.onload = () => resolve(void 0);
+          backgroundImg.onerror = () => resolve(void 0);
+          setTimeout(() => resolve(void 0), 10000);
+        });
+
+        template.fields.forEach(field => {
+          if (field.type === 'qrcode') return;
+          const fieldDiv = document.createElement('div');
+          fieldDiv.style.position = 'absolute';
+          fieldDiv.style.left = `${field.x}%`;
+          fieldDiv.style.top = `${field.y}%`;
+          fieldDiv.style.transform = 'translate(-50%, -50%)';
+          fieldDiv.style.textAlign = 'center';
+          fieldDiv.style.width = '100%';
+          fieldDiv.style.maxWidth = '80%';
+          fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+          fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`;
+          fieldDiv.style.color = field.color || '#000';
+          fieldDiv.style.fontWeight = 'bold';
+          fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
+          fieldDiv.style.whiteSpace = 'nowrap';
+          fieldDiv.style.zIndex = '10';
+          fieldDiv.style.overflow = 'visible';
+
+          let textValue = '';
+          switch (field.type) {
+            case 'text':
+              if (field.name === 'recipient') {
+                textValue = recipient.name;
+              } else if (field.name === 'course') {
+                textValue = recipient.course || field.defaultValue || '';
+              } else if (recipient.customFields && recipient.customFields[field.name]) {
+                textValue = recipient.customFields[field.name];
+              } else {
+                textValue = field.defaultValue || '';
+              }
+              break;
+            case 'date':
+              textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
               });
-            }
-          });
+              break;
+          }
+          fieldDiv.textContent = textValue;
+          certificateDiv.appendChild(fieldDiv);
+        });
 
-          const imgData = canvas.toDataURL('image/png', 1.0);
-          
-          // More robust check for blank canvas
-          const isBlankCanvas = canvas.width === 0 || 
-                               canvas.height === 0 || 
-                               imgData.length < 1000 ||
-                               imgData === 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
-          
-          if (isBlankCanvas) {
-            console.warn(`Canvas rendering failed for ${recipient.name} - blank or invalid canvas`);
-            errorCount++;
-          } else {
-            const pdf = new jsPDF({
-              orientation: 'landscape',
-              unit: 'mm',
-              format: 'a4',
-              compress: true
-            });
-            
-            const imgProps = pdf.getImageProperties(imgData);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-            
-            // Center the image if it's smaller than the page
-            const yOffset = pdfHeight < pdf.internal.pageSize.getHeight() 
-              ? (pdf.internal.pageSize.getHeight() - pdfHeight) / 2 
-              : 0;
-            
-            pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, pdfHeight);
-            
-            const pdfBlob = pdf.output('blob');
-            const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate.pdf`;
-            zip.file(fileName, pdfBlob);
-            successCount++;
-          }
-          
-        } catch (error) {
-          console.error(`Error generating PDF for ${recipient.name}:`, error);
-          errorCount++;
-        } finally {
-          // Clean up container for this certificate
-          if (container && document.body.contains(container)) {
-            document.body.removeChild(container);
-          }
+        container.appendChild(certificateDiv);
+
+        await waitForImagesToLoad(certificateDiv);
+
+        const dataUrl = await toPng(certificateDiv, {
+          quality: 1.0,
+          pixelRatio: 2,
+          backgroundColor: '#ffffff',
+          cacheBust: true
+        });
+
+        if (!dataUrl || dataUrl.length < 1000) return null;
+
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
+        const imgProps = pdf.getImageProperties(dataUrl);
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        const scale = Math.max(pageW / imgProps.width, pageH / imgProps.height);
+        const drawW = imgProps.width * scale;
+        const drawH = imgProps.height * scale;
+        const x = (pageW - drawW) / 2;
+        const y = (pageH - drawH) / 2;
+        pdf.addImage(dataUrl, 'PNG', x, y, drawW, drawH);
+        return pdf.output('blob');
+      } catch {
+        return null;
+      } finally {
+        if (container && document.body.contains(container)) {
+          document.body.removeChild(container);
         }
       }
+    };
+
+    // Limited concurrency for faster total time and stability
+    const concurrency = 3;
+    let pointer = 0;
+    while (pointer < certificates.length) {
+      const slice = certificates.slice(pointer, pointer + concurrency);
+      await Promise.all(
+        slice.map(async cert => {
+          const recipient = recipients.find(r => r.id === cert.recipientId);
+          const template = templates.find(t => t.id === cert.templateId);
+          if (!recipient || !template) {
+            errorCount++;
+            return;
+          }
+          const blob = await renderCertificateToBlob(recipient, template);
+          if (blob) {
+            const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate.pdf`;
+            zip.file(fileName, blob);
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        })
+      );
+      pointer += concurrency;
     }
-    
+
     if (successCount > 0) {
-      // Generate and download zip file
       const content = await zip.generateAsync({ type: 'blob' });
       saveAs(content, `certificados-${new Date().toISOString().split('T')[0]}.zip`);
-      
       if (errorCount > 0) {
         alert(`Se descargaron ${successCount} certificados exitosamente. ${errorCount} certificados fallaron.`);
       }
     } else {
       throw new Error('No se pudo generar ningún certificado PDF.');
     }
-    
+
   } catch (error) {
     console.error('Error generating certificates:', error);
     alert('Hubo un error al generar los certificados. Por favor, inténtelo de nuevo.');

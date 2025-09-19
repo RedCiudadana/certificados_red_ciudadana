@@ -6,9 +6,9 @@ import { nanoid } from 'nanoid';
 // Default data for certificates that can be validated
 const defaultTemplates: Template[] = [
   {
-    id: 'template-professional',
-    name: 'Certificado Profesional',
-    imageUrl: '/assets/certificate-templates/professional-certificate.jpg',
+    id: 'proteccion-datos-personales',
+    name: 'Certificado de Protección de Datos Personales',
+    imageUrl: '/assets/certificate-templates/proteccion-datos-personales.jpg',
     fields: [
       { 
         id: nanoid(), 
@@ -19,36 +19,60 @@ const defaultTemplates: Template[] = [
         fontSize: 28, 
         fontFamily: 'serif', 
         color: '#1a365d' 
-      },
-      { 
-        id: nanoid(), 
-        name: 'course', 
-        type: 'text', 
-        x: 50, 
-        y: 60, 
-        fontSize: 20, 
-        fontFamily: 'serif', 
-        color: '#2d3748' 
-      },
-      { 
-        id: nanoid(), 
-        name: 'date', 
-        type: 'date', 
-        x: 30, 
-        y: 85, 
-        fontSize: 16, 
-        fontFamily: 'serif', 
-        color: '#6b7280' 
-      },
-      { 
-        id: nanoid(), 
-        name: 'qrcode', 
-        type: 'qrcode', 
-        x: 85, 
-        y: 90 
       }
     ]
-  }
+  },
+  {
+    id: 'power-bi-avanzado',
+    name: 'Certificado de Power BI Avanzado',
+    imageUrl: '/assets/certificate-templates/power-bi-avanzado.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: 'serif', 
+        color: '#1a365d' 
+      }
+    ]
+  },
+  {
+    id: 'excel-avanzado',
+    name: 'Certificado de Excel Avanzado',
+    imageUrl: '/assets/certificate-templates/excel-avanzado.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: 'serif', 
+        color: '#1a365d' 
+      }
+    ]
+  },
+  {
+    id: 'datos-abiertos',
+    name: 'Certificado de Datos Abiertos',
+    imageUrl: '/assets/certificate-templates/datos-abiertos.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 50, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: 'serif', 
+        color: '#1a365d' 
+      }
+    ]
+  },
 ];
 
 const defaultRecipients: Recipient[] = [
@@ -94,7 +118,7 @@ const defaultCertificates: Certificate[] = [
   {
     id: '1234',  // Easy ID for testing
     recipientId: 'recipient-001',
-    templateId: 'template-professional',
+    templateId: 'proteccion-datos-personales',
     qrCodeUrl: 'https://certificados.redciudadana.org/verify/1234',
     issueDate: '2024-01-15T00:00:00.000Z',
     verificationUrl: 'https://certificados.redciudadana.org/verify/1234',
@@ -103,7 +127,7 @@ const defaultCertificates: Certificate[] = [
   {
     id: 'CERT-2024-001',
     recipientId: 'recipient-002',
-    templateId: 'template-professional',
+    templateId: 'power-bi-avanzado',
     qrCodeUrl: 'https://certificados.redciudadana.org/verify/CERT-2024-001',
     issueDate: '2024-02-20T00:00:00.000Z',
     verificationUrl: 'https://certificados.redciudadana.org/verify/CERT-2024-001',
@@ -112,7 +136,7 @@ const defaultCertificates: Certificate[] = [
   {
     id: 'CERT-2024-002',
     recipientId: 'recipient-003',
-    templateId: 'template-professional',
+    templateId: 'excel-avanzado',
     qrCodeUrl: 'https://certificados.redciudadana.org/verify/CERT-2024-002',
     issueDate: '2024-03-10T00:00:00.000Z',
     verificationUrl: 'https://certificados.redciudadana.org/verify/CERT-2024-002',
@@ -121,7 +145,7 @@ const defaultCertificates: Certificate[] = [
   {
     id: 'TEST',  // Another easy ID for testing
     recipientId: 'recipient-001',
-    templateId: 'template-professional',
+    templateId: 'datos-abiertos',
     qrCodeUrl: 'https://certificados.redciudadana.org/verify/TEST',
     issueDate: '2024-01-15T00:00:00.000Z',
     verificationUrl: 'https://certificados.redciudadana.org/verify/TEST',
@@ -314,7 +338,7 @@ export const useCertificateStore = create<CertificateStore>()(
           id,
           name,
           description,
-          templateId,
+          templateId: templateId || '',
           certificates: [],
           createdAt: new Date().toISOString()
         };
