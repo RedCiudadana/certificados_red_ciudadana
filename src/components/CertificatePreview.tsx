@@ -63,9 +63,10 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
       left: `${field.x}%`,
       top: `${field.y}%`,
       transform: 'translate(-50%, -50%)',
-      fontFamily: field.fontFamily || 'serif',
+      fontFamily: field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       fontSize: `${field.fontSize || 16}px`,
       color: field.color || '#000',
+      fontWeight: 'bold',
       textAlign: 'center',
       width: '100%',
       maxWidth: '80%',
@@ -135,7 +136,10 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   };
   
   // Dynamically adjust the container size based on the template's aspect ratio
-  const aspectRatio = (template.width || 1) / (template.height || 1);
+  // Use A4 landscape ratio by default if template dimensions are not provided
+  const aspectRatio = (template.width && template.height)
+    ? (template.width / template.height)
+    : (297 / 210);
   const containerStyle: React.CSSProperties = {
     position: 'relative',
     width: '100%',
@@ -150,7 +154,7 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
       className="absolute inset-0"
       style={{
         backgroundImage: `url(${template.imageUrl})`,
-        backgroundSize: 'contain',
+        backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       }}

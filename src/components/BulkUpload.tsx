@@ -106,7 +106,12 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      processExcelFile(file);
+      processExcelFile(file).then(() => {
+        // Clear the input so the browser doesn't prompt again or block selecting the same file
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      });
     }
   };
 
@@ -216,6 +221,18 @@ const BulkUpload: React.FC<BulkUploadProps> = ({ onUploaded }) => {
             <p className="mt-1 text-sm text-gray-700">
               Successfully processed {totalRecords} recipient{totalRecords !== 1 ? 's' : ''}
             </p>
+            <div className="mt-4 flex justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setUploadComplete(false);
+                  setPreview([]);
+                }}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
+                Subir otro archivo
+              </button>
+            </div>
           </div>
         )}
 

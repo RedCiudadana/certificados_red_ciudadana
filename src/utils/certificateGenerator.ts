@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import { Certificate, Recipient, Template } from '../types';
 import JSZip from 'jszip';
-import { toPng } from 'html-to-image';
+import { toPng, toJpeg } from 'html-to-image';
 
 // Helper function to wait for all images to load
 const waitForImagesToLoad = async (element: HTMLElement): Promise<void> => {
@@ -498,12 +498,19 @@ export const generateCertificatePDF = async (
     const imgProps = pdf.getImageProperties(imgData);
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
-    const scale = Math.min(pageW / imgProps.width, pageH / imgProps.height);
+
+    // cover = escalar para que cubra toda la hoja
+    const scale = Math.max(pageW / imgProps.width, pageH / imgProps.height);
     const drawW = imgProps.width * scale;
     const drawH = imgProps.height * scale;
+
+    // centrar (puede recortar arriba/abajo o izquierda/derecha)
     const x = (pageW - drawW) / 2;
     const y = (pageH - drawH) / 2;
+
     pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
+
+
     
     pdf.save(`${filename}.pdf`);
   } catch (error) {
@@ -522,6 +529,7 @@ export const downloadAllCertificatesAsPDF = async (
     return;
   }
 
+  let globalContainer: HTMLDivElement | null = null;
   try {
     const zip = new JSZip();
     let successCount = 0;
@@ -536,22 +544,22 @@ export const downloadAllCertificatesAsPDF = async (
       }
     } catch {}
 
+    // Create one reusable offscreen container for faster rendering
+    globalContainer = document.createElement('div');
+    globalContainer.style.position = 'fixed';
+    globalContainer.style.left = '-9999px';
+    globalContainer.style.top = '0';
+    globalContainer.style.width = '1200px';
+    globalContainer.style.height = '848px';
+    globalContainer.style.zIndex = '0';
+    globalContainer.style.backgroundColor = 'white';
+    document.body.appendChild(globalContainer);
+
     const renderCertificateToBlob = async (
       recipient: Recipient,
       template: Template
     ): Promise<Blob | null> => {
-      let container: HTMLElement | null = null;
       try {
-        container = document.createElement('div');
-        container.style.position = 'fixed';
-        container.style.left = '-9999px';
-        container.style.top = '0';
-        container.style.width = '1200px';
-        container.style.height = '848px';
-        container.style.zIndex = '0';
-        container.style.backgroundColor = 'white';
-        document.body.appendChild(container);
-
         const certificateDiv = document.createElement('div');
         certificateDiv.className = 'certificate-preview';
         certificateDiv.style.width = '100%';
@@ -590,9 +598,11 @@ export const downloadAllCertificatesAsPDF = async (
           fieldDiv.style.textAlign = 'center';
           fieldDiv.style.width = '100%';
           fieldDiv.style.maxWidth = '80%';
-          fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+          fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
           fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`;
+          // Unificar color de fuente según masivo en ambos flujos
           fieldDiv.style.color = field.color || '#000';
+          // Forzar bold como en masivo
           fieldDiv.style.fontWeight = 'bold';
           fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
           fieldDiv.style.whiteSpace = 'nowrap';
@@ -603,6 +613,7 @@ export const downloadAllCertificatesAsPDF = async (
           switch (field.type) {
             case 'text':
               if (field.name === 'recipient') {
+                // Usar la misma lógica del singular para el nombre
                 textValue = recipient.name;
               } else if (field.name === 'course') {
                 textValue = recipient.course || field.defaultValue || '';
@@ -624,15 +635,17 @@ export const downloadAllCertificatesAsPDF = async (
           certificateDiv.appendChild(fieldDiv);
         });
 
-        container.appendChild(certificateDiv);
+        if (!globalContainer) return null;
+        globalContainer.appendChild(certificateDiv);
 
         await waitForImagesToLoad(certificateDiv);
 
-        const dataUrl = await toPng(certificateDiv, {
-          quality: 1.0,
-          pixelRatio: 2,
+        // Render to JPEG for faster encoding and smaller files
+        const dataUrl = await toJpeg(certificateDiv, {
+          quality: 0.92,
+          pixelRatio: 1.5,
           backgroundColor: '#ffffff',
-          cacheBust: true
+          cacheBust: false
         });
 
         if (!dataUrl || dataUrl.length < 1000) return null;
@@ -651,14 +664,16 @@ export const downloadAllCertificatesAsPDF = async (
       } catch {
         return null;
       } finally {
-        if (container && document.body.contains(container)) {
-          document.body.removeChild(container);
+        // Clean per-certificate nodes
+        while (globalContainer && globalContainer.firstChild) {
+          globalContainer.removeChild(globalContainer.firstChild);
         }
       }
     };
 
-    // Limited concurrency for faster total time and stability
-    const concurrency = 3;
+    // Concurrency tuned to CPU cores for speed without freezing the UI
+    const cores = (navigator as any).hardwareConcurrency || 4;
+    const concurrency = Math.min(8, cores * 2);
     let pointer = 0;
     while (pointer < certificates.length) {
       const slice = certificates.slice(pointer, pointer + concurrency);
@@ -684,7 +699,8 @@ export const downloadAllCertificatesAsPDF = async (
     }
 
     if (successCount > 0) {
-      const content = await zip.generateAsync({ type: 'blob' });
+      // Use STORE (no compression) to significantly speed up zipping
+      const content = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
       saveAs(content, `certificados-${new Date().toISOString().split('T')[0]}.zip`);
       if (errorCount > 0) {
         alert(`Se descargaron ${successCount} certificados exitosamente. ${errorCount} certificados fallaron.`);
@@ -696,6 +712,11 @@ export const downloadAllCertificatesAsPDF = async (
   } catch (error) {
     console.error('Error generating certificates:', error);
     alert('Hubo un error al generar los certificados. Por favor, inténtelo de nuevo.');
+  } finally {
+    // Remove reusable container
+    if (globalContainer && document.body.contains(globalContainer)) {
+      document.body.removeChild(globalContainer);
+    }
   }
 };
 

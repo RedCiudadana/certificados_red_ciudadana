@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Github, FileJson, ExternalLink, Copy, Check, Code, Globe, Zap, Shield, Search, BarChart3 } from 'lucide-react';
+import { Download, Github, FileJson, FileText, ExternalLink, Copy, Check, Code, Globe, Zap, Shield, Search, BarChart3 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { generateStaticSite } from '../utils/certificateGenerator';
 import JSZip from 'jszip';
@@ -15,17 +15,27 @@ const ExportSite: React.FC = () => {
   
   const handleGeneratePreview = () => {
     setIsGenerating(true);
-    
-    // Small delay to show loading state
+  
     setTimeout(() => {
       const files = generateStaticSite(certificates, recipients, templates);
+  
+      if (!files || !files['index.html'] || files['index.html'].trim().length === 0) {
+        console.error("❌ Error: generateStaticSite no devolvió un index.html válido");
+        setIsGenerating(false);
+        return;
+      }
+  
       setExportedFiles(files);
-      
-      // Create preview URL
-      const blob = new Blob([files['index.html']], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-      
+  
+      try {
+        // Aseguramos que index.html tenga contenido
+        const blob = new Blob([files['index.html']], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        setPreviewUrl(url);
+      } catch (err) {
+        console.error("❌ Error creando vista previa:", err);
+      }
+  
       setIsGenerating(false);
     }, 1500);
   };

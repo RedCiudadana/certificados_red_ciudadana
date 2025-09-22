@@ -14,10 +14,10 @@ const defaultTemplates: Template[] = [
         id: nanoid(), 
         name: 'recipient', 
         type: 'text', 
-        x: 50, 
+        x: 40, 
         y: 40, 
         fontSize: 28, 
-        fontFamily: 'serif', 
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
         color: '#1a365d' 
       }
     ]
@@ -31,10 +31,10 @@ const defaultTemplates: Template[] = [
         id: nanoid(), 
         name: 'recipient', 
         type: 'text', 
-        x: 50, 
+        x: 40, 
         y: 40, 
         fontSize: 28, 
-        fontFamily: 'serif', 
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
         color: '#1a365d' 
       }
     ]
@@ -48,10 +48,10 @@ const defaultTemplates: Template[] = [
         id: nanoid(), 
         name: 'recipient', 
         type: 'text', 
-        x: 50, 
+        x: 40, 
         y: 40, 
         fontSize: 28, 
-        fontFamily: 'serif', 
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
         color: '#1a365d' 
       }
     ]
@@ -65,10 +65,10 @@ const defaultTemplates: Template[] = [
         id: nanoid(), 
         name: 'recipient', 
         type: 'text', 
-        x: 50, 
+        x: 40, 
         y: 40, 
         fontSize: 28, 
-        fontFamily: 'serif', 
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", 
         color: '#1a365d' 
       }
     ]

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Template } from '../types';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCertificateStore } from '../store/certificateStore';
 import { CheckCircle, AlertTriangle, ArrowLeft, Share2, Download, Search, Award, Shield, Clock, User, Calendar, FileText, ExternalLink } from 'lucide-react';
@@ -76,8 +77,8 @@ const VerifyCertificate: React.FC = () => {
     container.style.position = 'fixed';
     container.style.left = '-9999px';
     container.style.top = '0';
-    container.style.width = '800px';
-    container.style.height = '566px';
+    container.style.width = '1200px';
+    container.style.height = '848px';
     document.body.appendChild(container);
 
     try {
@@ -110,7 +111,7 @@ const VerifyCertificate: React.FC = () => {
       });
 
       // Add text fields
-      template.fields.forEach(field => {
+      template.fields.forEach((field: Template['fields'][0]) => {
         if (field.type === 'qrcode') return; // Skip QR code for now
         
         const fieldDiv = document.createElement('div');
@@ -121,8 +122,9 @@ const VerifyCertificate: React.FC = () => {
         fieldDiv.style.textAlign = 'center';
         fieldDiv.style.width = '100%';
         fieldDiv.style.maxWidth = '80%';
-        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
         fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
+        // Color alineado al masivo
         fieldDiv.style.color = field.color || '#000';
         fieldDiv.style.zIndex = '1';
         fieldDiv.style.fontWeight = 'bold';
@@ -490,7 +492,7 @@ const VerifyCertificate: React.FC = () => {
                     }}
                   >
                     {/* Render certificate fields */}
-                    {template.fields.map(field => {
+                    {template.fields.map((field: Template['fields'][0]) => {
                       if (field.type === 'qrcode') return null; // Skip QR code in preview
                       
                       const style: React.CSSProperties = {
@@ -498,8 +500,9 @@ const VerifyCertificate: React.FC = () => {
                         left: `${field.x}%`,
                         top: `${field.y}%`,
                         transform: 'translate(-50%, -50%)',
-                        fontFamily: field.fontFamily || 'serif',
+                        fontFamily: field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
                         fontSize: `${(field.fontSize || 16) * 0.8}px`, // Scale down for preview
+                        // Color alineado al masivo
                         color: field.color || '#000',
                         textAlign: 'center',
                         width: '100%',

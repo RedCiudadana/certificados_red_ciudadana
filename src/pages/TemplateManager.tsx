@@ -17,9 +17,9 @@ const TemplateManager: React.FC = () => {
     name: '',
     imageUrl: '',
     fields: [
-      { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 40, fontSize: 24, fontFamily: 'serif', color: '#000' },
-      { id: nanoid(), name: 'course', type: 'text', x: 50, y: 60, fontSize: 18, fontFamily: 'serif', color: '#333' },
-      { id: nanoid(), name: 'date', type: 'date', x: 50, y: 80, fontSize: 14, fontFamily: 'serif', color: '#555' },
+      { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 40, fontSize: 24, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#000' },
+      { id: nanoid(), name: 'course', type: 'text', x: 50, y: 60, fontSize: 18, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#333' },
+      { id: nanoid(), name: 'date', type: 'date', x: 50, y: 80, fontSize: 14, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#555' },
       { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 80, y: 90 }
     ]
   });
@@ -29,9 +29,9 @@ const TemplateManager: React.FC = () => {
       name: '',
       imageUrl: '',
       fields: [
-        { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 40, fontSize: 24, fontFamily: 'serif', color: '#000' },
-        { id: nanoid(), name: 'course', type: 'text', x: 50, y: 60, fontSize: 18, fontFamily: 'serif', color: '#333' },
-        { id: nanoid(), name: 'date', type: 'date', x: 50, y: 80, fontSize: 14, fontFamily: 'serif', color: '#555' },
+        { id: nanoid(), name: 'recipient', type: 'text', x: 50, y: 40, fontSize: 24, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#000' },
+        { id: nanoid(), name: 'course', type: 'text', x: 50, y: 60, fontSize: 18, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#333' },
+        { id: nanoid(), name: 'date', type: 'date', x: 50, y: 80, fontSize: 14, fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", color: '#555' },
         { id: nanoid(), name: 'qrcode', type: 'qrcode', x: 80, y: 90 }
       ]
     });
@@ -283,10 +283,11 @@ const TemplateManager: React.FC = () => {
                   <div className="col-span-2">
                     {field.type !== 'qrcode' && (
                       <select
-                        value={field.fontFamily || 'serif'}
+                        value={field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}
                         onChange={(e) => handleFieldChange(field.id, 'fontFamily', e.target.value)}
                         className="block w-full border border-gray-300 rounded-md shadow-sm py-1 px-2 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"
                       >
+                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">System UI</option>
                         <option value="serif">Serif</option>
                         <option value="sans-serif">Sans-serif</option>
                         <option value="monospace">Monospace</option>

@@ -130,8 +130,9 @@ const Certificates: React.FC = () => {
         fieldDiv.style.top = `${field.y}%`;
         fieldDiv.style.transform = 'translate(-50%, -50%)';
         fieldDiv.style.textAlign = 'center';
-        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
         fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`; // Scale up for better quality
+        // Color alineado al masivo
         fieldDiv.style.color = field.color || '#000';
         fieldDiv.style.fontWeight = 'bold';
         fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
@@ -169,8 +170,9 @@ const Certificates: React.FC = () => {
       tempContainer = document.createElement('div');
       tempContainer.style.position = 'absolute';
       tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '-9999px';
-      tempContainer.style.visibility = 'hidden';
+      tempContainer.style.top = '0';
+      tempContainer.style.width = '1200px';
+      tempContainer.style.height = '848px';
       document.body.appendChild(tempContainer);
       tempContainer.appendChild(certificateDiv);
 

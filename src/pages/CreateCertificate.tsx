@@ -91,8 +91,9 @@ export default function CreateCertificate() {
       container.style.position = 'fixed';
       container.style.left = '-9999px';
       container.style.top = '0';
-      container.style.width = '800px';
-      container.style.height = '566px';
+      // Render at A4 landscape aspect to match PDF capture
+      container.style.width = '1200px';
+      container.style.height = '848px';
       container.style.backgroundColor = 'white';
       container.style.zIndex = '-1000';
       document.body.appendChild(container);
@@ -121,8 +122,9 @@ export default function CreateCertificate() {
         fieldDiv.style.textAlign = 'center';
         fieldDiv.style.width = '100%';
         fieldDiv.style.maxWidth = '80%';
-        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
         fieldDiv.style.fontSize = `${(field.fontSize || 16) * 1.5}px`;
+        // Mantener color consistente con masivo
         fieldDiv.style.color = field.color || '#000';
         fieldDiv.style.fontWeight = 'bold';
         fieldDiv.style.textShadow = '1px 1px 2px rgba(255,255,255,0.8)';

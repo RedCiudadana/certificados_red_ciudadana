@@ -9,12 +9,14 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
   const { isAuthenticated, user, openLoginModal } = useAuthStore();
 
-  if (!isAuthenticated || !user) {
-    // Open login modal and show a loading/redirect message
-    React.useEffect(() => {
+  // Ensure the login modal opens on unauthenticated access without violating hooks rules
+  React.useEffect(() => {
+    if (!isAuthenticated || !user) {
       openLoginModal();
-    }, [openLoginModal]);
+    }
+  }, [isAuthenticated, user, openLoginModal]);
 
+  if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">

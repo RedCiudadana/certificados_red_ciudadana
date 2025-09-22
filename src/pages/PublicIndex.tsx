@@ -90,8 +90,8 @@ const PublicIndex: React.FC = () => {
     container.style.position = 'fixed';
     container.style.left = '-9999px';
     container.style.top = '0';
-    container.style.width = '800px';
-    container.style.height = '566px';
+    container.style.width = '1200px';
+    container.style.height = '848px';
     document.body.appendChild(container);
 
     try {
@@ -135,8 +135,9 @@ const PublicIndex: React.FC = () => {
         fieldDiv.style.textAlign = 'center';
         fieldDiv.style.width = '100%';
         fieldDiv.style.maxWidth = '80%';
-        fieldDiv.style.fontFamily = field.fontFamily || 'serif';
+        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
         fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
+        // Color alineado al masivo
         fieldDiv.style.color = field.color || '#000';
         fieldDiv.style.zIndex = '1';
         fieldDiv.style.fontWeight = 'bold';

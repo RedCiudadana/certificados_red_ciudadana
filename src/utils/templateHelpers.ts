@@ -14,7 +14,7 @@ export const commonFields = {
     x,
     y,
     fontSize: 28,
-    fontFamily: 'serif',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     color: '#1a365d',
     defaultValue: 'Recipient Name'
   }),
@@ -26,7 +26,7 @@ export const commonFields = {
     x,
     y,
     fontSize: 20,
-    fontFamily: 'serif',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     color: '#2d3748',
     defaultValue: 'Course Name'
   }),
@@ -38,7 +38,7 @@ export const commonFields = {
     x,
     y,
     fontSize: 18,
-    fontFamily: 'serif',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     color: '#4a5568',
     defaultValue: 'Red Ciudadana'
   }),
@@ -50,7 +50,7 @@ export const commonFields = {
     x,
     y,
     fontSize: 16,
-    fontFamily: 'serif',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     color: '#6b7280'
   }),
 
@@ -81,7 +81,7 @@ export const commonFields = {
     x,
     y,
     fontSize: 22,
-    fontFamily: 'serif',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
     color: '#047857',
     defaultValue: 'Outstanding Achievement'
   })
@@ -156,7 +156,7 @@ export const templateConfigs = {
         x: 50,
         y: 72,
         fontSize: 16,
-        fontFamily: 'serif',
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         color: '#059669',
         defaultValue: 'For exceptional performance and dedication'
       },
@@ -178,7 +178,7 @@ export const templateConfigs = {
         x: 50,
         y: 52,
         fontSize: 24,
-        fontFamily: 'serif',
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         color: '#7c2d12',
         defaultValue: 'Bachelor of Science'
       },
