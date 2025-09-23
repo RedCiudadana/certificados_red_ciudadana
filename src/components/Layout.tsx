@@ -20,6 +20,7 @@ import {
   Code2
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
+import LogoRedBlanco from '../assets/logos/LOGO-RED_BLANCO.png'
 
 const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -81,14 +82,7 @@ const Layout: React.FC = () => {
       <div className="hidden lg:flex lg:fixed lg:inset-y-0 lg:flex-col lg:w-72 lg:bg-white lg:shadow-xl lg:border-r lg:border-gray-100">
         <div className="flex items-center justify-center flex-shrink-0 px-6 py-6" style={{ backgroundColor: "#232831" }}>
           <Link to="/dashboard" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <Award className="h-10 w-10 text-white" />
-              <Sparkles className="h-4 w-4 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
-            </div>
-            <div>
-              <span className="text-2xl font-bold text-white">CertifyPro</span>
-              <p className="text-gray-100 text-xs">Generador de Certificados</p>
-            </div>
+            <img src={LogoRedBlanco}/>
           </Link>
         </div>
         

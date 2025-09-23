@@ -599,7 +599,7 @@ export const downloadAllCertificatesAsPDF = async (
           fieldDiv.style.width = '100%';
           fieldDiv.style.maxWidth = '80%';
           fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-          fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`;
+          fieldDiv.style.fontSize = `${(field.fontSize || 16)}px`;
           // Unificar color de fuente según masivo en ambos flujos
           fieldDiv.style.color = field.color || '#000';
           // Forzar bold como en masivo

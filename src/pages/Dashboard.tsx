@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Quick insights */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow-lg p-6 border-l-4" style={{ borderColor: "#232831" }}>
           <div className="flex items-center">
             <TrendingUp className="h-8 w-8" style={{ color: "#232831" }} />
@@ -169,7 +169,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       
       {/* Enhanced recent certificates section */}
       <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
