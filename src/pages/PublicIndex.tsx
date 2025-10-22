@@ -299,7 +299,7 @@ const PublicIndex: React.FC = () => {
                 </div>
                 <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
                 <p className="text-gray-600">
-                  Busca el número de 4 dígitos en tu certificado. También puedes usar el código completo si lo tienes.
+                  Busca el número de 4 dígitos en tu certificado. También puedes usar tu correo electrónico completo si lo tienes.
                 </p>
               </div>
 
@@ -307,9 +307,9 @@ const PublicIndex: React.FC = () => {
                 <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
                   <span className="text-3xl font-bold text-white">2</span>
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h4>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código o correo</h4>
                 <p className="text-gray-600">
-                  Ingresa el código en el buscador de abajo y presiona el botón "Verificar Certificado".
+                  Ingresa el código o correo electrónico en el buscador de abajo y presiona el botón "Verificar Certificado".
                 </p>
               </div>
 
