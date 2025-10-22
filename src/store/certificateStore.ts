@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Template, Recipient, Certificate, CertificateCollection } from '../types';
 import { nanoid } from 'nanoid';
+import { supabase, DatabaseCertificate } from '../lib/supabase';
 
 // Default data for certificates that can be validated
 const defaultTemplates: Template[] = [
@@ -203,7 +204,7 @@ export const useCertificateStore = create<CertificateStore>()(
         const id = nanoid();
         const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
         const verificationUrl = `${baseUrl}/verify/${id}`;
-        
+
         const certificate: Certificate = {
           id,
           recipientId,
@@ -213,20 +214,45 @@ export const useCertificateStore = create<CertificateStore>()(
           verificationUrl,
           status: 'published'
         };
-        
+
         set(state => ({
           certificates: [...state.certificates, certificate]
         }));
-        
+
+        const { recipients, templates } = get();
+        const recipient = recipients.find(r => r.id === recipientId);
+        const template = templates.find(t => t.id === templateId);
+
+        if (recipient && template) {
+          const dbCertificate: DatabaseCertificate = {
+            certificate_code: id,
+            recipient_name: recipient.name,
+            recipient_email: recipient.email || '',
+            recipient_id: recipient.customFields?.studentId || null,
+            course_name: recipient.course || template.name,
+            template_id: templateId,
+            issue_date: new Date().toISOString().split('T')[0],
+            qr_code_data: verificationUrl,
+            status: 'active'
+          };
+
+          supabase.insertCertificate(dbCertificate).catch(error => {
+            console.error('Error saving certificate to database:', error);
+          });
+        }
+
         return id;
       },
       
       generateBulkCertificates: (recipientIds, templateId) => {
         const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const { recipients, templates } = get();
+        const template = templates.find(t => t.id === templateId);
+
         const newCertificates = recipientIds.map(recipientId => {
           const id = nanoid();
           const verificationUrl = `${baseUrl}/verify/${id}`;
-          
+
           return {
             id,
             recipientId,
@@ -237,11 +263,33 @@ export const useCertificateStore = create<CertificateStore>()(
             status: 'published' as const
           };
         });
-        
+
         set(state => ({
           certificates: [...state.certificates, ...newCertificates]
         }));
-        
+
+        newCertificates.forEach(cert => {
+          const recipient = recipients.find(r => r.id === cert.recipientId);
+
+          if (recipient && template) {
+            const dbCertificate: DatabaseCertificate = {
+              certificate_code: cert.id,
+              recipient_name: recipient.name,
+              recipient_email: recipient.email || '',
+              recipient_id: recipient.customFields?.studentId || null,
+              course_name: recipient.course || template.name,
+              template_id: templateId,
+              issue_date: new Date().toISOString().split('T')[0],
+              qr_code_data: cert.verificationUrl,
+              status: 'active'
+            };
+
+            supabase.insertCertificate(dbCertificate).catch(error => {
+              console.error('Error saving certificate to database:', error);
+            });
+          }
+        });
+
         return newCertificates.map(c => c.id);
       },
       
