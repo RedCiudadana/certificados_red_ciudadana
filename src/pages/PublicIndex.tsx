@@ -281,6 +281,51 @@ const PublicIndex: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Verification Steps */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
+          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center">
+              <img src={Icono2} className="mr-3 h-7 w-7 text-gray-600" />
+              Pasos para la Verificación de Certificados
+            </h3>
+            <p className="text-gray-600 mt-2">Sigue estos sencillos pasos para verificar cualquier certificado</p>
+          </div>
+
+          <div className="p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">1</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
+                <p className="text-gray-600">
+                  Busca el número de 4 dígitos en tu certificado. También puedes usar el código completo si lo tienes.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">2</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h4>
+                <p className="text-gray-600">
+                  Ingresa el código en el buscador de abajo y presiona el botón "Verificar Certificado".
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">3</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h4>
+                <p className="text-gray-600">
+                  La página te mostrará los detalles del certificado de confirmación y su autenticidad.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Certificate Verification */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -426,52 +471,6 @@ const PublicIndex: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Verification Steps */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
-          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-              <img src={Icono2} className="mr-3 h-7 w-7 text-gray-600" />
-              Pasos para la Verificación de Certificados
-            </h3>
-            <p className="text-gray-600 mt-2">Sigue estos sencillos pasos para verificar cualquier certificado</p>
-          </div>
-          
-          <div className="p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">1</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
-                <p className="text-gray-600">
-                  Busca el número de 4 dígitos en tu certificado. También puedes usar el código completo si lo tienes.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">2</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h4>
-                <p className="text-gray-600">
-                  Ingresa el código en el buscador de arriba y presiona el botón "Verificar Certificado".
-                </p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">3</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h4>
-                <p className="text-gray-600">
-                  La página te mostrará los detalles del certificado de confirmación y su autenticidad.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       {/* Footer */}
