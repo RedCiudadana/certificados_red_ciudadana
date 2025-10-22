@@ -423,51 +423,128 @@ const PublicIndex: React.FC = () => {
                 <img src={Icono3} className="mr-3 h-7 w-7 text-gray-600" />
                 Mis Certificados
               </h3>
-              <p className="text-gray-600 mt-2">Consulta, valida y comparte tus certificados aprobados</p>
+              <p className="text-gray-600 mt-2">Busca tus certificados ingresando tu correo electrónico</p>
             </div>
-            
-            <div className="p-6">
-              <div className="space-y-6">
-                <div className="text-center py-8">
-                  <Award className="mx-auto h-16 w-16 text-gray-600 mb-4" />
-                  <p className="text-gray-600 mb-6">
-                    Accede al portal de estudiantes para ver todos tus certificados, validarlos y compartirlos en LinkedIn.
-                  </p>
-                  <Link
-                    to="/student-verification"
-                    className="inline-flex items-center justify-center px-8 py-4 transition-all duration-200 shadow-lg text-lg hover:opacity-90"
-                    style={{ backgroundColor: '#232831', color: 'white', borderRadius: '10px', fontSize: '16px', fontWeight: 'bold'}}
-                  >
-                    <Award className="mr-2 h-5 w-5" />
-                    Acceder al Portal de Estudiantes
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
 
-                <div className="grid grid-cols-1 gap-4 pt-6 border-t border-gray-200">
-                  <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Busca tus certificados</h4>
-                      <p className="text-sm text-gray-600">Encuentra todos tus certificados usando tu email</p>
-                    </div>
+            <div className="p-6">
+              <form onSubmit={handleStudentCertificateSearch} className="space-y-4">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-gray-400" />
                   </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Valida tu propiedad</h4>
-                      <p className="text-sm text-gray-600">Reclama tus certificados para validar que son tuyos</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Comparte en LinkedIn</h4>
-                      <p className="text-sm text-gray-600">Agrega tus certificaciones directamente a tu perfil profesional</p>
-                    </div>
-                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Ingresa tu correo electrónico..."
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-lg"
+                    disabled={isLoadingStudentCerts}
+                  />
                 </div>
-              </div>
+                <button
+                  type="submit"
+                  disabled={isLoadingStudentCerts || !email.trim()}
+                  className="w-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg text-lg hover:opacity-90"
+                  style={{ backgroundColor: '#232831', color: 'white', borderRadius: '10px', padding: '10px', fontSize: '16px', fontWeight: 'bold'}}
+                >
+                  {isLoadingStudentCerts ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
+                      Buscando...
+                    </div>
+                  ) : (
+                    <>
+                      <Award className="inline-block mr-2 h-5 w-5" />
+                      Buscar Mis Certificados
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Student Certificates Results */}
+              {studentCertificates.length > 0 && (
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-lg font-semibold text-gray-900">
+                      Certificados Encontrados ({studentCertificates.length})
+                    </h4>
+                    <Link
+                      to="/student-verification"
+                      className="text-sm text-gray-600 hover:text-gray-900 underline"
+                    >
+                      Ver en portal completo
+                    </Link>
+                  </div>
+                  {studentCertificates.map(({ certificate, recipient }) => (
+                    <div key={certificate.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow duration-200">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h5 className="font-semibold text-gray-900">{recipient?.course || 'Certificación'}</h5>
+                          <div className="mt-2 space-y-1 text-sm text-gray-600">
+                            <div className="flex items-center">
+                              <User className="h-4 w-4 mr-2" />
+                              {recipient?.name}
+                            </div>
+                            <div className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              {new Date(recipient?.issueDate || certificate.issueDate).toLocaleDateString('es-ES')}
+                            </div>
+                            <div className="flex items-center">
+                              <FileText className="h-4 w-4 mr-2" />
+                              ID: {certificate.id.slice(-8)}...
+                            </div>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <Link
+                              to={`/verify/${certificate.id}`}
+                              className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors duration-200"
+                            >
+                              <Shield className="mr-1 h-3 w-3" />
+                              Ver Certificado
+                            </Link>
+                            <button
+                              onClick={() => handleDownloadCertificate(certificate.id)}
+                              className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors duration-200"
+                            >
+                              <Download className="mr-1 h-3 w-3" />
+                              Descargar PDF
+                            </button>
+                            <button
+                              onClick={() => handleShareToLinkedIn(certificate.id)}
+                              className="inline-flex items-center px-3 py-1 bg-[#0A66C2] text-white text-xs font-medium rounded-full hover:bg-[#004182] transition-colors duration-200"
+                            >
+                              <ExternalLink className="mr-1 h-3 w-3" />
+                              LinkedIn
+                            </button>
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <CheckCircle className="mr-1 h-3 w-3" />
+                            Aprobado
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {email && studentCertificates.length === 0 && !isLoadingStudentCerts && (
+                <div className="mt-6 text-center py-8">
+                  <Award className="mx-auto h-12 w-12 text-gray-300" />
+                  <h4 className="mt-2 text-lg font-medium text-gray-900">No se encontraron certificados</h4>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No hay certificados asociados a este correo electrónico.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    ¿Buscas validar y compartir tus certificados?{' '}
+                    <Link to="/student-verification" className="text-gray-900 underline font-medium">
+                      Visita el portal de estudiantes
+                    </Link>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
