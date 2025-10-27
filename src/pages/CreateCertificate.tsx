@@ -8,6 +8,7 @@ import CertificatePreview from '../components/CertificatePreview';
 import BulkUpload from '../components/BulkUpload';
 import { toPng } from 'html-to-image';
 import { generateCertificatePDF, downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
+import { downloadCertificatePDF } from '../utils/certificateStorage';
 
 export default function CreateCertificate() {
   const {
@@ -83,90 +84,11 @@ export default function CreateCertificate() {
   };
   
   const handleDownloadCertificate = async () => {
-    if (!currentTemplate || !currentRecipient) return;
-    
+    if (!currentRecipient || generatedCertificateIds.length === 0) return;
+
     try {
-      // Create a temporary certificate element for PDF generation
-      const container = document.createElement('div');
-      container.style.position = 'fixed';
-      container.style.left = '-9999px';
-      container.style.top = '0';
-      // Render at A4 landscape aspect to match PDF capture
-      container.style.width = '1200px';
-      container.style.height = '848px';
-      container.style.backgroundColor = 'white';
-      container.style.zIndex = '-1000';
-      document.body.appendChild(container);
-
-      // Create certificate preview
-      const certificateDiv = document.createElement('div');
-      certificateDiv.className = 'certificate-preview';
-      certificateDiv.style.width = '100%';
-      certificateDiv.style.height = '100%';
-      certificateDiv.style.position = 'relative';
-      certificateDiv.style.backgroundColor = 'white';
-      certificateDiv.style.backgroundImage = `url(${currentTemplate.imageUrl})`;
-      certificateDiv.style.backgroundSize = 'cover';
-      certificateDiv.style.backgroundPosition = 'center';
-      certificateDiv.style.backgroundRepeat = 'no-repeat';
-
-      // Add text fields
-      currentTemplate.fields.forEach(field => {
-        if (field.type === 'qrcode') return; // Skip QR code for now
-        
-        const fieldDiv = document.createElement('div');
-        fieldDiv.style.position = 'absolute';
-        fieldDiv.style.left = `${field.x}%`;
-        fieldDiv.style.top = `${field.y}%`;
-        fieldDiv.style.transform = 'translate(-50%, -50%)';
-        fieldDiv.style.textAlign = 'center';
-        fieldDiv.style.width = '100%';
-        fieldDiv.style.maxWidth = '80%';
-        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-        fieldDiv.style.fontSize = `${(field.fontSize || 16) * 1.5}px`;
-        // Mantener color consistente con masivo
-        fieldDiv.style.color = field.color || '#000';
-        fieldDiv.style.fontWeight = 'bold';
-        fieldDiv.style.textShadow = '1px 1px 2px rgba(255,255,255,0.8)';
-        fieldDiv.style.zIndex = '10';
-
-        let textValue = '';
-        switch (field.type) {
-          case 'text':
-            if (field.name === 'recipient') {
-              textValue = currentRecipient.name;
-            } else if (field.name === 'course') {
-              textValue = currentRecipient.course || field.defaultValue || '';
-            } else if (currentRecipient.customFields && currentRecipient.customFields[field.name]) {
-              textValue = currentRecipient.customFields[field.name];
-            } else {
-              textValue = field.defaultValue || '';
-            }
-            break;
-          case 'date':
-            textValue = new Date(currentRecipient.issueDate).toLocaleDateString('es-ES', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            });
-            break;
-        }
-
-        fieldDiv.textContent = textValue;
-        certificateDiv.appendChild(fieldDiv);
-      });
-
-      container.appendChild(certificateDiv);
-      
-      // Wait for rendering
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const fileName = `${currentRecipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
-      await generateCertificatePDF(certificateDiv, fileName);
-      
-      // Clean up
-      document.body.removeChild(container);
-      
+      const certificateId = generatedCertificateIds[0];
+      await downloadCertificatePDF(certificateId, currentRecipient.name);
     } catch (error) {
       console.error('Error downloading certificate:', error);
       alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
