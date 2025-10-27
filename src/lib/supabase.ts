@@ -17,7 +17,7 @@ export interface DatabaseCertificate {
   completion_date?: string | null;
   instructor_name?: string | null;
   duration_hours?: number | null;
-  certificate_image_url?: string | null;
+  certificate_pdf_url?: string | null;
   qr_code_data?: string | null;
   status?: 'active' | 'revoked';
   metadata?: Record<string, any> | null;
@@ -100,6 +100,33 @@ class SupabaseClient {
       'PATCH',
       `certificate_claims?certificate_id=eq.${certificateId}&student_email=eq.${encodeURIComponent(email)}`,
       { linkedin_shared: true, linkedin_shared_at: new Date().toISOString() }
+    );
+  }
+
+  async updateCertificatePDFUrl(certificateCode: string, pdfUrl: string) {
+    try {
+      const result = await this.request(
+        'PATCH',
+        `certificates?certificate_code=eq.${certificateCode}`,
+        { certificate_pdf_url: pdfUrl }
+      );
+      console.log('Certificate PDF URL updated:', result);
+      return result;
+    } catch (error) {
+      console.error('Failed to update certificate PDF URL:', error);
+      throw error;
+    }
+  }
+
+  async getAllCertificates(): Promise<DatabaseCertificate[]> {
+    const data = await this.request('GET', 'certificates?status=eq.active&select=*&order=created_at.desc');
+    return data || [];
+  }
+
+  async deleteCertificate(certificateCode: string) {
+    return this.request(
+      'DELETE',
+      `certificates?certificate_code=eq.${certificateCode}`
     );
   }
 }

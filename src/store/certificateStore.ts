@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { Template, Recipient, Certificate, CertificateCollection } from '../types';
 import { nanoid } from 'nanoid';
 import { supabase, DatabaseCertificate } from '../lib/supabase';
+import { generateAndUploadCertificatePDF } from '../utils/certificateStorage';
 
 // Default data for certificates that can be validated
 const defaultTemplates: Template[] = [
@@ -238,8 +239,19 @@ export const useCertificateStore = create<CertificateStore>()(
 
           console.log('Attempting to save certificate to database:', dbCertificate);
           supabase.insertCertificate(dbCertificate)
-            .then(result => {
+            .then(async result => {
               console.log('Certificate successfully saved to database:', result);
+
+              try {
+                console.log('Generating and uploading PDF to storage...');
+                const pdfUrl = await generateAndUploadCertificatePDF(id, template, recipient);
+                console.log('PDF uploaded successfully:', pdfUrl);
+
+                await supabase.updateCertificatePDFUrl(id, pdfUrl);
+                console.log('Certificate PDF URL updated in database');
+              } catch (pdfError) {
+                console.error('Error generating/uploading PDF:', pdfError);
+              }
             })
             .catch(error => {
               console.error('Error saving certificate to database:', error);
@@ -280,7 +292,7 @@ export const useCertificateStore = create<CertificateStore>()(
         let savedCount = 0;
         let errorCount = 0;
 
-        newCertificates.forEach(cert => {
+        const processCertificate = async (cert: typeof newCertificates[0]) => {
           const recipient = recipients.find(r => r.id === cert.recipientId);
 
           if (recipient && template) {
@@ -296,20 +308,46 @@ export const useCertificateStore = create<CertificateStore>()(
               status: 'active'
             };
 
-            console.log('Saving bulk certificate:', dbCertificate);
-            supabase.insertCertificate(dbCertificate)
-              .then(result => {
-                savedCount++;
-                console.log(`Certificate ${savedCount}/${newCertificates.length} saved successfully`);
-              })
-              .catch(error => {
-                errorCount++;
-                console.error(`Error saving certificate ${cert.id}:`, error);
-              });
+            try {
+              console.log('Saving bulk certificate:', dbCertificate);
+              await supabase.insertCertificate(dbCertificate);
+              savedCount++;
+              console.log(`Certificate ${savedCount}/${newCertificates.length} saved successfully`);
+
+              try {
+                console.log(`Generating and uploading PDF ${savedCount}/${newCertificates.length}...`);
+                const pdfUrl = await generateAndUploadCertificatePDF(cert.id, template, recipient);
+                await supabase.updateCertificatePDFUrl(cert.id, pdfUrl);
+                console.log(`PDF ${savedCount}/${newCertificates.length} uploaded successfully`);
+              } catch (pdfError) {
+                console.error(`Error uploading PDF for certificate ${cert.id}:`, pdfError);
+              }
+            } catch (error) {
+              errorCount++;
+              console.error(`Error saving certificate ${cert.id}:`, error);
+            }
           } else {
             console.error('Missing recipient or template for certificate:', cert.id);
           }
-        });
+        };
+
+        const batchSize = 3;
+        const processBatch = async (batch: typeof newCertificates) => {
+          await Promise.all(batch.map(cert => processCertificate(cert)));
+        };
+
+        (async () => {
+          for (let i = 0; i < newCertificates.length; i += batchSize) {
+            const batch = newCertificates.slice(i, i + batchSize);
+            await processBatch(batch);
+          }
+
+          if (errorCount > 0) {
+            alert(`Se procesaron ${savedCount} certificados exitosamente. ${errorCount} fallaron.`);
+          } else {
+            console.log(`All ${savedCount} certificates processed successfully!`);
+          }
+        })();
 
         return newCertificates.map(c => c.id);
       },
