@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
           <div className="sm:flex sm:items-center sm:justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">
-                ¡Bienvenido a CertifyPro! 
+                ¡Bienvenido a Certificados RC! 
               </h1>
               <p className="text-xl text-gray-100">
                 Gestiona tus certificados y genera nuevos de manera profesional
