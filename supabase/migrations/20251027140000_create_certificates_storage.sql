@@ -49,16 +49,16 @@ ON storage.objects FOR SELECT
 TO public
 USING (bucket_id = 'certificates');
 
--- Allow authenticated users to upload certificates
-CREATE POLICY "Authenticated users can upload certificates"
+-- Allow anyone to upload certificates (needed for anon key usage)
+CREATE POLICY "Anyone can upload certificates"
 ON storage.objects FOR INSERT
-TO authenticated
+TO public
 WITH CHECK (bucket_id = 'certificates');
 
--- Allow authenticated users to update certificates
-CREATE POLICY "Authenticated users can update certificates"
+-- Allow anyone to update certificates (needed for anon key usage)
+CREATE POLICY "Anyone can update certificates"
 ON storage.objects FOR UPDATE
-TO authenticated
+TO public
 USING (bucket_id = 'certificates')
 WITH CHECK (bucket_id = 'certificates');
 
