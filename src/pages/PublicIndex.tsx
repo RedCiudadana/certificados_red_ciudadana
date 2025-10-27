@@ -259,23 +259,9 @@ const PublicIndex: React.FC = () => {
               Verifica tu Certificado Digital
             </h2>
             <p className="text-xl text-gray-100 mb-8 max-w-3xl mx-auto">
-              Sistema oficial de verificación de certificados de Red Ciudadana. 
+              Sistema oficial de verificación de certificados de Red Ciudadana.
               Valida la autenticidad de cualquier certificado o consulta tus certificaciones aprobadas.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
-                <div className="text-2xl font-bold">{certificates.length}</div>
-                <div className="text-sm">Certificados Emitidos</div>
-              </div>
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
-                <div className="text-2xl font-bold">{recipients.length}</div>
-                <div className="text-sm">Estudiantes Certificados</div>
-              </div>
-              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
-                <div className="text-2xl font-bold">{templates.length}</div>
-                <div className="text-sm">Programas Disponibles</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
