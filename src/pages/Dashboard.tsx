@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Award, FileSpreadsheet, FileText, Users, Download, ChevronRight, TrendingUp, Clock, CheckCircle, Plus, Shield, Search } from 'lucide-react';
+import { Award, FileSpreadsheet, FileText, Users, Download, ChevronRight, TrendingUp, Clock, CheckCircle, Plus, Shield, Search, TestTube } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
+import { testStorageUpload, testPDFGeneration } from '../utils/testStorage';
 
 const Dashboard: React.FC = () => {
   const { templates, recipients, certificates } = useCertificateStore();
@@ -98,6 +99,31 @@ const Dashboard: React.FC = () => {
               </Link>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Diagnostic Tools */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-yellow-900 mb-4 flex items-center">
+          <TestTube className="mr-2 h-5 w-5" />
+          Herramientas de Diagnóstico
+        </h3>
+        <p className="text-sm text-yellow-800 mb-4">
+          Usa estos botones para probar la conexión con Supabase Storage y diagnosticar problemas de subida de PDFs.
+        </p>
+        <div className="flex space-x-3">
+          <button
+            onClick={testStorageUpload}
+            className="inline-flex items-center px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-700 transition-colors"
+          >
+            Probar Subida a Storage
+          </button>
+          <button
+            onClick={testPDFGeneration}
+            className="inline-flex items-center px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-700 transition-colors"
+          >
+            Probar Generación de PDF
+          </button>
         </div>
       </div>
 
