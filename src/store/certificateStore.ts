@@ -236,9 +236,17 @@ export const useCertificateStore = create<CertificateStore>()(
             status: 'active'
           };
 
-          supabase.insertCertificate(dbCertificate).catch(error => {
-            console.error('Error saving certificate to database:', error);
-          });
+          console.log('Attempting to save certificate to database:', dbCertificate);
+          supabase.insertCertificate(dbCertificate)
+            .then(result => {
+              console.log('Certificate successfully saved to database:', result);
+            })
+            .catch(error => {
+              console.error('Error saving certificate to database:', error);
+              alert('Warning: Certificate was created but could not be saved to database. Please check console for details.');
+            });
+        } else {
+          console.error('Missing recipient or template data:', { recipient, template });
         }
 
         return id;
@@ -268,6 +276,10 @@ export const useCertificateStore = create<CertificateStore>()(
           certificates: [...state.certificates, ...newCertificates]
         }));
 
+        console.log(`Saving ${newCertificates.length} certificates to database...`);
+        let savedCount = 0;
+        let errorCount = 0;
+
         newCertificates.forEach(cert => {
           const recipient = recipients.find(r => r.id === cert.recipientId);
 
@@ -284,9 +296,18 @@ export const useCertificateStore = create<CertificateStore>()(
               status: 'active'
             };
 
-            supabase.insertCertificate(dbCertificate).catch(error => {
-              console.error('Error saving certificate to database:', error);
-            });
+            console.log('Saving bulk certificate:', dbCertificate);
+            supabase.insertCertificate(dbCertificate)
+              .then(result => {
+                savedCount++;
+                console.log(`Certificate ${savedCount}/${newCertificates.length} saved successfully`);
+              })
+              .catch(error => {
+                errorCount++;
+                console.error(`Error saving certificate ${cert.id}:`, error);
+              });
+          } else {
+            console.error('Missing recipient or template for certificate:', cert.id);
           }
         });
 

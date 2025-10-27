@@ -66,7 +66,14 @@ class SupabaseClient {
   }
 
   async insertCertificate(certificate: DatabaseCertificate) {
-    return this.request('POST', 'certificates', certificate);
+    try {
+      const result = await this.request('POST', 'certificates', certificate);
+      console.log('Certificate saved to database:', result);
+      return result;
+    } catch (error) {
+      console.error('Failed to save certificate to database:', error);
+      throw error;
+    }
   }
 
   async getCertificateByCode(code: string): Promise<DatabaseCertificate | null> {
