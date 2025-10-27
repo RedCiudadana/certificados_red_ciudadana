@@ -250,10 +250,10 @@ const PublicIndex: React.FC = () => {
       {/* Hero Section */}
       <div
         className="relative overflow-hidden"
-        style={{ backgroundImage: `url(${Slider})` , backgroundSize: 'cover', backgroundPosition: 'center', height: '600px' }}
+        style={{ backgroundImage: `url(${Slider})` , backgroundSize: 'cover', backgroundPosition: 'center', height: '300px' }}
       >
         <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 h-full">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 h-full">
           <div className="text-center flex items-center justify-center h-full flex-col">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Verifica tu Certificado Digital
@@ -454,12 +454,6 @@ const PublicIndex: React.FC = () => {
                     <h4 className="text-lg font-semibold text-gray-900">
                       Certificados Encontrados ({studentCertificates.length})
                     </h4>
-                    <Link
-                      to="/student-verification"
-                      className="text-sm text-gray-600 hover:text-gray-900 underline"
-                    >
-                      Ver en portal completo
-                    </Link>
                   </div>
                   {studentCertificates.map(({ certificate, recipient }) => (
                     <div key={certificate.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow duration-200">
@@ -522,12 +516,6 @@ const PublicIndex: React.FC = () => {
                   <h4 className="mt-2 text-lg font-medium text-gray-900">No se encontraron certificados</h4>
                   <p className="mt-1 text-sm text-gray-500">
                     No hay certificados asociados a este correo electrónico.
-                  </p>
-                  <p className="mt-2 text-sm text-gray-600">
-                    ¿Buscas validar y compartir tus certificados?{' '}
-                    <Link to="/student-verification" className="text-gray-900 underline font-medium">
-                      Visita el portal de estudiantes
-                    </Link>
                   </p>
                 </div>
               )}
