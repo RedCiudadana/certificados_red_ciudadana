@@ -90,6 +90,40 @@ const defaultTemplates: Template[] = [
       }
     ]
   },
+  {
+    id: 'experiencia-usuario',
+    name: 'Certificado de Experiencia de Usuario (UX)',
+    imageUrl: '/assets/certificate-templates/Experiencia-de-Usuario-UX.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 30, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: "Sora, sans-serif", 
+        color: '#1a365d' 
+      }
+    ]
+  },
+  {
+    id: 'introduccion-ciberseguridad',
+    name: 'Certificado de Introducción a la Ciberseguridad',
+    imageUrl: '/assets/certificate-templates/Introduccion-a-la-Ciberseguridad.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 30, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: "Sora, sans-serif", 
+        color: '#1a365d' 
+      }
+    ]
+  },
 ];
 
 const defaultRecipients: Recipient[] = [
