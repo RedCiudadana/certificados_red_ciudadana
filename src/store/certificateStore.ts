@@ -73,6 +73,23 @@ const defaultTemplates: Template[] = [
       }
     ]
   },
+  {
+    id: 'entendiendo-ia',
+    name: 'Certificado de Entendiendo la IA',
+    imageUrl: '/assets/certificate-templates/entendiendo-la-inteligencia-artificial.jpg',
+    fields: [
+      { 
+        id: nanoid(), 
+        name: 'recipient', 
+        type: 'text', 
+        x: 30, 
+        y: 40, 
+        fontSize: 28, 
+        fontFamily: "Sora, sans-serif", 
+        color: '#1a365d' 
+      }
+    ]
+  },
 ];
 
 const defaultRecipients: Recipient[] = [
