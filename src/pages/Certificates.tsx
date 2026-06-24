@@ -1,9 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Download, ChevronUp, ChevronDown, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import { generateCertificatePDF, downloadAllCertificatesAsPDF } from '../utils/certificateGenerator';
-import { downloadCertificatePDF, getCertificatePDFUrl } from '../utils/certificateStorage';
-import { supabase } from '../lib/supabase';
 
 const Certificates: React.FC = () => {
   const { certificates, recipients, templates } = useCertificateStore();
@@ -104,14 +102,92 @@ const Certificates: React.FC = () => {
   const handleDownloadPDF = async (certificateId: string) => {
     const certificate = certificates.find(c => c.id === certificateId);
     const recipient = recipients.find(r => r.id === certificate?.recipientId);
+    const template = templates.find(t => t.id === certificate?.templateId);
 
-    if (!certificate || !recipient) return;
+    if (!certificate || !recipient || !template) return;
+
+    let tempContainer: HTMLDivElement | null = null;
 
     try {
-      await downloadCertificatePDF(certificateId, recipient.name);
+      // Create certificate element
+      const certificateDiv = document.createElement('div');
+      certificateDiv.style.position = 'relative';
+      certificateDiv.style.width = '1200px';
+      certificateDiv.style.height = '848px';
+      certificateDiv.style.backgroundColor = 'white';
+      certificateDiv.style.backgroundImage = `url(${template.imageUrl})`;
+      certificateDiv.style.backgroundSize = 'cover';
+      certificateDiv.style.backgroundPosition = 'center';
+      certificateDiv.style.backgroundRepeat = 'no-repeat';
+
+      // Add text fields
+      template.fields.forEach(field => {
+        if (field.type === 'qrcode') return; // Skip QR code for PDF
+        
+        const fieldDiv = document.createElement('div');
+        fieldDiv.style.position = 'absolute';
+        fieldDiv.style.left = `${field.x}%`;
+        fieldDiv.style.top = `${field.y}%`;
+        fieldDiv.style.transform = 'translate(-50%, -50%)';
+        fieldDiv.style.textAlign = 'center';
+        fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        fieldDiv.style.fontSize = `${(field.fontSize || 16) * 2}px`; // Scale up for better quality
+        // Color alineado al masivo
+        fieldDiv.style.color = field.color || '#000';
+        fieldDiv.style.fontWeight = 'bold';
+        fieldDiv.style.textShadow = '2px 2px 4px rgba(255,255,255,0.8)';
+        fieldDiv.style.whiteSpace = 'nowrap';
+        fieldDiv.style.zIndex = '10';
+
+        let textValue = '';
+        switch (field.type) {
+          case 'text':
+            if (field.name === 'recipient') {
+              textValue = recipient.name;
+            } else if (field.name === 'course') {
+              textValue = recipient.course || field.defaultValue || '';
+            } else if (recipient.customFields && recipient.customFields[field.name]) {
+              textValue = recipient.customFields[field.name];
+            } else {
+              textValue = field.defaultValue || '';
+            }
+            break;
+
+          case 'date':
+            textValue = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            break;
+        }
+
+        fieldDiv.textContent = textValue;
+        certificateDiv.appendChild(fieldDiv);
+      });
+
+      // Create temporary container and attach to DOM
+      tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      tempContainer.style.width = '1200px';
+      tempContainer.style.height = '848px';
+      document.body.appendChild(tempContainer);
+      tempContainer.appendChild(certificateDiv);
+
+      // Generate PDF
+      const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
+      await generateCertificatePDF(certificateDiv, fileName);
+
     } catch (error) {
-      console.error('Error downloading certificate from storage:', error);
-      alert('No se pudo descargar el certificado desde el almacenamiento. Intenta regenerarlo.');
+      console.error('Error downloading certificate:', error);
+      alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
+    } finally {
+      // Clean up temporary container
+      if (tempContainer && tempContainer.parentNode) {
+        tempContainer.parentNode.removeChild(tempContainer);
+      }
     }
   };
 

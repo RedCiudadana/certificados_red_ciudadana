@@ -226,7 +226,7 @@ const LoginModal: React.FC = () => {
               </button>
             </div>
 
-            {/* <div className="text-center">
+            <div className="text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -241,7 +241,7 @@ const LoginModal: React.FC = () => {
                   : '¿Ya tienes cuenta? Iniciar sesión'
                 }
               </button>
-            </div> */}
+            </div>
           </form>
         </div>
       </div>

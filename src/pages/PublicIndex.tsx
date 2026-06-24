@@ -250,68 +250,37 @@ const PublicIndex: React.FC = () => {
       {/* Hero Section */}
       <div
         className="relative overflow-hidden"
-        style={{ backgroundImage: `url(${Slider})` , backgroundSize: 'cover', backgroundPosition: 'center', height: '300px' }}
+        style={{ backgroundImage: `url(${Slider})` , backgroundSize: 'cover', backgroundPosition: 'center', height: '600px' }}
       >
         <div className="absolute inset-0 bg-black opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 h-full">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 h-full">
           <div className="text-center flex items-center justify-center h-full flex-col">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Verifica tu Certificado Digital
             </h2>
             <p className="text-xl text-gray-100 mb-8 max-w-3xl mx-auto">
-              Sistema oficial de verificación de certificados de Red Ciudadana.
+              Sistema oficial de verificación de certificados de Red Ciudadana. 
               Valida la autenticidad de cualquier certificado o consulta tus certificaciones aprobadas.
             </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
+                <div className="text-2xl font-bold">{certificates.length}</div>
+                <div className="text-sm">Certificados Emitidos</div>
+              </div>
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
+                <div className="text-2xl font-bold">{recipients.length}</div>
+                <div className="text-sm">Estudiantes Certificados</div>
+              </div>
+              <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl px-6 py-4 text-white">
+                <div className="text-2xl font-bold">{templates.length}</div>
+                <div className="text-sm">Programas Disponibles</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Verification Steps */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
-          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-              <img src={Icono2} className="mr-3 h-7 w-7 text-gray-600" />
-              Pasos para la Verificación de Certificados
-            </h3>
-            <p className="text-gray-600 mt-2">Sigue estos sencillos pasos para verificar cualquier certificado</p>
-          </div>
-
-          <div className="p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">1</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
-                <p className="text-gray-600">
-                  Busca el número de 4 dígitos en tu certificado. También puedes usar tu correo electrónico completo si lo tienes.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">2</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código o correo</h4>
-                <p className="text-gray-600">
-                  Ingresa el código o correo electrónico en el buscador de abajo y presiona el botón "Verificar Certificado".
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
-                  <span className="text-3xl font-bold text-white">3</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h4>
-                <p className="text-gray-600">
-                  La página te mostrará los detalles del certificado de confirmación y su autenticidad.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* Certificate Verification */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -409,9 +378,9 @@ const PublicIndex: React.FC = () => {
                 <img src={Icono3} className="mr-3 h-7 w-7 text-gray-600" />
                 Mis Certificados
               </h3>
-              <p className="text-gray-600 mt-2">Busca tus certificados ingresando tu correo electrónico</p>
+              <p className="text-gray-600 mt-2">Consulta tus certificados aprobados ingresando tu correo electrónico</p>
             </div>
-
+            
             <div className="p-6">
               <form onSubmit={handleStudentCertificateSearch} className="space-y-4">
                 <div className="relative">
@@ -450,21 +419,15 @@ const PublicIndex: React.FC = () => {
               {/* Student Certificates Results */}
               {studentCertificates.length > 0 && (
                 <div className="mt-6 space-y-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold text-gray-900">
-                      Certificados Encontrados ({studentCertificates.length})
-                    </h4>
-                  </div>
+                  <h4 className="text-lg font-semibold text-gray-900">
+                    Certificados Encontrados ({studentCertificates.length})
+                  </h4>
                   {studentCertificates.map(({ certificate, recipient }) => (
                     <div key={certificate.id} className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h5 className="font-semibold text-gray-900">{recipient?.course || 'Certificación'}</h5>
                           <div className="mt-2 space-y-1 text-sm text-gray-600">
-                            <div className="flex items-center">
-                              <User className="h-4 w-4 mr-2" />
-                              {recipient?.name}
-                            </div>
                             <div className="flex items-center">
                               <Calendar className="h-4 w-4 mr-2" />
                               {new Date(recipient?.issueDate || certificate.issueDate).toLocaleDateString('es-ES')}
@@ -522,12 +485,58 @@ const PublicIndex: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Verification Steps */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-12">
+          <div className="px-6 py-6 bg-gradient-to-r from-gray-50 to-gray-50 border-b border-gray-100">
+            <h3 className="text-2xl font-bold text-gray-900 flex items-center">
+              <img src={Icono2} className="mr-3 h-7 w-7 text-gray-600" />
+              Pasos para la Verificación de Certificados
+            </h3>
+            <p className="text-gray-600 mt-2">Sigue estos sencillos pasos para verificar cualquier certificado</p>
+          </div>
+          
+          <div className="p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">1</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h4>
+                <p className="text-gray-600">
+                  Busca el número de 4 dígitos en tu certificado. También puedes usar el código completo si lo tienes.
+                </p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">2</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Ingresa el Código</h4>
+                <p className="text-gray-600">
+                  Ingresa el código en el buscador de arriba y presiona el botón "Verificar Certificado".
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#232831' }}>
+                  <span className="text-3xl font-bold text-white">3</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">Ver Detalles</h4>
+                <p className="text-gray-600">
+                  La página te mostrará los detalles del certificado de confirmación y su autenticidad.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <img 
@@ -540,6 +549,14 @@ const PublicIndex: React.FC = () => {
                 Sistema oficial de certificados digitales de Red Ciudadana. 
                 Verificación segura y confiable de certificaciones.
               </p>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Enlaces Útiles</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/verify" className="hover:text-white transition-colors">Verificar Certificado</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">Iniciar Sesión</Link></li>
+              </ul>
             </div>
             
             <div>

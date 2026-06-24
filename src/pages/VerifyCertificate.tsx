@@ -4,8 +4,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCertificateStore } from '../store/certificateStore';
 import { CheckCircle, AlertTriangle, ArrowLeft, Share2, Download, Search, Award, Shield, Clock, User, Calendar, FileText, ExternalLink } from 'lucide-react';
 import { generateCertificatePDF } from '../utils/certificateGenerator';
-import { downloadCertificatePDF, getCertificatePDFUrl } from '../utils/certificateStorage';
-import { supabase } from '../lib/supabase';
 
 const VerifyCertificate: React.FC = () => {
   const { certificateId } = useParams<{ certificateId: string }>();
@@ -31,47 +29,36 @@ const VerifyCertificate: React.FC = () => {
     setRecipient(null);
     setTemplate(null);
 
-    try {
-      const dbCertificate = await supabase.getCertificateByCode(id);
-
-      if (dbCertificate) {
-        setCertificate({
-          id: dbCertificate.certificate_code,
-          recipientId: dbCertificate.id,
-          templateId: dbCertificate.template_id,
-          qrCodeUrl: dbCertificate.qr_code_data || '',
-          issueDate: dbCertificate.issue_date,
-          verificationUrl: dbCertificate.qr_code_data || '',
-          status: 'published' as const,
-          pdfUrl: dbCertificate.certificate_pdf_url
-        });
-
-        setRecipient({
-          id: dbCertificate.id || '',
-          name: dbCertificate.recipient_name,
-          email: dbCertificate.recipient_email,
-          course: dbCertificate.course_name,
-          issueDate: dbCertificate.issue_date,
-          customFields: dbCertificate.metadata || {}
-        });
-
-        const foundTemplate = templates.find(t => t.id === dbCertificate.template_id);
+    // Simulate verification delay
+    setTimeout(() => {
+      // Find certificate by ID (exact match or partial match for 4-digit codes)
+      const foundCertificate = certificates.find(c => 
+        c.id === id || c.id.slice(-4) === id || c.id.includes(id)
+      );
+      
+      if (foundCertificate) {
+        setCertificate(foundCertificate);
+        setIsValid(true);
+        
+        const foundRecipient = recipients.find(r => r.id === foundCertificate.recipientId);
+        if (foundRecipient) {
+          setRecipient(foundRecipient);
+        }
+        
+        const foundTemplate = templates.find(t => t.id === foundCertificate.templateId);
         if (foundTemplate) {
           setTemplate(foundTemplate);
         }
-
-        setIsValid(true);
-        navigate(`/verify/${dbCertificate.certificate_code}`, { replace: true });
+        
+        // Update URL without page reload
+        navigate(`/verify/${foundCertificate.id}`, { replace: true });
       } else {
         setIsValid(false);
       }
-    } catch (error) {
-      console.error('Error verifying certificate:', error);
-      setIsValid(false);
-    } finally {
+      
       setIsLoading(false);
       setShowVerificationSteps(false);
-    }
+    }, 1500);
   };
 
   const handleShareToLinkedIn = async () => {
@@ -83,25 +70,9 @@ const VerifyCertificate: React.FC = () => {
   };
 
   const handleDownloadCertificate = async () => {
-    if (!certificate || !recipient) return;
-
-    try {
-      await downloadCertificatePDF(certificate.id, recipient.name);
-    } catch (error) {
-      console.error('Error downloading certificate from storage:', error);
-      alert('No se pudo descargar el certificado desde el almacenamiento.');
-    }
-  };
-
-  const handleViewOnline = () => {
-    if (!certificate) return;
-    const pdfUrl = getCertificatePDFUrl(certificate.id);
-    window.open(pdfUrl, '_blank');
-  };
-
-  const oldHandleDownloadCertificate_BACKUP = async () => {
     if (!recipient || !template || !certificate) return;
-
+    
+    // Create a temporary container for rendering the certificate
     const container = document.createElement('div');
     container.style.position = 'fixed';
     container.style.left = '-9999px';

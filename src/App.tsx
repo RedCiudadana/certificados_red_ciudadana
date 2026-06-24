@@ -10,7 +10,6 @@ import CreateCertificate from './pages/CreateCertificate';
 import TemplateManager from './pages/TemplateManager';
 import RecipientManager from './pages/RecipientManager';
 import VerifyCertificate from './pages/VerifyCertificate';
-import StudentVerification from './pages/StudentVerification';
 import ExportSite from './pages/ExportSite';
 import Documentation from './pages/Documentation';
 import SourceCodeManager from './pages/SourceCodeManager';
@@ -31,10 +30,9 @@ function AppContent() {
           !isAuthenticated ? <PublicIndex /> : <Navigate to="/dashboard" replace />
         } />
         
-        {/* Public verification routes */}
+        {/* Public verification route */}
         <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/verify/:certificateId" element={<VerifyCertificate />} />
-        <Route path="/student-verification" element={<StudentVerification />} />
         
         {/* Protected routes with Layout */}
         <Route path="/dashboard" element={

@@ -186,7 +186,14 @@ const Layout: React.FC = () => {
       >
         <div className="flex items-center justify-center h-20 bg-gradient-to-r from-gray-600 to-gray-600">
           <Link to="/dashboard" className="flex items-center space-x-3" onClick={toggleMobileMenu}>
-            <img src={LogoRedBlanco}/>
+            <div className="relative">
+              <Award className="h-8 w-8 text-white" />
+              <Sparkles className="h-3 w-3 text-yellow-300 absolute -top-1 -right-1 animate-pulse" />
+            </div>
+            <div>
+              <span className="text-xl font-bold text-white">CertifyPro</span>
+              <p className="text-gray-100 text-xs">Generador de Certificados</p>
+            </div>
           </Link>
         </div>
         
