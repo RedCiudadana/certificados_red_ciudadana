@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { LogIn, User, Lock, Eye, EyeOff, UserPlus, Shield, GraduationCap, X } from 'lucide-react';
+import { LogIn, User, Lock, Eye, EyeOff, UserPlus, Shield, X, KeyRound } from 'lucide-react';
 
 const LoginModal: React.FC = () => {
-  const { login, register, isLoading, isLoginModalOpen, closeLoginModal } = useAuthStore();
+  const { login, register, isLoading, isLoginModalOpen, closeLoginModal, loginWithLlave, oidcConfigured, checkOidcConfig } = useAuthStore();
   const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -16,13 +16,26 @@ const LoginModal: React.FC = () => {
   });
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    checkOidcConfig();
+  }, [checkOidcConfig]);
+
+  // Check for OIDC session after redirect from llave-auth callback
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('llave_session=')) {
+      // OIDC redirect — clean the hash and let checkOidcSession handle it
+      navigate(window.location.pathname, { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     try {
       let success = false;
-      
+
       if (isLoginMode) {
         success = await login(formData.email, formData.password);
         if (!success) {
@@ -50,6 +63,10 @@ const LoginModal: React.FC = () => {
     }
   };
 
+  const handleLlaveLogin = () => {
+    loginWithLlave();
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({
       ...prev,
@@ -64,14 +81,13 @@ const LoginModal: React.FC = () => {
     setIsLoginMode(true);
   };
 
-
   if (!isLoginModalOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         {/* Background overlay */}
-        <div 
+        <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
           onClick={handleClose}
         />
@@ -95,13 +111,37 @@ const LoginModal: React.FC = () => {
               {isLoginMode ? 'Iniciar Sesión' : 'Crear Cuenta'}
             </h2>
             <p className="text-gray-600">
-              {isLoginMode 
-                ? 'Accede a tu cuenta de CertifyPro' 
+              {isLoginMode
+                ? 'Accede al panel de administración de certificados'
                 : 'Únete a la plataforma de certificados'
               }
             </p>
           </div>
 
+          {/* LlaveRedCiudadana OIDC Login Button */}
+          {oidcConfigured && (
+            <>
+              <div className="mb-6">
+                <button
+                  onClick={handleLlaveLogin}
+                  className="group relative w-full flex justify-center py-3 px-4 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 shadow-sm"
+                >
+                  <KeyRound className="h-5 w-5 mr-2 text-gray-600" />
+                  Iniciar sesión con LlaveRedCiudadana
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">o con credenciales locales</span>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -232,12 +272,12 @@ const LoginModal: React.FC = () => {
                 onClick={() => {
                   setIsLoginMode(!isLoginMode);
                   setError('');
-                  setFormData({ email: '', password: '', name: '', role: 'student' });
+                  setFormData({ email: '', password: '', name: '', role: 'admin' });
                 }}
                 className="text-gray-600 hover:text-gray-500 text-sm font-medium"
               >
-                {isLoginMode 
-                  ? '¿No tienes cuenta? Crear una nueva' 
+                {isLoginMode
+                  ? '¿No tienes cuenta? Crear una nueva'
                   : '¿Ya tienes cuenta? Iniciar sesión'
                 }
               </button>

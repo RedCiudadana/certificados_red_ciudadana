@@ -17,7 +17,8 @@ import {
   Shield,
   LogOut,
   User,
-  Code2
+  Code2,
+  Network
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
 import LogoRedBlanco from '../assets/logos/LOGO-RED_BLANCO.png'
@@ -40,11 +41,12 @@ const Layout: React.FC = () => {
     { name: 'Exportar Sitio', to: '/dashboard/export', icon: Download },
     { name: 'LinkedIn', to: '/dashboard/linkedin', icon: Share2 },
     { name: 'Notificaciones', to: '/dashboard/notifications', icon: Mail },
-    { name: 'Documentación', to: '/dashboard/docs', icon: Book }
+    { name: 'Documentación', to: '/dashboard/docs', icon: Book },
+    { name: 'API Escuela', to: '/dashboard/api', icon: Network }
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
     setIsMobileMenuOpen(false);
   };

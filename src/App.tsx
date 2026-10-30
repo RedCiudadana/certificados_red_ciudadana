@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -16,11 +16,17 @@ import SourceCodeManager from './pages/SourceCodeManager';
 import LinkedInIntegration from './pages/LinkedInIntegration';
 import EmailNotifications from './pages/EmailNotifications';
 import Certificates from './pages/Certificates';
+import ApiIntegration from './pages/ApiIntegration';
 import Layout from './components/Layout';
 
 function AppContent() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, checkOidcSession, checkOidcConfig } = useAuthStore();
   const location = useLocation();
+
+  useEffect(() => {
+    checkOidcConfig();
+    checkOidcSession();
+  }, [checkOidcConfig, checkOidcSession]);
   
   return (
     <>
@@ -86,6 +92,11 @@ function AppContent() {
           <Route path="source-code" element={
             <ProtectedRoute requiredRole="admin">
               <SourceCodeManager />
+            </ProtectedRoute>
+          } />
+          <Route path="api" element={
+            <ProtectedRoute requiredRole="admin">
+              <ApiIntegration />
             </ProtectedRoute>
           } />
         </Route>

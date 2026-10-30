@@ -1,0 +1,7 @@
+[functions.escuela-api]
+verify_jwt = false
+entrypoint = "./functions/escuela-api/index.ts"
+
+[functions.llave-auth]
+verify_jwt = false
+entrypoint = "./functions/llave-auth/index.ts"

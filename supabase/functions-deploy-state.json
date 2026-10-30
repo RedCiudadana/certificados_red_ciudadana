@@ -1,0 +1,13 @@
+{
+  "projectId": "59020507",
+  "functions": {
+    "escuela-api": {
+      "hasChanged": false,
+      "hash": "d418602a08abf0f79ee1501eb92a31d64623d42c7ddb10516a39b225910cbb12"
+    },
+    "llave-auth": {
+      "hasChanged": false,
+      "hash": "23f0560bfdd3dfefb5470b3b64e375783cf275e0e1a99b89d5bb0be69ca22ff0"
+    }
+  }
+}

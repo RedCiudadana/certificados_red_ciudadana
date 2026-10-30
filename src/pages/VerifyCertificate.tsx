@@ -1,78 +1,106 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Template } from '../types';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCertificateStore } from '../store/certificateStore';
 import { CheckCircle, AlertTriangle, ArrowLeft, Share2, Download, Search, Award, Shield, Clock, User, Calendar, FileText, ExternalLink } from 'lucide-react';
 import { generateCertificatePDF } from '../utils/certificateGenerator';
+import { supabase } from '../lib/supabase';
+
+interface SupabaseCertificate {
+  id: string;
+  certificate_code: string;
+  recipient_name: string;
+  recipient_email: string;
+  course_name: string;
+  template_id: string;
+  issue_date: string;
+  completion_date: string | null;
+  instructor_name: string | null;
+  duration_hours: number | null;
+  certificate_pdf_url: string | null;
+  qr_code_data: string | null;
+  status: string;
+  metadata: Record<string, unknown> | null;
+}
 
 const VerifyCertificate: React.FC = () => {
   const { certificateId } = useParams<{ certificateId: string }>();
   const navigate = useNavigate();
-  const { certificates, recipients, templates } = useCertificateStore();
+  const { templates } = useCertificateStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
-  const [certificate, setCertificate] = useState<any>(null);
-  const [recipient, setRecipient] = useState<any>(null);
-  const [template, setTemplate] = useState<any>(null);
+  const [certificate, setCertificate] = useState<SupabaseCertificate | null>(null);
   const [searchId, setSearchId] = useState('');
   const [showVerificationSteps, setShowVerificationSteps] = useState(!certificateId);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleVerification = async (id: string) => {
-    if (!id || id.length < 4) {
-      alert('Por favor ingresa un código válido de al menos 4 dígitos');
+  const handleVerification = useCallback(async (code: string) => {
+    if (!code || code.length < 4) {
+      setErrorMessage('Por favor ingresa un código válido de al menos 4 caracteres');
       return;
     }
 
     setIsLoading(true);
     setIsValid(false);
     setCertificate(null);
-    setRecipient(null);
-    setTemplate(null);
+    setErrorMessage('');
 
-    // Simulate verification delay
-    setTimeout(() => {
-      // Find certificate by ID (exact match or partial match for 4-digit codes)
-      const foundCertificate = certificates.find(c => 
-        c.id === id || c.id.slice(-4) === id || c.id.includes(id)
-      );
-      
-      if (foundCertificate) {
-        setCertificate(foundCertificate);
+    try {
+      // Query Supabase — exact code match only (no partial matching to prevent enumeration)
+      const { data, error } = await supabase
+        .from('certificates')
+        .select('*')
+        .eq('certificate_code', code)
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (error) {
+        setErrorMessage('Error al verificar el certificado. Intenta de nuevo.');
+        setIsLoading(false);
+        setShowVerificationSteps(false);
+        return;
+      }
+
+      if (data) {
+        setCertificate(data as SupabaseCertificate);
         setIsValid(true);
-        
-        const foundRecipient = recipients.find(r => r.id === foundCertificate.recipientId);
-        if (foundRecipient) {
-          setRecipient(foundRecipient);
-        }
-        
-        const foundTemplate = templates.find(t => t.id === foundCertificate.templateId);
-        if (foundTemplate) {
-          setTemplate(foundTemplate);
-        }
-        
-        // Update URL without page reload
-        navigate(`/verify/${foundCertificate.id}`, { replace: true });
+        navigate(`/verify/${data.certificate_code}`, { replace: true });
       } else {
         setIsValid(false);
       }
-      
-      setIsLoading(false);
-      setShowVerificationSteps(false);
-    }, 1500);
-  };
+    } catch {
+      setErrorMessage('Error de conexión. Verifica tu conexión a internet.');
+      setIsValid(false);
+    }
 
-  const handleShareToLinkedIn = async () => {
-    if (!recipient || !certificate) return;
-    
-    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(recipient.course || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(recipient.issueDate).getFullYear()}&issueMonth=${new Date(recipient.issueDate).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.href)}&certId=${encodeURIComponent(certificate.id)}`;
-    
+    setIsLoading(false);
+    setShowVerificationSteps(false);
+  }, [navigate]);
+
+  const handleShareToLinkedIn = () => {
+    if (!certificate) return;
+
+    const linkedInUrl = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(certificate.course_name || 'Certificación Profesional')}&organizationName=${encodeURIComponent('Red Ciudadana')}&issueYear=${new Date(certificate.issue_date).getFullYear()}&issueMonth=${new Date(certificate.issue_date).getMonth() + 1}&certUrl=${encodeURIComponent(window.location.href)}&certId=${encodeURIComponent(certificate.certificate_code)}`;
+
     window.open(linkedInUrl, '_blank', 'width=600,height=600');
   };
 
   const handleDownloadCertificate = async () => {
-    if (!recipient || !template || !certificate) return;
-    
-    // Create a temporary container for rendering the certificate
+    if (!certificate) return;
+
+    // If a PDF URL exists in storage, download it directly
+    if (certificate.certificate_pdf_url) {
+      window.open(certificate.certificate_pdf_url, '_blank');
+      return;
+    }
+
+    // Fallback: generate PDF client-side from template
+    const template = templates.find(t => t.id === certificate.template_id);
+    if (!template) {
+      alert('No se pudo encontrar la plantilla del certificado para generar el PDF.');
+      return;
+    }
+
     const container = document.createElement('div');
     container.style.position = 'fixed';
     container.style.left = '-9999px';
@@ -82,7 +110,6 @@ const VerifyCertificate: React.FC = () => {
     document.body.appendChild(container);
 
     try {
-      // Create certificate preview
       const certificateDiv = document.createElement('div');
       certificateDiv.className = 'certificate-preview';
       certificateDiv.style.width = '100%';
@@ -91,7 +118,6 @@ const VerifyCertificate: React.FC = () => {
       certificateDiv.style.backgroundColor = 'white';
       certificateDiv.style.overflow = 'hidden';
 
-      // Add template background
       const img = document.createElement('img');
       img.src = template.imageUrl;
       img.alt = 'Certificate template';
@@ -103,17 +129,16 @@ const VerifyCertificate: React.FC = () => {
       img.style.objectFit = 'cover';
       certificateDiv.appendChild(img);
 
-      // Wait for image to load
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        setTimeout(resolve, 10000); // Longer fallback timeout
+      await new Promise((resolve) => {
+        if (img.complete) return resolve(void 0);
+        img.onload = () => resolve(void 0);
+        img.onerror = () => resolve(void 0);
+        setTimeout(resolve, 10000);
       });
 
-      // Add text fields
       template.fields.forEach((field: Template['fields'][0]) => {
-        if (field.type === 'qrcode') return; // Skip QR code for now
-        
+        if (field.type === 'qrcode') return;
+
         const fieldDiv = document.createElement('div');
         fieldDiv.style.position = 'absolute';
         fieldDiv.style.left = `${field.x}%`;
@@ -124,7 +149,6 @@ const VerifyCertificate: React.FC = () => {
         fieldDiv.style.maxWidth = '80%';
         fieldDiv.style.fontFamily = field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
         fieldDiv.style.fontSize = `${field.fontSize || 16}px`;
-        // Color alineado al masivo
         fieldDiv.style.color = field.color || '#000';
         fieldDiv.style.zIndex = '1';
         fieldDiv.style.fontWeight = 'bold';
@@ -132,21 +156,16 @@ const VerifyCertificate: React.FC = () => {
 
         switch (field.type) {
           case 'text':
-            let textValue = '';
             if (field.name === 'recipient') {
-              textValue = recipient.name;
+              fieldDiv.textContent = certificate.recipient_name;
             } else if (field.name === 'course') {
-              textValue = recipient.course || field.defaultValue || '';
-            } else if (recipient.customFields && recipient.customFields[field.name]) {
-              textValue = recipient.customFields[field.name];
+              fieldDiv.textContent = certificate.course_name || field.defaultValue || '';
             } else {
-              textValue = field.defaultValue || '';
+              fieldDiv.textContent = field.defaultValue || '';
             }
-            fieldDiv.textContent = textValue;
             break;
-
           case 'date':
-            fieldDiv.textContent = new Date(recipient.issueDate).toLocaleDateString('es-ES', {
+            fieldDiv.textContent = new Date(certificate.issue_date).toLocaleDateString('es-ES', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
@@ -159,15 +178,13 @@ const VerifyCertificate: React.FC = () => {
 
       container.appendChild(certificateDiv);
 
-      // Generate PDF
-      const fileName = `${recipient.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
+      const fileName = `${certificate.recipient_name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-certificate`;
       await generateCertificatePDF(certificateDiv, fileName);
 
     } catch (error) {
       console.error('Error downloading certificate:', error);
       alert('Error al descargar el certificado. Por favor, inténtelo de nuevo.');
     } finally {
-      // Clean up
       document.body.removeChild(container);
     }
   };
@@ -178,12 +195,12 @@ const VerifyCertificate: React.FC = () => {
       handleVerification(searchId.trim());
     }
   };
-  
+
   useEffect(() => {
     if (certificateId && certificateId !== 'preview') {
       handleVerification(certificateId);
     }
-  }, [certificateId]);
+  }, [certificateId, handleVerification]);
 
   // Verification Steps Component
   const VerificationSteps = () => (
@@ -242,6 +259,9 @@ const VerifyCertificate: React.FC = () => {
                 disabled={isLoading}
               />
             </div>
+            {errorMessage && (
+              <p className="mt-2 text-sm text-red-600 text-center">{errorMessage}</p>
+            )}
             <button
               type="submit"
               disabled={isLoading || !searchId.trim()}
@@ -270,7 +290,7 @@ const VerifyCertificate: React.FC = () => {
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Busca el Código</h3>
             <p className="text-gray-600">
-              Localiza el número de identificación en tu certificado. Puede ser de 4 dígitos o el código completo.
+              Localiza el código de verificación en tu certificado. Es un código alfanumérico único.
             </p>
           </div>
 
@@ -308,9 +328,10 @@ const VerifyCertificate: React.FC = () => {
                 Sistema de Verificación Seguro
               </h3>
               <p className="text-gray-700 mb-4">
-                Nuestro sistema de verificación utiliza tecnología avanzada para garantizar la autenticidad 
-                de cada certificado emitido por Red Ciudadana. Cada certificado tiene un código único que 
-                no puede ser falsificado.
+                Nuestro sistema de verificación utiliza tecnología avanzada para garantizar la autenticidad
+                de cada certificado emitido por Red Ciudadana. Cada certificado tiene un código único que
+                no puede ser falsificado. La verificación por código es exacta — no se permite búsqueda
+                parcial para proteger la privacidad de los titulares.
               </p>
               <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                 <div className="flex items-center">
@@ -325,6 +346,10 @@ const VerifyCertificate: React.FC = () => {
                   <CheckCircle className="h-4 w-4 text-gray-500 mr-2" />
                   Base de datos segura
                 </div>
+                <div className="flex items-center">
+                  <CheckCircle className="h-4 w-4 text-gray-500 mr-2" />
+                  Sin requerir inicio de sesión
+                </div>
               </div>
             </div>
           </div>
@@ -332,7 +357,7 @@ const VerifyCertificate: React.FC = () => {
       </div>
     </div>
   );
-  
+
   if (showVerificationSteps) {
     return <VerificationSteps />;
   }
@@ -344,7 +369,7 @@ const VerifyCertificate: React.FC = () => {
           <div className="w-20 h-20 mx-auto bg-gradient-to-r from-gray-500 to-gray-500 rounded-full flex items-center justify-center mb-6">
             <div className="animate-spin rounded-full h-10 w-10 border-4 border-white border-t-transparent"></div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl bold text-gray-900 mb-4">
             Verificando Certificado
           </h2>
           <p className="text-gray-600 mb-8">
@@ -360,7 +385,7 @@ const VerifyCertificate: React.FC = () => {
       </div>
     );
   }
-  
+
   if (!isValid) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -372,7 +397,7 @@ const VerifyCertificate: React.FC = () => {
             Certificado No Encontrado
           </h2>
           <p className="text-gray-600 mb-8">
-            El código ingresado no corresponde a un certificado válido en nuestra base de datos. 
+            El código ingresado no corresponde a un certificado válido en nuestra base de datos.
             Verifica que hayas ingresado el código correctamente.
           </p>
           <div className="space-y-4">
@@ -380,6 +405,7 @@ const VerifyCertificate: React.FC = () => {
               onClick={() => {
                 setShowVerificationSteps(true);
                 setSearchId('');
+                setErrorMessage('');
                 navigate('/verify', { replace: true });
               }}
               className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
@@ -398,7 +424,7 @@ const VerifyCertificate: React.FC = () => {
       </div>
     );
   }
-  
+
   if (certificateId === 'preview') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -417,7 +443,7 @@ const VerifyCertificate: React.FC = () => {
           <div className="p-8">
             <div className="text-center">
               <p className="text-gray-600 mb-6">
-                Esta es una vista previa de la página de verificación del certificado. En un certificado real, 
+                Esta es una vista previa de la página de verificación del certificado. En un certificado real,
                 esta página mostraría datos auténticos del certificado.
               </p>
               <Link
@@ -433,7 +459,9 @@ const VerifyCertificate: React.FC = () => {
       </div>
     );
   }
-  
+
+  const template = templates.find(t => t.id === certificate?.template_id);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -481,28 +509,26 @@ const VerifyCertificate: React.FC = () => {
                   Certificado Digital
                 </h3>
                 <div className="relative bg-gray-50 rounded-xl p-4 overflow-hidden">
-                  <div 
+                  <div
                     className="relative w-full"
                     style={{
-                      paddingTop: '70.7%', // Maintain aspect ratio (A4 landscape)
+                      paddingTop: '70.7%',
                       backgroundImage: `url(${template.imageUrl})`,
                       backgroundSize: 'contain',
                       backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center'
                     }}
                   >
-                    {/* Render certificate fields */}
                     {template.fields.map((field: Template['fields'][0]) => {
-                      if (field.type === 'qrcode') return null; // Skip QR code in preview
-                      
+                      if (field.type === 'qrcode') return null;
+
                       const style: React.CSSProperties = {
                         position: 'absolute',
                         left: `${field.x}%`,
                         top: `${field.y}%`,
                         transform: 'translate(-50%, -50%)',
                         fontFamily: field.fontFamily || "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-                        fontSize: `${(field.fontSize || 16) * 0.8}px`, // Scale down for preview
-                        // Color alineado al masivo
+                        fontSize: `${(field.fontSize || 16) * 0.8}px`,
                         color: field.color || '#000',
                         textAlign: 'center',
                         width: '100%',
@@ -516,17 +542,15 @@ const VerifyCertificate: React.FC = () => {
                       switch (field.type) {
                         case 'text':
                           if (field.name === 'recipient') {
-                            textValue = recipient?.name || '';
+                            textValue = certificate?.recipient_name || '';
                           } else if (field.name === 'course') {
-                            textValue = recipient?.course || field.defaultValue || '';
-                          } else if (recipient?.customFields && recipient.customFields[field.name]) {
-                            textValue = recipient.customFields[field.name];
+                            textValue = certificate?.course_name || field.defaultValue || '';
                           } else {
                             textValue = field.defaultValue || '';
                           }
                           break;
                         case 'date':
-                          textValue = new Date(recipient?.issueDate || certificate?.issueDate).toLocaleDateString('es-ES', {
+                          textValue = new Date(certificate?.issue_date || new Date()).toLocaleDateString('es-ES', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
@@ -548,7 +572,7 @@ const VerifyCertificate: React.FC = () => {
 
           {/* Certificate Details */}
           <div className="space-y-6">
-            {/* Recipient Info */}
+            {/* Recipient Info — NO email shown for privacy */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <User className="mr-2 h-5 w-5 text-gray-600" />
@@ -557,18 +581,24 @@ const VerifyCertificate: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-gray-500">Nombre Completo</label>
-                  <p className="text-lg font-semibold text-gray-900">{recipient?.name || 'No disponible'}</p>
+                  <p className="text-lg font-semibold text-gray-900">{certificate?.recipient_name || 'No disponible'}</p>
                 </div>
-                {recipient?.email && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Correo Electrónico</label>
-                    <p className="text-gray-900">{recipient.email}</p>
-                  </div>
-                )}
-                {recipient?.course && (
+                {certificate?.course_name && (
                   <div>
                     <label className="text-sm font-medium text-gray-500">Curso/Programa</label>
-                    <p className="text-gray-900 font-medium">{recipient.course}</p>
+                    <p className="text-gray-900 font-medium">{certificate.course_name}</p>
+                  </div>
+                )}
+                {certificate?.duration_hours && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Duración</label>
+                    <p className="text-gray-900">{certificate.duration_hours} horas</p>
+                  </div>
+                )}
+                {certificate?.instructor_name && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Instructor</label>
+                    <p className="text-gray-900">{certificate.instructor_name}</p>
                   </div>
                 )}
               </div>
@@ -585,23 +615,19 @@ const VerifyCertificate: React.FC = () => {
                   <label className="text-sm font-medium text-gray-500">Fecha de Emisión</label>
                   <p className="text-gray-900 flex items-center">
                     <Calendar className="mr-2 h-4 w-4 text-gray-400" />
-                    {certificate?.issueDate
-                      ? new Date(certificate.issueDate).toLocaleDateString('es-ES', {
+                    {certificate?.issue_date
+                      ? new Date(certificate.issue_date).toLocaleDateString('es-ES', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric'
                         })
-                      : new Date(recipient?.issueDate).toLocaleDateString('es-ES', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                      : 'No disponible'}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">ID del Certificado</label>
+                  <label className="text-sm font-medium text-gray-500">Código del Certificado</label>
                   <p className="text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded-lg">
-                    {certificate?.id || certificateId}
+                    {certificate?.certificate_code || certificateId}
                   </p>
                 </div>
                 <div>
@@ -611,23 +637,12 @@ const VerifyCertificate: React.FC = () => {
                     Válido y Verificado
                   </span>
                 </div>
-              </div>
-            </div>
-
-            {/* Custom Fields */}
-            {recipient?.customFields && Object.keys(recipient.customFields).length > 0 && (
-              <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
-                <div className="space-y-3">
-                  {Object.entries(recipient.customFields).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                      <span className="text-sm font-medium text-gray-500 capitalize">{key}:</span>
-                      <span className="text-gray-900 font-medium">{value as string}</span>
-                    </div>
-                  ))}
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Institución Emisora</label>
+                  <p className="text-gray-900">Red Ciudadana</p>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Actions */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
@@ -644,6 +659,7 @@ const VerifyCertificate: React.FC = () => {
                   onClick={() => {
                     setShowVerificationSteps(true);
                     setSearchId('');
+                    setErrorMessage('');
                     navigate('/verify', { replace: true });
                   }}
                   className="w-full bg-gradient-to-r from-gray-600 to-gray-600 text-white py-3 px-4 rounded-xl font-medium hover:from-gray-700 hover:to-gray-700 transition-all duration-200 shadow-lg"
