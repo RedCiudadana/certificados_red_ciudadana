@@ -21,7 +21,7 @@ import {
   Network
 } from 'lucide-react';
 import { useCertificateStore } from '../store/certificateStore';
-import LogoRedBlanco from '../assets/logos/LOGO-RED_BLANCO.png'
+const LOGO_URL = 'https://redciudadana.org/logo_red_ciudadana.png';
 
 const Layout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -84,7 +84,7 @@ const Layout: React.FC = () => {
       <div className="hidden lg:flex lg:fixed lg:inset-y-0 lg:flex-col lg:w-72 lg:bg-white lg:shadow-xl lg:border-r lg:border-gray-100">
         <div className="flex items-center justify-center flex-shrink-0 px-6 py-6" style={{ backgroundColor: "#232831" }}>
           <Link to="/dashboard" className="flex items-center space-x-3 group">
-            <img src={LogoRedBlanco}/>
+            <img src={LOGO_URL} alt="Red Ciudadana" />
           </Link>
         </div>
         

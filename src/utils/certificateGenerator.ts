@@ -60,7 +60,7 @@ export const generateStaticSite = (
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Verificación de Certificados - Red Ciudadana</title>
   <meta name="description" content="Verify the authenticity of digital certificates">
-  <link rel="shortcut icon" type="image/x-icon" href="https://www.redciudadana.org/assets/img/redciudadana.png">
+  <link rel="shortcut icon" type="image/x-icon" href="https://redciudadana.org/logo_red_ciudadana.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #f8fafc; }
@@ -116,7 +116,7 @@ export const generateStaticSite = (
     <div class="header-content">
       <div class="logo">
         <a href="index.html">
-          <img src="https://www.redciudadana.org/assets/img/red/LOGO-RED_NEGRO.png" alt="Red Ciudadana" />
+          <img src="https://redciudadana.org/logo_red_ciudadana.png" alt="Red Ciudadana" />
         </a>
       </div>
       <nav class="nav-links">

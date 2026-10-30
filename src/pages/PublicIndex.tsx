@@ -229,7 +229,7 @@ const PublicIndex: React.FC = () => {
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
               <img 
-                src="https://www.redciudadana.org/assets/img/red/LOGO-RED_NEGRO.png" 
+                src="https://redciudadana.org/logo_red_ciudadana.png" 
                 alt="Red Ciudadana Logo" 
                 className="h-12 w-auto"
               />
